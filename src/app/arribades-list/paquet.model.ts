@@ -1,4 +1,5 @@
 export class Paquet {
+    public id: number;
     public data_arribada: number;
     public remitent: string;
     public procedencia: string;
@@ -12,6 +13,7 @@ export class Paquet {
     public signatura: string;
 
     constructor(
+        id:number,
         data_arribada: number,
         remitent: string,
         procedencia: string,
@@ -24,6 +26,7 @@ export class Paquet {
         dipositari: string,
         signatura: string,
     ){
+        this.id=id;
         this.data_arribada = data_arribada;
         this.remitent = remitent;
         this.procedencia  =procedencia;

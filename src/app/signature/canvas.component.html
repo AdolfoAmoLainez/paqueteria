@@ -1,3 +1,7 @@
-<canvas #canvas></canvas>
-<button type="button" (click)="logCanvas()">LOGCANVAS</button>
-<img [src]="imagen" />
+<div class="row">
+    <div class="col-md-5 justify-content-center ">
+        <canvas #canvas></canvas>
+        <button class="btn btn-primary" type="button" (click)="onSignar()" style="margin-left: 10px;">Signar</button>
+        <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancelar</button>
+    </div>
+</div>

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
-import {Paquet} from './paquet.model';
+import { Paquet } from './paquet.model';
 import { PaquetsService } from '../shared/paquets.service';
+import { Subscription } from 'rxjs';
 
 library.add(fas);
 
@@ -12,45 +13,43 @@ library.add(fas);
   templateUrl: './arribades-list.component.html',
   styleUrls: ['./arribades-list.component.css']
 })
-export class ArribadesListComponent implements OnInit {
+export class ArribadesListComponent implements OnInit, OnDestroy {
 
-  paquets: Paquet[] = [
-    new Paquet(
-      Date.now(),
-      "Adolfo Amo",
-      "Sid Comunicacio",
-      1,
-      "Missatger",
-      "",
-      "Trini Expósito",
-      "Slipi CC",
-      0,
-      "",
-      ""
-    ),
-    new Paquet(
-      Date.now(),
-      "Adolfo Amo2",
-      "Sid Comunicacio",
-      1,
-      "Missatger",
-      "",
-      "Trini Expósito2",
-      "Slipi CC",
-      0,
-      "",
-      ""
-    ),
-  ]
+  editMode: boolean = true;
+  signMode: boolean = false;
+
+  changePaquetsSubscription: Subscription;
+
+  paquets: Paquet[] = [];
 
   constructor(private paquetsService: PaquetsService) { }
 
-  ngOnInit() {
+  ngOnDestroy() {
+    this.changePaquetsSubscription.unsubscribe();
   }
 
-  onEditPaquet(index:number){
-    console.log(index);
+  ngOnInit() {
+    this.paquets = this.paquetsService.getPaquets();
+
+    this.changePaquetsSubscription = this.paquetsService.changedPaquets.subscribe(
+      (paquets: Paquet[]) => {
+        this.paquets = paquets
+      }
+    );
+  }
+
+  onEditPaquet(index: number) {
+    this.signMode = false;
+    this.editMode = true;
     this.paquetsService.startedEditPaquet.next(this.paquets[index]);
+
+  }
+
+  onEntregarPaquet(index: number) {
+    this.signMode = true;
+    this.editMode = false;
+    this.paquetsService.startedSignPaquet.next(this.paquets[index]);
+
   }
 
 }

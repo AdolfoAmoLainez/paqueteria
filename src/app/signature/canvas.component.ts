@@ -1,7 +1,7 @@
 import {
-  Component, Input, ElementRef, AfterViewInit, ViewChild
+  Component, Input, ElementRef, AfterViewInit, ViewChild, OnInit, OnDestroy
 } from '@angular/core';
-import { Observable } from 'rxjs'
+import { Observable, Subscription } from 'rxjs'
 
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeUntil';
@@ -20,9 +20,13 @@ export class CanvasComponent implements AfterViewInit {
   @Input() public width = 400;
   @Input() public height = 400;
 
+
+
   imagen: string;
 
   private cx: CanvasRenderingContext2D;
+
+
 
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -41,6 +45,10 @@ export class CanvasComponent implements AfterViewInit {
   logCanvas(){
     this.imagen=this.canvas.nativeElement.toDataURL();
   }
+
+  onHideForm(){}
+
+  onSignar(){}
   
   private captureEvents(canvasEl: HTMLCanvasElement) {
     /**
