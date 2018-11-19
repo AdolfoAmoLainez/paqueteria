@@ -7,22 +7,28 @@ import { AppComponent } from './app.component';
 import { CanvasComponent } from './signature/canvas.component';
 import { ArribadesListComponent } from './arribades-list/arribades-list.component';
 import { PaquetComponent } from './paquet/paquet.component';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+
 import { PaquetsService } from './shared/paquets.service';
+
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { CollapseModule } from 'ngx-bootstrap';
+import { LoginComponent } from './auth/login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CanvasComponent,
     ArribadesListComponent,
-    PaquetComponent
+    PaquetComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     FontAwesomeModule,
     FormsModule,
     ReactiveFormsModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    CollapseModule.forRoot()
 
   ],
   providers: [PaquetsService],
