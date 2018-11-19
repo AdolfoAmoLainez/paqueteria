@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
-import { Paquet } from './paquet.model';
+import { Paquet } from '../shared/paquet.model';
 import { PaquetsService } from '../shared/paquets.service';
 import { Subscription } from 'rxjs';
 
@@ -48,6 +48,14 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   onEntregarPaquet(index: number) {
     this.signMode = true;
     this.editMode = false;
+    this.paquetsService.startedSignPaquet.next(this.paquets[index]);
+
+  }
+
+  onGenerarQr(index: number) {
+    this.signMode = true;
+    this.editMode = false;
+    this.paquets[index].qrcode=Math.floor(Math.random() * 1000) + 1  
     this.paquetsService.startedSignPaquet.next(this.paquets[index]);
 
   }

@@ -58,28 +58,43 @@
     </div>
   </div>
 </div>
-<div class="row justify-content-sm-center mb-3" >
-  <div class="col-md-5 text-center" [attr.hidden]="signMode && signaturaPaquet==''?null:''">
-    <form [formGroup]="paquetForm" class="mb-3" >
-      <div class="form-group">
-        <label for="dipositari">Dipositari</label>
-        <input type="text" formControlName="dipositari" name="dipositari" id="dipositari" class="form-control">
-      </div>
-    </form>
-    <canvas #canvas></canvas>
-    <button class="btn btn-primary" type="button" (click)="onSignar()" style="margin-left: 10px;">Signar</button>
-    <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancelar</button>
-  </div>
-  <div class="col-md-5 text-center" *ngIf="signaturaPaquet!=''">
-    <form [formGroup]="paquetForm" class="mb-3">
-      <fieldset disabled>
+
+<div [attr.hidden]="signMode && signaturaPaquet==''?null:''">
+  <div class="row">
+    <div class="col-md-6">
+      <form [formGroup]="paquetForm" class="mb-3">
         <div class="form-group">
           <label for="dipositari">Dipositari</label>
           <input type="text" formControlName="dipositari" name="dipositari" id="dipositari" class="form-control">
         </div>
-      </fieldset>
-    </form>
-    <img [src]="signaturaPaquet" />
-    <button class="btn btn-success" type="button" (click)="onHideForm()" style="margin-left: 10px;">Tancar</button>
+      </form>
+    </div>
   </div>
+  <div class="row">
+    <div class="col-md-6 text-center">
+      <canvas #canvas></canvas>
+    </div>
+    <div class="col-md-6" *ngIf="signMode && signaturaPaquet=='' && qrCodePaquet!=''">
+      <qrcode [qrdata]="qrCodePaquet" [size]="256" [level]="'M'"></qrcode>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 text-center">
+      <button class="btn btn-primary" type="button" (click)="onSignar()" style="margin-left: 10px;">Signar</button>
+      <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-6 text-center" *ngIf="signaturaPaquet!=''">
+  <form [formGroup]="paquetForm" class="mb-3">
+    <fieldset disabled>
+      <div class="form-group">
+        <label for="dipositari">Dipositari</label>
+        <input type="text" formControlName="dipositari" name="dipositari" id="dipositari" class="form-control">
+      </div>
+    </fieldset>
+  </form>
+  <img [src]="signaturaPaquet" />
+  <button class="btn btn-success" type="button" (click)="onHideForm()" style="margin-left: 10px;">Tancar</button>
 </div>

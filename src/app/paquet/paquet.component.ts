@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input, ElementRef, AfterViewInit, ViewChi
 import { FormGroup, FormControl } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { PaquetsService } from '../shared/paquets.service';
-import { Paquet } from '../arribades-list/paquet.model';
+import { Paquet } from '../shared/paquet.model';
 
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeUntil';
@@ -31,6 +31,8 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
   addMode: boolean = false;
   paquetEditingIndex: number;
   signaturaPaquet:string = '';
+  qrCodePaquet:string=''
+  signUrlServer = 'http://localhost:3000/signqr/';
 
   editSubscription: Subscription;
   signSubscription: Subscription;
@@ -112,6 +114,11 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
         this.formEditable = false;
         this.paquetEditingIndex = paquet.id;
         this.signaturaPaquet = paquet.signatura;
+        if (paquet.qrcode!=undefined && paquet.qrcode!=0){
+          this.qrCodePaquet = this.signUrlServer + paquet.id + "/" + paquet.qrcode 
+        }else{
+          this.qrCodePaquet ='';
+        }
 
       }
     );
@@ -161,7 +168,8 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
         this.paquetForm.get('departament').value,
         0,
         "",
-        ""));
+        "",
+        0));
     } else {
       this.paquetsService.addPaquet(new Paquet(
         this.paquetEditingIndex,
@@ -175,7 +183,8 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
         this.paquetForm.get('departament').value,
         0,
         "",
-        ""));
+        "",
+        0));
     }
   }
 

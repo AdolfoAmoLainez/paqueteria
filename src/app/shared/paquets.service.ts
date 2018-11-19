@@ -1,5 +1,5 @@
 import { Subject } from "rxjs";
-import { Paquet } from "../arribades-list/paquet.model";
+import { Paquet } from "./paquet.model";
 
 export class PaquetsService {
     paquets: Paquet[] = [
@@ -15,7 +15,8 @@ export class PaquetsService {
             "Slipi CC",
             0,
             "",
-            ""
+            "",
+            1245
         ),
         new Paquet(
             2,
@@ -29,7 +30,8 @@ export class PaquetsService {
             "Slipi CC",
             0,
             "",
-            ""
+            "",
+            0
         ),
     ]
 
@@ -70,5 +72,9 @@ export class PaquetsService {
         this.paquets[index]=paquet;
 
         this.changedPaquets.next(this.paquets.slice());
+    }
+
+    generaQrPaquet(){
+        
     }
 }
