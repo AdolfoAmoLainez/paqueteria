@@ -8,6 +8,8 @@ import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/pairwise';
 import 'rxjs/add/operator/switchMap';
+import { DatabaseService } from '../shared/database.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -30,14 +32,18 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
   editMode: boolean = false;
   addMode: boolean = false;
   paquetEditingIndex: number;
-  signaturaPaquet:string = '';
-  qrCodePaquet:string=''
-  signUrlServer = 'http://localhost:3000/signqr/';
+  paquetEditing: Paquet;
+  signaturaPaquet: string = 'empty';
+  qrCodePaquet: string = ''
+  signUrlServer = 'http://localhost:3000/paquetqr/';
+  paquetSignatCorrectament: boolean = false;
 
   editSubscription: Subscription;
   signSubscription: Subscription;
 
-  constructor(private paquetsService: PaquetsService) { }
+  constructor(private paquetsService: PaquetsService,
+    private databaseService: DatabaseService,
+    private route: ActivatedRoute) { }
 
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -59,6 +65,64 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
 
+    if (this.route.snapshot.params['id'] != undefined &&
+      this.route.snapshot.params['id'] != null &&
+      this.route.snapshot.params['qrcode'] != undefined &&
+      this.route.snapshot.params['qrcode'] != null) {
+      let paquet: Paquet;
+      this.databaseService.getPaquetQr(this.route.snapshot.params['id'], this.route.snapshot.params['qrcode'])
+        .subscribe(
+          (data: any) => {
+
+            if (data.length == 0) {
+              this.paquetSignatCorrectament = true;
+            } else {
+              for (let elem in data) {
+                paquet = new Paquet(
+                  data[elem].id,
+                  data[elem].data_arribada,
+                  data[elem].remitent,
+                  data[elem].procedencia,
+                  data[elem].quantitat,
+                  data[elem].mitja_arribada,
+                  data[elem].referencia,
+                  data[elem].destinatari,
+                  data[elem].departament,
+                  data[elem].data_lliutament,
+                  data[elem].dipositari,
+                  data[elem].signatura,
+                  0
+                )
+              }
+            }
+
+            this.formVisible = true;
+            this.editMode = false;
+            this.signMode = true;
+            this.formEditable = false;
+            this.paquetEditingIndex = paquet.id;
+            this.signaturaPaquet = paquet.signatura;
+
+            this.qrCodePaquet = '';
+
+            this.paquetEditing = paquet;
+            this.paquetForm.patchValue({
+              'data_arribada': new Date(paquet.data_arribada),
+              'remitent': paquet.remitent,
+              'procedencia': paquet.procedencia,
+              'quantitat': paquet.quantitat,
+              'mitja_arribada': paquet.mitja_arribada,
+              'referencia': paquet.referencia,
+              'destinatari': paquet.destinatari,
+              'departament': paquet.departament,
+              'dipositari': paquet.dipositari
+            });
+
+
+          }
+        );
+    }
+
     this.paquetForm = new FormGroup({
       'data_arribada': new FormControl(null),
       'remitent': new FormControl(null),
@@ -68,12 +132,13 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
       'referencia': new FormControl(null),
       'destinatari': new FormControl(null),
       'departament': new FormControl(null),
-      'dipositari' : new FormControl(null)
+      'dipositari': new FormControl(null)
     });
 
     this.editSubscription = this.paquetsService.startedEditPaquet.subscribe(
       (paquet: Paquet) => {
         //console.log(paquet);
+        this.paquetEditing = paquet;
         this.paquetForm.patchValue({
           'data_arribada': new Date(paquet.data_arribada),
           'remitent': paquet.remitent,
@@ -97,6 +162,7 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
       (paquet: Paquet) => {
         //console.log(paquet);
         this.onClear();
+        this.paquetEditing = paquet;
         this.paquetForm.patchValue({
           'data_arribada': new Date(paquet.data_arribada),
           'remitent': paquet.remitent,
@@ -106,7 +172,7 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
           'referencia': paquet.referencia,
           'destinatari': paquet.destinatari,
           'departament': paquet.departament,
-          'dipositari' : paquet.dipositari
+          'dipositari': paquet.dipositari
         });
         this.formVisible = true;
         this.editMode = false;
@@ -114,10 +180,10 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
         this.formEditable = false;
         this.paquetEditingIndex = paquet.id;
         this.signaturaPaquet = paquet.signatura;
-        if (paquet.qrcode!=undefined && paquet.qrcode!=0){
-          this.qrCodePaquet = this.signUrlServer + paquet.id + "/" + paquet.qrcode 
-        }else{
-          this.qrCodePaquet ='';
+        if (paquet.qrcode != undefined && paquet.qrcode != 0) {
+          this.qrCodePaquet = this.signUrlServer + paquet.id + "/" + paquet.qrcode
+        } else {
+          this.qrCodePaquet = '';
         }
 
       }
@@ -137,21 +203,23 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addMode = true;
     this.signMode = false;
     this.editMode = false;
-    this.signaturaPaquet='';
+    this.signaturaPaquet = 'empty';
     this.onClear();
   }
 
   onClear() {
     this.paquetForm.reset()
     this.editMode = false;
-    this.signaturaPaquet='';
+    this.signaturaPaquet = 'empty';
+    this.paquetEditingIndex = 0;
     this.cx.clearRect(0, 0, this.width, this.height);
   }
 
   onSignar() {
-    this.paquetsService.signaPaquet(this.paquetEditingIndex,
-      this.paquetForm.get('dipositari').value,
-      this.canvas.nativeElement.toDataURL());
+    this.paquetEditing.dipositari = this.paquetForm.get('dipositari').value;
+    this.paquetEditing.signatura = this.canvas.nativeElement.toDataURL();
+    this.databaseService.updatePaquet(this.paquetEditing);
+    window.location.reload();
   }
 
   onPaquetAction() {
@@ -168,10 +236,10 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
         this.paquetForm.get('departament').value,
         0,
         "",
-        "",
+        "empty",
         0));
     } else {
-      this.paquetsService.addPaquet(new Paquet(
+      this.databaseService.addPaquet(new Paquet(
         this.paquetEditingIndex,
         this.paquetForm.get('data_arribada').value,
         this.paquetForm.get('remitent').value,
@@ -183,7 +251,7 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
         this.paquetForm.get('departament').value,
         0,
         "",
-        "",
+        "empty",
         0));
     }
   }

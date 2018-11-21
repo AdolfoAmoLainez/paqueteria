@@ -5,6 +5,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { Paquet } from '../shared/paquet.model';
 import { PaquetsService } from '../shared/paquets.service';
 import { Subscription } from 'rxjs';
+import { DatabaseService } from '../shared/database.service';
 
 library.add(fas);
 
@@ -22,14 +23,15 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   paquets: Paquet[] = [];
 
-  constructor(private paquetsService: PaquetsService) { }
+  constructor(private paquetsService: PaquetsService,
+              private databaseService: DatabaseService) { }
 
   ngOnDestroy() {
     this.changePaquetsSubscription.unsubscribe();
   }
 
   ngOnInit() {
-    this.paquets = this.paquetsService.getPaquets();
+    this.databaseService.getPaquetsPerSignar();
 
     this.changePaquetsSubscription = this.paquetsService.changedPaquets.subscribe(
       (paquets: Paquet[]) => {
@@ -55,8 +57,9 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   onGenerarQr(index: number) {
     this.signMode = true;
     this.editMode = false;
-    this.paquets[index].qrcode=Math.floor(Math.random() * 1000) + 1  
-    this.paquetsService.startedSignPaquet.next(this.paquets[index]);
+    this.paquets[index].qrcode=Math.floor(Math.random() * 1000) + 1;
+    this.databaseService.updateSignedPaquet(this.paquets[index]);
+
 
   }
 

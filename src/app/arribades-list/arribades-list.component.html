@@ -1,24 +1,40 @@
-<ul class="list-group">
-  <li *ngFor="let paquet of paquets; let i = index" class="list-group-item">
-    <div class="row align-items-center">
-      <div class="col-sm-2">
-        {{paquet.data_arribada | date:"d/M/yyyy"}}
-      </div>
-      <div class="col-sm-4 ">
-        {{paquet.destinatari}}
-      </div>
-      <div class="col-sm-1 text-right">
-        <fa-icon icon="edit" class="fa-2x text-secondary" style="cursor: pointer;" (click)="onEditPaquet(i)"></fa-icon>
-      </div>
-      <div class="col-sm-1 text-right">
-        <fa-icon icon="trash-alt" class="fa-2x text-danger" style="cursor: pointer;"></fa-icon>
-      </div>
-      <div class="col-sm-1 text-right">
-        <fa-icon icon="hand-holding" class="fa-2x" style="cursor: pointer;" (click)="onEntregarPaquet(i)"></fa-icon>
-      </div>
-      <div class="col-sm-1 text-right">
-          <fa-icon icon="qrcode" class="fa-2x" style="cursor: pointer;" (click)="onGenerarQr(i)"></fa-icon>
+<div class="row">
+  <div class="col-sm-12">
+    <app-paquet></app-paquet>
+  </div>
+</div>
+<div class="row mt-3" *ngIf="paquets.length == 0">
+  <div class="col-sm-12 text-center">
+    <alert type="danger text-center">
+      <h2><strong>No hi ha paquets per signar!</strong></h2>
+    </alert>
+  </div>
+</div>
+<div class="row mt-3">
+  <div class="col-sm-12">
+    <ul class="list-group">
+      <li *ngFor="let paquet of paquets; let i = index" class="list-group-item">
+        <div class="row align-items-center">
+          <div class="col-sm-2">
+            {{paquet.data_arribada | date:"d/M/yyyy"}}
+          </div>
+          <div class="col-sm-4 ">
+            {{paquet.destinatari}}
+          </div>
+          <div class="col-sm-1 text-right">
+            <fa-icon icon="edit" class="fa-2x text-secondary" style="cursor: pointer;" (click)="onEditPaquet(i)"></fa-icon>
+          </div>
+          <div class="col-sm-1 text-right">
+            <fa-icon icon="trash-alt" class="fa-2x text-danger" style="cursor: pointer;"></fa-icon>
+          </div>
+          <div class="col-sm-1 text-right">
+            <fa-icon icon="hand-holding" class="fa-2x" style="cursor: pointer;" (click)="onEntregarPaquet(i)"></fa-icon>
+          </div>
+          <div class="col-sm-1 text-right">
+            <fa-icon icon="qrcode" class="fa-2x" style="cursor: pointer;" (click)="onGenerarQr(i)"></fa-icon>
+          </div>
         </div>
-    </div>
-  </li>
-</ul>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -10,10 +10,18 @@ import { PaquetComponent } from './paquet/paquet.component';
 import { LoginComponent } from './auth/login/login.component';
 
 import { PaquetsService } from './shared/paquets.service';
+import { DatabaseService } from './shared/database.service';
 
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CollapseModule } from 'ngx-bootstrap';
 import {QRCodeModule} from 'angularx-qrcode';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ErrorInterceptor } from './shared/httperror.interceptor';
+import { JwtInterceptor } from './shared/jwt.interceptor';
+import { AlertModule } from 'ngx-bootstrap/alert';
+import { AuthService } from './auth/auth.service';
+import { AppRoutingModule } from './app-routing.module';
+
 
 
 @NgModule({
@@ -31,10 +39,16 @@ import {QRCodeModule} from 'angularx-qrcode';
     ReactiveFormsModule,
     BsDatepickerModule.forRoot(),
     CollapseModule.forRoot(),
-    QRCodeModule
+    AlertModule.forRoot(),
+    QRCodeModule,
+    HttpClientModule,
+    AppRoutingModule
 
   ],
-  providers: [PaquetsService],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    PaquetsService,DatabaseService,AuthService,AppRoutingModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

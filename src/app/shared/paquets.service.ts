@@ -1,8 +1,11 @@
 import { Subject } from "rxjs";
 import { Paquet } from "./paquet.model";
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class PaquetsService {
-    paquets: Paquet[] = [
+    paquets: Paquet[] = [];
+    /*
         new Paquet(
             1,
             Date.now(),
@@ -33,21 +36,26 @@ export class PaquetsService {
             "",
             0
         ),
-    ]
+    ]*/
 
     startedEditPaquet = new Subject<Paquet>();
     startedSignPaquet = new Subject<Paquet>();
     changedPaquets = new Subject<Paquet[]>();
+
+    setPaquets(paquets: Paquet[]){
+        this.paquets = paquets;
+        this.changedPaquets.next(this.paquets.slice());
+    }
 
     getPaquets() {
         return this.paquets.slice();
     }
 
     addPaquet(paquet: Paquet) {
-        const maxId=Math.max.apply(Math, this.paquets.map(
+        /*const maxId=Math.max.apply(Math, this.paquets.map(
             function(paquet){ return paquet.id})
             )+1;
-        paquet.id=maxId;
+        paquet.id=maxId;*/
         this.paquets.push(paquet);
         this.changedPaquets.next(this.paquets.slice());
 
@@ -75,6 +83,6 @@ export class PaquetsService {
     }
 
     generaQrPaquet(){
-        
+
     }
 }

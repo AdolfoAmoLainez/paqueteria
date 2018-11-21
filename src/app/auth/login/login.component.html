@@ -1,13 +1,13 @@
 <div class="container login-container">
-  <div class="row">
+  <div class="row justify-content-center">
       <div class="col-md-6 login-form-1">
           <h2>PAQUETERIA</h2>
-          <form>
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
               <div class="form-group">
-                  <input type="text" class="form-control" placeholder="NIU*" value="" />
+                  <input type="text" formControlName="niu" class="form-control" placeholder="NIU*" value="" />
               </div>
               <div class="form-group">
-                  <input type="password" class="form-control" placeholder="Contrasenya*" value="" />
+                  <input type="password" formControlName = "passwd" class="form-control" placeholder="Contrasenya*" value="" />
               </div>
               <div class="form-group">
                   <input type="submit" class="btnSubmit" value="Entrar" />
