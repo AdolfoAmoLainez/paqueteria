@@ -224,7 +224,7 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onPaquetAction() {
     if (this.editMode) {
-      this.paquetsService.updatePaquet(new Paquet(
+      this.databaseService.updatePaquet(new Paquet(
         this.paquetEditingIndex,
         this.paquetForm.get('data_arribada').value,
         this.paquetForm.get('remitent').value,

@@ -20,24 +20,37 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   signMode: boolean = false;
 
   changePaquetsSubscription: Subscription;
+  changeTotalPaquetsSubscription: Subscription;
 
   paquets: Paquet[] = [];
+  totalPaquets:number;
+  vistaSeguent:string;
+  vistaActual:string;
 
   constructor(private paquetsService: PaquetsService,
               private databaseService: DatabaseService) { }
 
   ngOnDestroy() {
     this.changePaquetsSubscription.unsubscribe();
+    this.changeTotalPaquetsSubscription.unsubscribe();
   }
 
   ngOnInit() {
-    this.databaseService.getPaquetsPerSignar();
+    this.databaseService.getPaquetsPerSignar(1);
+    this.vistaSeguent="Signats";
+    this.vistaActual="per Signar";
 
     this.changePaquetsSubscription = this.paquetsService.changedPaquets.subscribe(
       (paquets: Paquet[]) => {
-        this.paquets = paquets
+        this.paquets = paquets;
       }
     );
+
+    this.changeTotalPaquetsSubscription = this.paquetsService.changedTotalPaquets.subscribe(
+      (total)=>{
+        this.totalPaquets = total;
+      }
+    )
   }
 
   onEditPaquet(index: number) {
@@ -61,6 +74,33 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.databaseService.updateSignedPaquet(this.paquets[index]);
 
 
+  }
+
+  pageChanged(event){
+    switch (this.vistaSeguent){
+      case "per Signar": 
+        this.databaseService.getPaquetsPerSignar(event.page);
+          break;
+      case "Signats":
+        this.databaseService.getPaquetsSignats(event.page);
+          break;
+    }
+  }
+
+  onSearch(valor:string){
+    console.log(valor)
+  }
+
+  onChangeView(){
+    if (this.vistaSeguent == "per Signar"){
+      this.databaseService.getPaquetsPerSignar(1);
+      this.vistaActual = this.vistaSeguent;
+      this.vistaSeguent="Signats";
+    }else{
+      this.databaseService.getPaquetsSignats(1);
+      this.vistaActual = this.vistaSeguent;
+      this.vistaSeguent="per Signar";
+    }
   }
 
 }

@@ -9,3 +9,11 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'app';
 }
+
+/**
+ * Historico ordenado por entrega descendente
+ * Correo electronico, mirar de enviar mail al dar de alta paquete
+ *    posibilidad de reenviament
+ * Busqueda por cualquier campo 
+ *    (destinatari, remitent, mitja, procedencia)
+ */

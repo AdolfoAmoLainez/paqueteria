@@ -14,11 +14,13 @@ import { DatabaseService } from './shared/database.service';
 
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CollapseModule } from 'ngx-bootstrap';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { AlertModule } from 'ngx-bootstrap/alert';
+
 import {QRCodeModule} from 'angularx-qrcode';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorInterceptor } from './shared/httperror.interceptor';
 import { JwtInterceptor } from './shared/jwt.interceptor';
-import { AlertModule } from 'ngx-bootstrap/alert';
 import { AuthService } from './auth/auth.service';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -40,6 +42,7 @@ import { AppRoutingModule } from './app-routing.module';
     BsDatepickerModule.forRoot(),
     CollapseModule.forRoot(),
     AlertModule.forRoot(),
+    PaginationModule.forRoot(),
     QRCodeModule,
     HttpClientModule,
     AppRoutingModule
