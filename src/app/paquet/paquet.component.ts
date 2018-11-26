@@ -157,7 +157,7 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
         this.signaturaPaquet = paquet.signatura;
       }
     );
-
+/*
     this.signSubscription = this.paquetsService.startedSignPaquet.subscribe(
       (paquet: Paquet) => {
         //console.log(paquet);
@@ -187,7 +187,7 @@ export class PaquetComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
       }
-    );
+    );*/
   }
 
   onShowForm() {

@@ -16,7 +16,7 @@ export class DatabaseService {
                                 "&_limit=3&_sort=data_arribada&_order=desc",
                                 { observe: 'response' }).subscribe(
                 (res) => {
-                    console.log(res);
+                    //console.log(res);
                     let link = res.headers.get('Link');
                     if (link) {
                         this.paquetsService.setPagination(link);
@@ -97,7 +97,7 @@ export class DatabaseService {
                                 { observe: 'response' }).subscribe(
                 (res) => {
 
-                    console.log(res);
+                    //console.log(res);
                     let link = res.headers.get('Link');
                     if (link) {
                         this.paquetsService.setPagination(link);
@@ -153,6 +153,10 @@ export class DatabaseService {
         return this.http.get(this.dataServerURL + "/paquets?id=" + index + "&qrcode=" + qrcode);
     }
 
+    getPaquet(index: number) {
+        return this.http.get(this.dataServerURL + "/paquets?id=" + index);
+    }
+
     updatePaquet(paquet: Paquet) {
         return (this.http.patch(this.dataServerURL + '/paquets/' + paquet.id, paquet).subscribe(
             (data) => {
@@ -167,7 +171,16 @@ export class DatabaseService {
         ));
     }
 
-    updateSignedPaquet(paquet: Paquet) {
+    
+    signaPaquet(paquet: Paquet) {
+        return (this.http.patch(this.dataServerURL + '/paquets/' + paquet.id, paquet)).subscribe(
+            (data) => {
+                this.paquetsService.paquetSignatCorrectament.next(paquet.id);
+            }
+        );
+    }
+
+    updateQrPaquet(paquet: Paquet) {
         return (this.http.patch(this.dataServerURL + '/paquets/' + paquet.id, paquet).subscribe(
             (data) => {
                 const paquet: Paquet = <Paquet>data;
@@ -176,7 +189,7 @@ export class DatabaseService {
                     'Luz modificada correctamente!',
                     'success'
                     );*/
-                this.paquetsService.startedSignPaquet.next(paquet);
+                this.paquetsService.startedSignPaquet.next(paquet.id);
             }
         ));
     }

@@ -48,10 +48,11 @@ export class PaquetsService {
     ]*/
 
     startedEditPaquet = new Subject<Paquet>();
-    startedSignPaquet = new Subject<Paquet>();
+    startedSignPaquet = new Subject<number>();
     changedPaquets = new Subject<Paquet[]>();
     changedPagination = new Subject<any>();
     changedTotalPaquets = new Subject<any>();
+    paquetSignatCorrectament = new Subject<number>();
 
 
 
@@ -91,6 +92,14 @@ export class PaquetsService {
 
     getPaquets() {
         return this.paquets.slice();
+    }
+
+    getPaquet(indexPaquet:number):Paquet{
+        const index = this.paquets.findIndex((element) => {
+            return element.id == indexPaquet;
+        });
+        //console.log(this.paquets);
+        return this.paquets[index];
     }
 
     addPaquet(paquet: Paquet) {

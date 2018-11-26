@@ -23,6 +23,9 @@ import { ErrorInterceptor } from './shared/httperror.interceptor';
 import { JwtInterceptor } from './shared/jwt.interceptor';
 import { AuthService } from './auth/auth.service';
 import { AppRoutingModule } from './app-routing.module';
+import { PaquetEditAddComponent } from './paquet/paquet-editadd/paquet-editadd.component';
+import { PaquetViewsignatComponent } from './paquet/paquet-viewsignat/paquet-viewsignat.component';
+import { PaquetSignarComponent } from './paquet/paquet-signar/paquet-signar.component';
 
 
 
@@ -32,7 +35,10 @@ import { AppRoutingModule } from './app-routing.module';
     CanvasComponent,
     ArribadesListComponent,
     PaquetComponent,
-    LoginComponent
+    LoginComponent,
+    PaquetEditAddComponent,
+    PaquetViewsignatComponent,
+    PaquetSignarComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +57,7 @@ import { AppRoutingModule } from './app-routing.module';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    PaquetsService,DatabaseService,AuthService,AppRoutingModule],
+    PaquetsService, DatabaseService,AuthService,AppRoutingModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

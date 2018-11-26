@@ -1,0 +1,68 @@
+<div *ngIf="formVisible">
+  <div *ngIf="!paquetSignatCorrectament">
+    <form [formGroup]="paquetForm" class="mb-3">
+      <fieldset disabled>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="data_arribada">Data Arribada</label>
+              <input bsDatepicker [bsConfig]="{ dateInputFormat: 'D/M/YYYY' }" type="text" formControlName="data_arribada"
+                name="data_arribada" id="data_arribada" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="remitent">Remitent</label>
+              <input type="text" formControlName="remitent" name="remitent" id="remitent" class="form-control">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="quantitat">Quantitat</label>
+              <input type="number" formControlName="quantitat" name="quantitat" id="quantitat" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="destinatari">Destinatari</label>
+              <input type="text" formControlName="destinatari" name="destinatari" id="destinatari" class="form-control">
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+    <div class="row" *ngIf="formVisible">
+      <div class="col-md-6">
+        <form [formGroup]="paquetForm" class="mb-3">
+          <div class="form-group">
+            <label for="dipositari">Dipositari</label>
+            <input type="text" formControlName="dipositari" name="dipositari" id="dipositari" class="form-control">
+          </div>
+        </form>
+      </div>
+    </div>
+    <div [attr.hidden]="formVisible?null:''">
+    <div class="row">
+      <div class="col-md-6 text-center">
+        <canvas #canvas></canvas>
+      </div>
+      <div class="col-md-6" *ngIf="qrCodePaquet!=''">
+        <qrcode [qrdata]="qrCodePaquet" [size]="256" [level]="'M'"></qrcode>
+      </div>
+    </div>
+  </div>
+    <div class="row" *ngIf="formVisible">
+      <div class="col-md-6 text-center">
+        <button class="btn btn-primary" type="button" (click)="onSignar()" style="margin-left: 10px;">Signar</button>
+        <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+<div class="row mt-3" *ngIf="paquetSignatCorrectament && formVisible">
+  <div class="col-sm-12 text-center">
+    <alert type="success text-center">
+      <h2><strong>El paquet s'ha signat correctament</strong></h2>
+    </alert>
+  </div>
+  <div class="col-sm-12 text-center">
+    <button class="btn btn-success" type="button" (click)="onHideForm()" style="margin-left: 10px;">Tancar</button>
+  </div>
+</div>
