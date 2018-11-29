@@ -26,6 +26,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { PaquetEditAddComponent } from './paquet/paquet-editadd/paquet-editadd.component';
 import { PaquetViewsignatComponent } from './paquet/paquet-viewsignat/paquet-viewsignat.component';
 import { PaquetSignarComponent } from './paquet/paquet-signar/paquet-signar.component';
+import { PaquetSignarmovilComponent } from './paquet/paquet-signarmovil/paquet-signarmovil.component';
 
 
 
@@ -38,7 +39,8 @@ import { PaquetSignarComponent } from './paquet/paquet-signar/paquet-signar.comp
     LoginComponent,
     PaquetEditAddComponent,
     PaquetViewsignatComponent,
-    PaquetSignarComponent
+    PaquetSignarComponent,
+    PaquetSignarmovilComponent
   ],
   imports: [
     BrowserModule,

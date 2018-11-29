@@ -11,13 +11,12 @@ export class DatabaseService {
     constructor(private http: HttpClient,
         private paquetsService: PaquetsService) { }
 
-    getPaquetsPerSignar(page: number) {
-        return this.http.get(this.dataServerURL + "/paquets?signatura=empty&_page=" + page +
-                                "&_limit=3&_sort=data_arribada&_order=desc",
+    getPaquetsPerSignar() {
+        return this.http.get(this.dataServerURL + "/paquets?signatura=empty&_sort=data_arribada&_order=desc",
                                 { observe: 'response' }).subscribe(
                 (res) => {
                     //console.log(res);
-                    let link = res.headers.get('Link');
+                    /*let link = res.headers.get('Link');
                     if (link) {
                         this.paquetsService.setPagination(link);
                     }
@@ -25,7 +24,7 @@ export class DatabaseService {
                     let totalCount = res.headers.get('X-Total-Count');
                     if (totalCount) {
                         this.paquetsService.setTotalPaquets(parseInt(totalCount));
-                    }
+                    }*/
                     //const lights: Light[] = <Light[]>data;
                     let paquets: Paquet[] = [];
 
@@ -40,7 +39,7 @@ export class DatabaseService {
                             res.body[elem].referencia,
                             res.body[elem].destinatari,
                             res.body[elem].departament,
-                            res.body[elem].data_lliutament,
+                            res.body[elem].data_lliurament,
                             res.body[elem].dipositari,
                             res.body[elem].signatura,
                             res.body[elem].qrcode
@@ -80,7 +79,7 @@ export class DatabaseService {
                             res.body[elem].referencia,
                             res.body[elem].destinatari,
                             res.body[elem].departament,
-                            res.body[elem].data_lliutament,
+                            res.body[elem].data_lliurament,
                             res.body[elem].dipositari,
                             res.body[elem].signatura,
                             res.body[elem].qrcode
@@ -91,14 +90,13 @@ export class DatabaseService {
             );
     }
 
-    getPaquetsSignats(page: number) {
-        return this.http.get(this.dataServerURL + "/paquets?signatura_like=^data&_page=" + page +
-                                "&_limit=3&_sort=data_arribada&_order=desc",
+    getPaquetsSignats() {
+        return this.http.get(this.dataServerURL + "/paquets?signatura_like=^data&_sort=data_arribada&_order=desc",
                                 { observe: 'response' }).subscribe(
                 (res) => {
 
                     //console.log(res);
-                    let link = res.headers.get('Link');
+                   /* let link = res.headers.get('Link');
                     if (link) {
                         this.paquetsService.setPagination(link);
                     }
@@ -106,7 +104,7 @@ export class DatabaseService {
                     let totalCount = res.headers.get('X-Total-Count');
                     if (totalCount) {
                         this.paquetsService.setTotalPaquets(parseInt(totalCount));
-                    }
+                    }*/
                     //const lights: Light[] = <Light[]>data;
                     let paquets: Paquet[] = [];
 
@@ -121,7 +119,7 @@ export class DatabaseService {
                             res.body[elem].referencia,
                             res.body[elem].destinatari,
                             res.body[elem].departament,
-                            res.body[elem].data_lliutament,
+                            res.body[elem].data_lliurament,
                             res.body[elem].dipositari,
                             res.body[elem].signatura,
                             res.body[elem].qrcode
@@ -173,6 +171,7 @@ export class DatabaseService {
 
     
     signaPaquet(paquet: Paquet) {
+        paquet.data_lliurament = Date.now();
         return (this.http.patch(this.dataServerURL + '/paquets/' + paquet.id, paquet)).subscribe(
             (data) => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);

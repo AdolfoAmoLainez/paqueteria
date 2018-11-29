@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
 import { PaquetsService } from 'src/app/shared/paquets.service';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-paquet-viewsignat',
@@ -28,7 +29,8 @@ export class PaquetViewsignatComponent implements OnInit {
       'destinatari': new FormControl(null),
       'departament': new FormControl(null),
       'dipositari': new FormControl(null),
-      'signatura': new FormControl(null)
+      'signatura': new FormControl(null),
+      'data_lliurament': new FormControl(null)
     });
 
     this.route.params.subscribe(
@@ -48,7 +50,9 @@ export class PaquetViewsignatComponent implements OnInit {
           'destinatari': paquetEditing.destinatari,
           'departament': paquetEditing.departament,
           'dipositari':paquetEditing.dipositari,
-          'signatura':paquetEditing.signatura
+          'signatura':paquetEditing.signatura,
+          'data_lliurament':paquetEditing.data_lliurament
+
         });
         this.formVisible=true;
       }

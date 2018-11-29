@@ -47,28 +47,16 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.databaseService.getPaquetsPerSignar(1);
+    this.databaseService.getPaquetsPerSignar();
     this.vistaSeguent="Signats";
     this.vistaActual="per Signar";
 
     this.changePaquetsSubscription = this.paquetsService.changedPaquets.subscribe(
       (paquets: Paquet[]) => {
         this.paquets = paquets;
-        console.log("changedPaquets");
-               
       }
     );
 
-    this.changeTotalPaquetsSubscription = this.paquetsService.changedTotalPaquets.subscribe(
-      (total)=>{
-        if (this.totalPaquets!=total && this.totalPaquets>0 && total>0){
-          this.paginaActual = 1; 
-          console.log("changedTotalPaquets " + total + " " + this.totalPaquets);
-        }
-        this.totalPaquets = total;
-
-      }
-    )
 
     this.signSubscription = this.paquetsService.startedSignPaquet.subscribe(
       (paquetId:number)=>{
@@ -120,20 +108,21 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   reloadLlista(){
     console.log("reloadLLista");
-    this.paginaActual=1;
-    switch (this.vistaSeguent){
+    //this.paginaActual=1;
+    switch (this.vistaActual){
       case "per Signar": 
-        this.databaseService.getPaquetsPerSignar(1);
+        this.databaseService.getPaquetsPerSignar();
         this.allowViewPaquet=false;
 
           break;
       case "Signats":
-        this.databaseService.getPaquetsSignats(1);
+        this.databaseService.getPaquetsSignats();
         this.allowViewPaquet=true;
           break;
     } 
   }
 
+  /*
   pageChanged(event){
     console.log(this.vistaSeguent + event.page);
     switch (this.vistaSeguent){
@@ -147,7 +136,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
         
           break;
     }
-  }
+  }*/
 
   onSearch(valor:string){
     console.log(valor)
@@ -155,12 +144,12 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   onChangeView(){
     if (this.vistaSeguent == "per Signar"){
-      this.databaseService.getPaquetsPerSignar(1);
+      this.databaseService.getPaquetsPerSignar();
       this.vistaActual = this.vistaSeguent;
       this.vistaSeguent="Signats";
       this.allowViewPaquet=false;
     }else{
-      this.databaseService.getPaquetsSignats(1);
+      this.databaseService.getPaquetsSignats();
       this.vistaActual = this.vistaSeguent;
       this.vistaSeguent="per Signar";
       this.allowViewPaquet=true;

@@ -41,17 +41,31 @@
     </div>
   </fieldset>
 </form>
-<div class="col-md-6 text-center" *ngIf="formVisible">
-  <form [formGroup]="paquetForm" class="mb-3">
-    <fieldset disabled>
-      <div class="form-group">
-        <label for="dipositari">Dipositari</label>
-        <input type="text" formControlName="dipositari" name="dipositari" id="dipositari" class="form-control">
-      </div>
-    </fieldset>
-    <img [src]="paquetForm.get('signatura').value"/>
-  </form>
 
-  <br>
-  <button class="btn btn-success" type="button" (click)="onHideForm()" style="margin-left: 10px;">Tancar</button>
+<div *ngIf="formVisible">
+  <form [formGroup]="paquetForm" class="mb-3">
+      <fieldset disabled>
+        <div class="row">
+          <div class="col-md-6 text-center">
+            <div class="form-group">
+              <label for="dipositari">Dipositari</label>
+              <input type="text" formControlName="dipositari" name="dipositari" id="dipositari" class="form-control">
+            </div>
+          </div>
+          <div class="col-md-6 text-center">
+            <div class="form-group">
+              <label for="dipositari">Data Lliurament</label>
+              <input type="text" formControlName="data_lliurament" 
+                      name="dipositari" id="dipositari" class="form-control"
+                      [value]="paquetForm.get('data_lliurament').value |  date:'d/M/yyyy H:mm'">
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <img [src]="paquetForm.get('signatura').value" />
+    </form>
+    
+    <br>
+    <button class="btn btn-success" type="button" (click)="onHideForm()" style="margin-left: 10px;">Tancar</button>
 </div>
+
