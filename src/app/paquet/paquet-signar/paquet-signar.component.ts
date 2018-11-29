@@ -7,7 +7,7 @@ import 'rxjs/add/operator/switchMap';
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PaquetsService } from 'src/app/shared/paquets.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Paquet } from 'src/app/shared/paquet.model';
 import { DatabaseService } from 'src/app/shared/database.service';
 
@@ -19,6 +19,7 @@ import { DatabaseService } from 'src/app/shared/database.service';
 export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('canvas') public canvas: ElementRef;
+  @ViewChild('canvasBlanc') public canvasBlanc: ElementRef;
   @Input() public width = 400;
   @Input() public height = 300;
   private cx: CanvasRenderingContext2D;
@@ -26,7 +27,7 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
   paquetForm: FormGroup;
   paquetEditing: Paquet;
   qrCodePaquet: string = ''//Variable que contindrà la url amb el codi QR
-  signUrlServer = 'http://localhost:3000/paquetqr/';
+  signUrlServer = 'http://localhost:3000/signarmovil/';
   paquetSignatCorrectament: boolean = false;
   formVisible:boolean = false;
 
@@ -39,10 +40,13 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
+    const canvasBlancEl: HTMLCanvasElement = this.canvasBlanc.nativeElement;
     this.cx = canvasEl.getContext('2d');
 
     canvasEl.width = this.width;
     canvasEl.height = this.height;
+    canvasBlancEl.width = this.width;
+    canvasBlancEl.height = this.height;
 
     this.cx.lineWidth = 3;
     this.cx.lineCap = 'round';
@@ -66,7 +70,7 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
       'referencia': new FormControl(null),
       'destinatari': new FormControl(null),
       'departament': new FormControl(null),
-      'dipositari': new FormControl(null)
+      'dipositari': new FormControl(null,Validators.required)
     });
 
     this.paquetSignatSubscription = this.paquetsService.paquetSignatCorrectament.subscribe(
@@ -106,8 +110,6 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
   
           this.formVisible=true;
         }
-
-
       }
     )
   }
@@ -121,8 +123,16 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.paquetEditing.dipositari = this.paquetForm.get('dipositari').value;
     this.paquetEditing.signatura = this.canvas.nativeElement.toDataURL();
     this.databaseService.signaPaquet(this.paquetEditing);
-    //window.location.reload();
     this.onHideForm();
+  }
+
+  //Tenim un canvas hidden amb les mateixes propietats
+  //Mirem si el contingut és igual, llavors no hi ha cap signatura dibuixada
+  senseSignar():boolean{
+    if(this.canvas.nativeElement.toDataURL() == this.canvasBlanc.nativeElement.toDataURL())
+      return true;
+    else 
+      return false;
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {

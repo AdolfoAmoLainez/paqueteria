@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PaquetsService } from 'src/app/shared/paquets.service';
 import { Paquet } from 'src/app/shared/paquet.model';
 import { DatabaseService } from 'src/app/shared/database.service';
@@ -27,15 +27,15 @@ export class PaquetEditAddComponent implements OnInit {
   ngOnInit() {
 
     this.paquetForm = new FormGroup({
-      'data_arribada': new FormControl(null),
-      'remitent': new FormControl(null),
+      'data_arribada': new FormControl(null,Validators.required),
+      'remitent': new FormControl(null,Validators.required),
       'procedencia': new FormControl(null),
-      'quantitat': new FormControl(null),
+      'quantitat': new FormControl(null,[Validators.required, Validators.min(1)]),
       'mitja_arribada': new FormControl(null),
       'referencia': new FormControl(null),
-      'destinatari': new FormControl(null),
-      'departament': new FormControl(null),
-      'dipositari': new FormControl(null)
+      'destinatari': new FormControl(null,Validators.required),
+      'departament': new FormControl(null,Validators.required)
+      //'dipositari': new FormControl(null,Validators.required)
     });
 
     //console.log(this.route.snapshot.params);

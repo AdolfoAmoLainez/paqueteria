@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
           <label for="quantitat">Quantitat</label>
-          <input type="number" formControlName="quantitat" name="quantitat" id="quantitat" class="form-control">
+          <input dir="rtl" type="number" formControlName="quantitat" name="quantitat" id="quantitat" class="form-control">
         </div>
         <div class="form-group">
           <label for="destinatari">Destinatari</label>
@@ -39,7 +39,10 @@
       </div>
     </div>
     <div class="col-md-5 justify-content-left ">
-      <button type="submit" class="btn btn-primary" (click)="onPaquetAction()">{{ editMode ? 'Modificar' : 'Añadir'}}</button>
+      <button type="submit" 
+              [disabled]="!paquetForm.valid"
+              [class]="!paquetForm.valid?'btn btn-warning':'btn btn-success'"
+              (click)="onPaquetAction()">{{ editMode ? 'Modificar' : 'Añadir'}}</button>
       <!--<button *ngIf="editMode" class="btn btn-danger" type="button" (click)="onDelete()">Delete</button>-->
       <button class="btn btn-primary" type="button" (click)="onClear()" style="margin-left: 10px;">Limpiar</button>
       <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancelar</button>

@@ -42,15 +42,19 @@
     <div class="row">
       <div class="col-md-6 text-center">
         <canvas #canvas></canvas>
+        <canvas #canvasBlanc hidden></canvas>
       </div>
       <div class="col-md-6" *ngIf="qrCodePaquet!=''">
-        <qrcode [qrdata]="qrCodePaquet" [size]="256" [level]="'M'"></qrcode>
+        <qrcode [qrdata]="qrCodePaquet" [size]="256" [level]="'M'" ></qrcode>
       </div>
     </div>
   </div>
     <div class="row" *ngIf="formVisible">
       <div class="col-md-6 text-center">
-        <button class="btn btn-primary" type="button" (click)="onSignar()" style="margin-left: 10px;">Signar</button>
+        <button type="button" 
+              [disabled]="!paquetForm.valid"
+              [class]="!paquetForm.valid || senseSignar()?'btn btn-warning':'btn btn-success'"
+              (click)="onSignar()" style="margin-left: 10px;">Signar</button>
         <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancelar</button>
       </div>
     </div>

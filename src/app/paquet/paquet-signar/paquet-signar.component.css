@@ -1,1 +1,4 @@
 canvas { border: 2px solid #000; }
+input.ng-invalid.ng-touched {
+    border: 1px solid red;
+}

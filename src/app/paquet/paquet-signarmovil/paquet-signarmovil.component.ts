@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit } from '
 import { DatabaseService } from 'src/app/shared/database.service';
 import { ActivatedRoute } from '@angular/router';
 import { Paquet } from 'src/app/shared/paquet.model';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeUntil';
@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
 
   @ViewChild('canvas') public canvas: ElementRef;
+  @ViewChild('canvasBlanc') public canvasBlanc: ElementRef; // per verificar senseSignar
   @Input() public width = 400;
   @Input() public height = 300;
 
@@ -32,10 +33,13 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
 
     public ngAfterViewInit() {
       const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
+      const canvasBlancEl: HTMLCanvasElement = this.canvasBlanc.nativeElement;
       this.cx = canvasEl.getContext('2d');
   
       canvasEl.width = this.width;
       canvasEl.height = this.height;
+      canvasBlancEl.width = this.width;
+      canvasBlancEl.height = this.height;
   
       this.cx.lineWidth = 3;
       this.cx.lineCap = 'round';
@@ -54,7 +58,7 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
       'referencia': new FormControl(null),
       'destinatari': new FormControl(null),
       'departament': new FormControl(null),
-      'dipositari': new FormControl(null)
+      'dipositari': new FormControl(null,Validators.required)
     });
     
 
@@ -116,7 +120,9 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
   }
 
   onClear() {
-    this.paquetForm.reset()
+    this.paquetForm.patchValue({
+      'dipositari': ''
+    })
 
     this.cx.clearRect(0, 0, this.width, this.height);
   }
@@ -125,6 +131,15 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
     this.paquetSignatCorrectament = false;
 
     this.onClear();
+  }
+
+    //Tenim un canvas hidden amb les mateixes propietats
+  //Mirem si el contingut és igual, llavors no hi ha cap signatura dibuixada
+  senseSignar():boolean{
+    if(this.canvas.nativeElement.toDataURL() == this.canvasBlanc.nativeElement.toDataURL())
+      return true;
+    else 
+      return false;
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
