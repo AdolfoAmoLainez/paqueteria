@@ -6,7 +6,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AppComponent } from './app.component';
 import { CanvasComponent } from './signature/canvas.component';
 import { ArribadesListComponent } from './arribades-list/arribades-list.component';
-import { PaquetComponent } from './paquet/paquet.component';
 import { LoginComponent } from './auth/login/login.component';
 
 import { PaquetsService } from './shared/paquets.service';
@@ -27,6 +26,7 @@ import { PaquetEditAddComponent } from './paquet/paquet-editadd/paquet-editadd.c
 import { PaquetViewsignatComponent } from './paquet/paquet-viewsignat/paquet-viewsignat.component';
 import { PaquetSignarComponent } from './paquet/paquet-signar/paquet-signar.component';
 import { PaquetSignarmovilComponent } from './paquet/paquet-signarmovil/paquet-signarmovil.component';
+import { AuthGuard } from './auth/auth-guard.service';
 
 
 
@@ -35,7 +35,6 @@ import { PaquetSignarmovilComponent } from './paquet/paquet-signarmovil/paquet-s
     AppComponent,
     CanvasComponent,
     ArribadesListComponent,
-    PaquetComponent,
     LoginComponent,
     PaquetEditAddComponent,
     PaquetViewsignatComponent,
@@ -59,7 +58,7 @@ import { PaquetSignarmovilComponent } from './paquet/paquet-signarmovil/paquet-s
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    PaquetsService, DatabaseService,AuthService,AppRoutingModule],
+    PaquetsService, DatabaseService,AuthService,AppRoutingModule,AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

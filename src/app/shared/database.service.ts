@@ -6,7 +6,7 @@ import { Injectable } from "@angular/core";
 @Injectable()
 export class DatabaseService {
 
-    dataServerURL: string = "http://localhost:3000";
+    dataServerURL: string = "http://bitacola.uab.cat:3000";
 
     constructor(private http: HttpClient,
         private paquetsService: PaquetsService) { }

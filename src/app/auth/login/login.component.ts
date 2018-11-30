@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService} from "../auth.service";
+import { Subscription } from 'rxjs';
+import { ErrorInterceptor } from 'src/app/shared/httperror.interceptor';
 
 @Component({
   selector: 'app-login',
@@ -11,12 +13,20 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService) { }
   loginForm: FormGroup;
+  loginErrorSubscription: Subscription;
+  errorMsg:string;
 
   ngOnInit() {
     this.loginForm = new FormGroup({
       "niu": new FormControl(null),
       "passwd": new FormControl(null)
-    })
+    });
+    this.loginErrorSubscription = this.authService.loginIncorrect.subscribe(
+      (error)=>{
+        this.errorMsg="Usuari o password incorrectes!";
+        console.log(this.errorMsg);
+      }
+    )
   }
 
   onLogin(){

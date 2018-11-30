@@ -7,6 +7,7 @@ import { PaquetsService } from '../shared/paquets.service';
 import { Subscription } from 'rxjs';
 import { DatabaseService } from '../shared/database.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../auth/auth.service';
 
 library.add(fas);
 
@@ -22,7 +23,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   allowViewPaquet: boolean = false; //Permet veure els botons de veure i editar
 
   changePaquetsSubscription: Subscription;
-  changeTotalPaquetsSubscription: Subscription;
+  //changeTotalPaquetsSubscription: Subscription;
   signSubscription: Subscription;
   paquetSignatSubscription: Subscription;
 
@@ -37,11 +38,12 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   constructor(private paquetsService: PaquetsService,
               private databaseService: DatabaseService,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private authService: AuthService) { }
 
   ngOnDestroy() {
     this.changePaquetsSubscription.unsubscribe();
-    this.changeTotalPaquetsSubscription.unsubscribe();
+    //this.changeTotalPaquetsSubscription.unsubscribe();
     this.signSubscription.unsubscribe();
     this.paquetSignatSubscription.unsubscribe();
   }
@@ -122,21 +124,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     } 
   }
 
-  /*
-  pageChanged(event){
-    console.log(this.vistaSeguent + event.page);
-    switch (this.vistaSeguent){
-      case "per Signar": 
-        this.databaseService.getPaquetsPerSignar(event.page);
-        this.allowViewPaquet=false;
-          break;
-      case "Signats":
-        this.databaseService.getPaquetsSignats(event.page);
-        this.allowViewPaquet=true;
-        
-          break;
-    }
-  }*/
+
 
   onSearch(valor:string){
     console.log(valor)
@@ -158,6 +146,10 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   onNouPaquet(){
     this.router.navigate(['add',0],{relativeTo: this.route});
+  }
+
+  onLogout(){
+    this.authService.logout();
   }
 
 }
