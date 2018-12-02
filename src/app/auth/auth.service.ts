@@ -2,20 +2,21 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Subject } from "rxjs";
+import { AppConstants } from "../app.params";
 
 @Injectable()
 export class AuthService {
     token: string;
     loginIncorrect = new Subject<any>();
+    appConstants = new AppConstants();
 
-    dataServerURL: string = "http://bitacola.uab.cat:3000/auth/login";
 
     constructor(private http: HttpClient,
         private router: Router) { }
 
     loginUser(username: string, password: string) {
 
-        return this.http.post<any>(this.dataServerURL, { username, password })
+        return this.http.post<any>(this.appConstants.loginURL, { username, password })
             .subscribe(
                 (data: any) => {
                     if (data && data.token) {

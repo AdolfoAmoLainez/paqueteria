@@ -5,6 +5,13 @@ import { PaquetsService } from 'src/app/shared/paquets.service';
 import { Paquet } from 'src/app/shared/paquet.model';
 import { DatabaseService } from 'src/app/shared/database.service';
 
+
+
+import { BsDatepickerConfig,BsLocaleService } from 'ngx-bootstrap/datepicker';
+
+
+
+
 @Component({
   selector: 'app-paquet-editadd',
   templateUrl: './paquet-editadd.component.html',
@@ -20,12 +27,16 @@ export class PaquetEditAddComponent implements OnInit {
   constructor(private route: ActivatedRoute,
     private router: Router,
     private paquetsService: PaquetsService,
-    private databaseService: DatabaseService) {
+    private databaseService: DatabaseService,
+    private localeService: BsLocaleService) {
+
+      this.localeService.use('es');
 
   }
 
   ngOnInit() {
 
+    //this.localeService.use('es');
     this.paquetForm = new FormGroup({
       'data_arribada': new FormControl(null,Validators.required),
       'remitent': new FormControl(null,Validators.required),
@@ -34,7 +45,8 @@ export class PaquetEditAddComponent implements OnInit {
       'mitja_arribada': new FormControl(null),
       'referencia': new FormControl(null),
       'destinatari': new FormControl(null,Validators.required),
-      'departament': new FormControl(null,Validators.required)
+      'departament': new FormControl(null,Validators.required),
+      'email': new FormControl(null,Validators.email)
       //'dipositari': new FormControl(null,Validators.required)
     });
 
@@ -59,14 +71,18 @@ export class PaquetEditAddComponent implements OnInit {
               'mitja_arribada': this.paquetEditing.mitja_arribada,
               'referencia': this.paquetEditing.referencia,
               'destinatari': this.paquetEditing.destinatari,
-              'departament': this.paquetEditing.departament
+              'departament': this.paquetEditing.departament,
+              'email': this.paquetEditing.email
             });
 
 
             break;
           case 'add':
             this.formVisible = true;
-            this.paquetForm.reset();
+            const ahora = new Date().toLocaleString();
+            this.paquetForm.reset({
+              'data_arribada': ahora
+            });
             break;
         }
 
@@ -101,7 +117,8 @@ export class PaquetEditAddComponent implements OnInit {
         0,
         "",
         "empty",
-        0));
+        0,
+        this.paquetForm.get('email').value));
     } else {
       this.databaseService.addPaquet(new Paquet(
         0,
@@ -116,7 +133,8 @@ export class PaquetEditAddComponent implements OnInit {
         0,
         "",
         "empty",
-        0));
+        0,
+        this.paquetForm.get('email').value));
     }
   }
 

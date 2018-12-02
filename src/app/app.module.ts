@@ -16,6 +16,8 @@ import { CollapseModule } from 'ngx-bootstrap';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { AlertModule } from 'ngx-bootstrap/alert';
 
+
+
 import {QRCodeModule} from 'angularx-qrcode';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorInterceptor } from './shared/httperror.interceptor';
@@ -28,6 +30,14 @@ import { PaquetSignarComponent } from './paquet/paquet-signar/paquet-signar.comp
 import { PaquetSignarmovilComponent } from './paquet/paquet-signarmovil/paquet-signarmovil.component';
 import { AuthGuard } from './auth/auth-guard.service';
 
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { esLocale } from 'ngx-bootstrap/locale';
+defineLocale('es', esLocale); 
+
+import { registerLocaleData} from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localeEs,'es');
 
 
 @NgModule({

@@ -2,17 +2,19 @@ import { HttpClient } from "@angular/common/http";
 import { Paquet } from "./paquet.model";
 import { PaquetsService } from "./paquets.service";
 import { Injectable } from "@angular/core";
+import { AppConstants } from "../app.params";
 
 @Injectable()
 export class DatabaseService {
 
-    dataServerURL: string = "http://bitacola.uab.cat:3000";
+    appConstants = new AppConstants();
+    //dataServerURL: string = "http://bitacola.uab.cat:3000";
 
     constructor(private http: HttpClient,
         private paquetsService: PaquetsService) { }
 
     getPaquetsPerSignar() {
-        return this.http.get(this.dataServerURL + "/paquets?signatura=empty&_sort=data_arribada&_order=desc",
+        return this.http.get(this.appConstants.dataServerURL + "/paquets?signatura=empty&_sort=data_arribada&_order=desc",
                                 { observe: 'response' }).subscribe(
                 (res) => {
                     //console.log(res);
@@ -42,7 +44,8 @@ export class DatabaseService {
                             res.body[elem].data_lliurament,
                             res.body[elem].dipositari,
                             res.body[elem].signatura,
-                            res.body[elem].qrcode
+                            res.body[elem].qrcode,
+                            res.body[elem].email
                         ))
                     }
                     this.paquetsService.setPaquets(paquets);
@@ -52,7 +55,7 @@ export class DatabaseService {
     }
 
     buscaPaquets(patro: string) {
-        return this.http.get(this.dataServerURL + "/paquets?destinatari_like=" + patro ,
+        return this.http.get(this.appConstants.dataServerURL + "/paquets?destinatari_like=" + patro ,
             { observe: 'response' }).subscribe(
                 (res) => {
 
@@ -82,7 +85,8 @@ export class DatabaseService {
                             res.body[elem].data_lliurament,
                             res.body[elem].dipositari,
                             res.body[elem].signatura,
-                            res.body[elem].qrcode
+                            res.body[elem].qrcode,
+                            res.body[elem].email
                         ))
                     }
                     this.paquetsService.setPaquets(paquets);
@@ -91,7 +95,7 @@ export class DatabaseService {
     }
 
     getPaquetsSignats() {
-        return this.http.get(this.dataServerURL + "/paquets?signatura_like=^data&_sort=data_arribada&_order=desc",
+        return this.http.get(this.appConstants.dataServerURL + "/paquets?signatura_like=^data&_sort=data_arribada&_order=desc",
                                 { observe: 'response' }).subscribe(
                 (res) => {
 
@@ -122,7 +126,8 @@ export class DatabaseService {
                             res.body[elem].data_lliurament,
                             res.body[elem].dipositari,
                             res.body[elem].signatura,
-                            res.body[elem].qrcode
+                            res.body[elem].qrcode,
+                            res.body[elem].email
                         ))
                     }
                     this.paquetsService.setPaquets(paquets);
@@ -135,7 +140,7 @@ export class DatabaseService {
 
     addPaquet(paquet: Paquet) {
         //console.log(paquet);
-        return this.http.post(this.dataServerURL + '/paquets', paquet).subscribe(
+        return this.http.post(this.appConstants.dataServerURL + '/paquets', paquet).subscribe(
             (data) => {
                 const paquet: Paquet = <Paquet>data;
                 this.paquetsService.addPaquet(paquet);
@@ -148,22 +153,18 @@ export class DatabaseService {
     }
 
     getPaquetQr(index: number, qrcode: number) {
-        return this.http.get(this.dataServerURL + "/paquets?id=" + index + "&qrcode=" + qrcode);
+        return this.http.get(this.appConstants.dataServerURL + "/paquets?id=" + index + "&qrcode=" + qrcode);
     }
 
     getPaquet(index: number) {
-        return this.http.get(this.dataServerURL + "/paquets?id=" + index);
+        return this.http.get(this.appConstants.dataServerURL + "/paquets?id=" + index);
     }
 
     updatePaquet(paquet: Paquet) {
-        return (this.http.patch(this.dataServerURL + '/paquets/' + paquet.id, paquet).subscribe(
+        return (this.http.patch(this.appConstants.dataServerURL + '/paquets/' + paquet.id, paquet).subscribe(
             (data) => {
                 const paquet: Paquet = <Paquet>data;
                 this.paquetsService.updatePaquet(paquet);
-                /*this.messagesService.sendMessage(
-                    'Luz modificada correctamente!',
-                    'success'
-                    );*/
 
             }
         ));
@@ -172,7 +173,7 @@ export class DatabaseService {
     
     signaPaquet(paquet: Paquet) {
         paquet.data_lliurament = Date.now();
-        return (this.http.patch(this.dataServerURL + '/paquets/' + paquet.id, paquet)).subscribe(
+        return (this.http.patch(this.appConstants.dataServerURL + '/paquets/' + paquet.id, paquet)).subscribe(
             (data) => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
             }
@@ -180,7 +181,7 @@ export class DatabaseService {
     }
 
     updateQrPaquet(paquet: Paquet) {
-        return (this.http.patch(this.dataServerURL + '/paquets/' + paquet.id, paquet).subscribe(
+        return (this.http.patch(this.appConstants.dataServerURL + '/paquets/' + paquet.id, paquet).subscribe(
             (data) => {
                 const paquet: Paquet = <Paquet>data;
                 this.paquetsService.updatePaquet(paquet);

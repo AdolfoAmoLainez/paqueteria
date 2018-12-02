@@ -109,7 +109,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   }
 
   reloadLlista(){
-    console.log("reloadLLista");
+    //console.log("reloadLLista");
     //this.paginaActual=1;
     switch (this.vistaActual){
       case "per Signar": 

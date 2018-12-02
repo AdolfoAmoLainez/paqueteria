@@ -58,8 +58,9 @@
               <div class="input-group-prepend">
                 <span class="input-group-text font-weight-bold" id="basic-addon1">Destinatari:</span>
               </div>
-              <input type="text" class="form-control" placeholder="destinatari" aria-label="destinatari"
-                aria-describedby="basic-addon1" [value]="paquet.destinatari" disabled>
+              <textarea class="form-control" aria-label="destinatari" 
+               cols="30" rows="2" disabled style="resize: none;">{{paquet.destinatari + '\n'+ paquet.email}}</textarea>
+
             </div>
             <div class="input-group mt-2">
                 <div class="input-group-prepend">

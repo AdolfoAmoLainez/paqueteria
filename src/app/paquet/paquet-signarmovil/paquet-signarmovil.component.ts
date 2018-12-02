@@ -88,7 +88,8 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
                 data[elem].data_lliutament,
                 data[elem].dipositari,
                 data[elem].signatura,
-                0
+                0,
+                data[elem].email
               )
             }
           }

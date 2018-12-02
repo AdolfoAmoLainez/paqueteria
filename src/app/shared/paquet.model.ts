@@ -12,6 +12,7 @@ export class Paquet {
     public dipositari: string;
     public signatura: string;
     public qrcode:number;
+    public email:string;
 
     constructor(
         id:number,
@@ -26,7 +27,8 @@ export class Paquet {
         data_lliurament: number,
         dipositari: string,
         signatura: string,
-        qrcode:number
+        qrcode:number,
+        email:string
     ){
         this.id=id;
         this.data_arribada = data_arribada;
@@ -41,6 +43,6 @@ export class Paquet {
         this.dipositari = dipositari;
         this.signatura = signatura;
         this.qrcode = qrcode;
-
+        this.email = email;
     }
 }
