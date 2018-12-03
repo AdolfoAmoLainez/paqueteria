@@ -18,10 +18,10 @@
   </div>
   <div class="col-sm-auto">
     <button class="btn btn-danger" type="button" (click)="onLogout()">
-        <fa-icon icon="power-off" class="text-white mr-2" style="cursor: pointer;"></fa-icon>Sortir
+      <fa-icon icon="power-off" class="text-white mr-2" style="cursor: pointer;"></fa-icon>Sortir
     </button>
-  </div>  
-<!--
+  </div>
+  <!--
   <div class="col-sm-3 text-right">
     <input type="text" class="form-control" name="seach" id="search" #searchInput>
   </div>
@@ -44,41 +44,40 @@
       <li *ngFor="let paquet of paquets; let i = index" class="list-group-item">
         <div class="row align-items-center">
           <div class="col-sm-2">
-              <div class="card">
-                <div class="card-header text-center font-weight-bold ">
-                  Arribada
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item text-center">{{paquet.data_arribada | date:"d/M/yyyy"}}</li>
-                </ul>
+            <div class="card">
+              <div class="card-header text-center font-weight-bold ">
+                Arribada
               </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item text-center">{{paquet.data_arribada | date:"d/M/yyyy"}}</li>
+              </ul>
+            </div>
           </div>
           <div class="col-sm-4 ">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text font-weight-bold" id="basic-addon1">Destinatari:</span>
               </div>
-              <textarea class="form-control" aria-label="destinatari" 
-               cols="30" rows="2" disabled style="resize: none;">{{paquet.destinatari + '\n'+ paquet.email}}</textarea>
+              <textarea class="form-control" aria-label="destinatari" cols="30" rows="2" disabled style="resize: none;">{{paquet.destinatari + '\n'+ paquet.email}}</textarea>
 
             </div>
             <div class="input-group mt-2">
-                <div class="input-group-prepend">
-                  <span class="input-group-text font-weight-bold" id="basic-addon1">Remitent:</span>
-                </div>
-                <input type="text" class="form-control" placeholder="remitent" aria-label="remitent"
-                  aria-describedby="basic-addon1" [value]="paquet.remitent" disabled>
+              <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold" id="basic-addon1">Remitent:</span>
               </div>
+              <input type="text" class="form-control" placeholder="remitent" aria-label="remitent" aria-describedby="basic-addon1"
+                [value]="paquet.remitent" disabled>
+            </div>
           </div>
           <div class="col-sm-3" *ngIf="paquet.data_lliurament!=''">
-              <div class="card">
-                  <div class="card-header text-center font-weight-bold">
-                    Lliurament
-                  </div>
-                  <ul class="list-group list-group-flush">
-                    <li class="list-group-item text-center">{{paquet.data_lliurament | date:"d/M/yyyy H:mm"}}</li>
-                  </ul>
-                </div>
+            <div class="card">
+              <div class="card-header text-center font-weight-bold">
+                Lliurament
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item text-center">{{paquet.data_lliurament | date:"d/M/yyyy H:mm"}}</li>
+              </ul>
+            </div>
           </div>
           <div class="col-sm-1 text-right" *ngIf="allowViewPaquet">
             <fa-icon icon="eye" class="fa-2x text-secondary" style="cursor: pointer;" (click)="onViewClick(paquet.id)"></fa-icon>
@@ -87,7 +86,7 @@
             <fa-icon icon="edit" class="fa-2x text-secondary" style="cursor: pointer;" (click)="onEditClick(paquet.id)"></fa-icon>
           </div>
           <div class="col-sm-1 text-right">
-            <fa-icon icon="trash-alt" class="fa-2x text-danger" style="cursor: pointer;"></fa-icon>
+            <fa-icon icon="trash-alt" class="fa-2x text-danger" style="cursor: pointer;" (click)="onDeleteClick(paquet.id,confirmDeletion)"></fa-icon>
           </div>
           <div class="col-sm-1 text-right" *ngIf="!allowViewPaquet">
             <fa-icon icon="hand-holding" class="fa-2x" style="cursor: pointer;" (click)="onEntregarPaquet(paquet.id)"></fa-icon>
@@ -95,8 +94,25 @@
           <div class="col-sm-1 text-right" *ngIf="!allowViewPaquet">
             <fa-icon icon="qrcode" class="fa-2x" style="cursor: pointer;" (click)="onGenerarQr(i)"></fa-icon>
           </div>
+          <div class="col-sm-1 text-right" *ngIf="!allowViewPaquet && paquet.email!=''">
+            <fa-icon icon="envelope" class="fa-2x" style="cursor: pointer;" (click)="onEnviarMail(paquet.id,confirmMailing)"></fa-icon>
+          </div>
         </div>
       </li>
     </ul>
   </div>
+  <ng-template #confirmDeletion>
+    <div class="modal-body text-center">
+      <p>{{deleteModalMsg}}</p>
+      <button type="button" class="btn btn-default" (click)="confirmDelete()">Sí</button>
+      <button type="button" class="btn btn-primary" (click)="declineDelete()" style="margin-left: 10px;">No</button>
+    </div>
+  </ng-template>
+  <ng-template #confirmMailing>
+    <div class="modal-body text-center">
+      <p>{{mailModalMsg}}</p>
+      <button type="button" class="btn btn-default" (click)="confirmMailSend()">Sí</button>
+      <button type="button" class="btn btn-primary" (click)="declineMailSend()" style="margin-left: 10px;">No</button>
+    </div>
+  </ng-template>
 </div>

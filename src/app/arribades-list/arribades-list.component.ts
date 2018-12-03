@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
@@ -8,6 +8,8 @@ import { Subscription } from 'rxjs';
 import { DatabaseService } from '../shared/database.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 library.add(fas);
 
@@ -35,11 +37,21 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   vistaSeguent:string;
   vistaActual:string;
 
+  deleteModalMsg: string ="Vols esborrar el paquet?";
+  deleteModalRef: BsModalRef;
+  deletePaquetIndex:number = 0;
+
+  mailModalMsg: string ="Vols reenviar l'avís del paquet per correu-e?";
+  mailModalRef: BsModalRef;
+  mailPaquetIndex:number = 0;
+
+
   constructor(private paquetsService: PaquetsService,
               private databaseService: DatabaseService,
               private router: Router,
               private route: ActivatedRoute,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private modalService: BsModalService,) { }
 
   ngOnDestroy() {
     this.changePaquetsSubscription.unsubscribe();
@@ -97,6 +109,39 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
     this.router.navigate(['view',index],{relativeTo: this.route});
 
+  }
+
+  onDeleteClick(index:number,template: TemplateRef<any>){
+    this.deleteModalRef = this.modalService.show(template, {class: 'modal-sm'});
+    this.deletePaquetIndex = index;
+  }
+
+  confirmDelete(): void {
+    this.databaseService.deletePaquet(this.deletePaquetIndex);
+    this.deleteModalRef.hide();
+    this.deletePaquetIndex=0;
+  }
+ 
+  declineDelete(): void {
+    this.deleteModalRef.hide();
+    this.deletePaquetIndex=0;
+  }
+
+  onEnviarMail(index:number,template: TemplateRef<any>){
+    this.mailModalRef = this.modalService.show(template, {class: 'modal-sm'});
+    this.mailPaquetIndex = index;
+  }
+
+  confirmMailSend(): void {
+    const paquet = this.paquetsService.getPaquet(this.mailPaquetIndex);
+    this.databaseService.enviaMail(paquet);
+    this.mailModalRef.hide();
+    this.mailPaquetIndex=0;
+  }
+ 
+  declineMailSend(): void {
+    this.mailModalRef.hide();
+    this.mailPaquetIndex=0;
   }
 
   onGenerarQr(index: number) {

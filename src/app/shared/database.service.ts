@@ -3,6 +3,7 @@ import { Paquet } from "./paquet.model";
 import { PaquetsService } from "./paquets.service";
 import { Injectable } from "@angular/core";
 import { AppConstants } from "../app.params";
+import { MessagesService } from "../messages/messages.service";
 
 @Injectable()
 export class DatabaseService {
@@ -11,7 +12,8 @@ export class DatabaseService {
     //dataServerURL: string = "http://bitacola.uab.cat:3000";
 
     constructor(private http: HttpClient,
-        private paquetsService: PaquetsService) { }
+        private paquetsService: PaquetsService,
+        private messagesService: MessagesService) { }
 
     getPaquetsPerSignar() {
         return this.http.get(this.appConstants.dataServerURL + "/paquets?signatura=empty&_sort=data_arribada&_order=desc",
@@ -144,10 +146,10 @@ export class DatabaseService {
             (data) => {
                 const paquet: Paquet = <Paquet>data;
                 this.paquetsService.addPaquet(paquet);
-                /*this.messagesService.sendMessage(
-                    'Luz añadida correctamente!',
+                this.messagesService.sendMessage(
+                    'Paquet afegit correctament!',
                     'success'
-                    );*/
+                    );
             }
         )
     }
@@ -165,7 +167,22 @@ export class DatabaseService {
             (data) => {
                 const paquet: Paquet = <Paquet>data;
                 this.paquetsService.updatePaquet(paquet);
+                this.messagesService.sendMessage(
+                    'Paquet modificat correctament!',
+                    'success'
+                    );
+            }
+        ));
+    }
 
+    deletePaquet(index: number) {
+        return (this.http.delete(this.appConstants.dataServerURL + '/paquets/' + index).subscribe(
+            (data) => {
+                this.paquetsService.deletePaquet(index);
+                this.messagesService.sendMessage(
+                    'Paquet esborrat correctament!',
+                    'success'
+                    );
             }
         ));
     }
@@ -176,6 +193,10 @@ export class DatabaseService {
         return (this.http.patch(this.appConstants.dataServerURL + '/paquets/' + paquet.id, paquet)).subscribe(
             (data) => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
+                this.messagesService.sendMessage(
+                    'Paquet signat correctament!',
+                    'success'
+                    );
             }
         );
     }
@@ -185,13 +206,31 @@ export class DatabaseService {
             (data) => {
                 const paquet: Paquet = <Paquet>data;
                 this.paquetsService.updatePaquet(paquet);
-                /*this.messagesService.sendMessage(
-                    'Luz modificada correctamente!',
+                this.messagesService.sendMessage(
+                    'Codi bidi generat correctament!',
                     'success'
-                    );*/
+                    );
                 this.paquetsService.startedSignPaquet.next(paquet.id);
             }
         ));
+    }
+
+    enviaMail(paquet: Paquet) {
+        return (this.http.post(this.appConstants.dataServerURL + '/enviaMail', paquet)).subscribe(
+            (data:any) => {
+                if(data.SendMail === 'ok'){
+                    this.messagesService.sendMessage(
+                        'Mail enviat correctament!',
+                        'success'
+                        );
+                }else{
+                    this.messagesService.sendMessage(
+                        "No s'ha pogut enviar el correu-e!",
+                        'danger'
+                        );
+                }
+            }
+        );
     }
 
 

@@ -12,7 +12,7 @@ import { PaquetsService } from './shared/paquets.service';
 import { DatabaseService } from './shared/database.service';
 
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { CollapseModule } from 'ngx-bootstrap';
+import { CollapseModule, ModalModule } from 'ngx-bootstrap';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { AlertModule } from 'ngx-bootstrap/alert';
 
@@ -36,6 +36,8 @@ defineLocale('es', esLocale);
 
 import { registerLocaleData} from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { MessagesComponent } from './messages/messages.component';
+import { MessagesService } from './messages/messages.service';
 
 registerLocaleData(localeEs,'es');
 
@@ -49,7 +51,8 @@ registerLocaleData(localeEs,'es');
     PaquetEditAddComponent,
     PaquetViewsignatComponent,
     PaquetSignarComponent,
-    PaquetSignarmovilComponent
+    PaquetSignarmovilComponent,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +62,7 @@ registerLocaleData(localeEs,'es');
     BsDatepickerModule.forRoot(),
     CollapseModule.forRoot(),
     AlertModule.forRoot(),
+    ModalModule.forRoot(),
     PaginationModule.forRoot(),
     QRCodeModule,
     HttpClientModule,
@@ -68,7 +72,7 @@ registerLocaleData(localeEs,'es');
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    PaquetsService, DatabaseService,AuthService,AppRoutingModule,AuthGuard],
+    PaquetsService, DatabaseService,AuthService,AppRoutingModule,AuthGuard,MessagesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

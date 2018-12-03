@@ -102,6 +102,15 @@ export class PaquetsService {
         return this.paquets[index];
     }
 
+    deletePaquet(indexPaquet:number){
+        const index = this.paquets.findIndex((element) => {
+            return element.id == indexPaquet;
+        });
+        //console.log(this.paquets);
+        this.paquets.splice(index,1);
+        this.changedPaquets.next(this.paquets.slice());
+    }
+
     addPaquet(paquet: Paquet) {
         /*const maxId=Math.max.apply(Math, this.paquets.map(
             function(paquet){ return paquet.id})
