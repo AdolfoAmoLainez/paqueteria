@@ -155,7 +155,7 @@ export class DatabaseService {
     }
 
     getPaquetQr(index: number, qrcode: number) {
-        return this.http.get(this.appConstants.dataServerURL + "/paquets?id=" + index + "&qrcode=" + qrcode);
+        return this.http.get(this.appConstants.dataServerURL + "/paquetqr?id=" + index + "&qrcode=" + qrcode);
     }
 
     getPaquet(index: number) {

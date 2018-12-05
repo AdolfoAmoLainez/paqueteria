@@ -10,6 +10,7 @@ import { PaquetsService } from 'src/app/shared/paquets.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Paquet } from 'src/app/shared/paquet.model';
 import { DatabaseService } from 'src/app/shared/database.service';
+import { AppConstants } from 'src/app/app.params';
 
 @Component({
   selector: 'app-paquet-signar',
@@ -18,16 +19,18 @@ import { DatabaseService } from 'src/app/shared/database.service';
 })
 export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  appConstants = new AppConstants();
+  
   @ViewChild('canvas') public canvas: ElementRef;
   @ViewChild('canvasBlanc') public canvasBlanc: ElementRef;
-  @Input() public width = 400;
+  @Input() public width = 300;
   @Input() public height = 300;
   private cx: CanvasRenderingContext2D;
 
   paquetForm: FormGroup;
   paquetEditing: Paquet;
   qrCodePaquet: string = ''//Variable que contindrà la url amb el codi QR
-  signUrlServer = 'http://localhost:3000/signarmovil/';
+
   paquetSignatCorrectament: boolean = false;
   formVisible:boolean = false;
 
@@ -92,7 +95,7 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
         }else{
           this.paquetSignatCorrectament=false;
           if (this.paquetEditing.qrcode != undefined && this.paquetEditing.qrcode != 0) {
-            this.qrCodePaquet = this.signUrlServer + this.paquetEditing.id + "/" + this.paquetEditing.qrcode
+            this.qrCodePaquet = this.appConstants.signUrlServer + this.paquetEditing.id + "/" + this.paquetEditing.qrcode
           } else {
             this.qrCodePaquet = '';
           }
