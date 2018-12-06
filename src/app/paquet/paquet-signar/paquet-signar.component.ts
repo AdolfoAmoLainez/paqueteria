@@ -129,6 +129,12 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onHideForm();
   }
 
+  onAnar(){
+    this.router.navigate(
+      ['signarmovil/'+this.paquetEditing.id+'/'+this.paquetEditing.qrcode]
+    );
+  }
+
   //Tenim un canvas hidden amb les mateixes propietats
   //Mirem si el contingut és igual, llavors no hi ha cap signatura dibuixada
   senseSignar():boolean{

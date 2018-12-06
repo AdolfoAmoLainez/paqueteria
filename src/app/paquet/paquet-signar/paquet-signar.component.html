@@ -55,6 +55,9 @@
               [disabled]="!paquetForm.valid"
               [class]="!paquetForm.valid || senseSignar()?'btn btn-warning':'btn btn-success'"
               (click)="onSignar()" style="margin-left: 10px;">Signar</button>
+        <button type="button" 
+              class="btn btn-success"
+              (click)="onAnar()" style="margin-left: 10px;">Anar</button>              
         <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancelar</button>
       </div>
     </div>

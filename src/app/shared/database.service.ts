@@ -16,7 +16,7 @@ export class DatabaseService {
         private messagesService: MessagesService) { }
 
     getPaquetsPerSignar() {
-        return this.http.get(this.appConstants.dataServerURL + "/paquets?signatura=empty&_sort=data_arribada&_order=desc",
+        return this.http.get(this.appConstants.dataServerURL + "/api/paquets?signatura=empty&_sort=data_arribada&_order=desc",
                                 { observe: 'response' }).subscribe(
                 (res) => {
                     //console.log(res);
@@ -57,7 +57,7 @@ export class DatabaseService {
     }
 
     buscaPaquets(patro: string) {
-        return this.http.get(this.appConstants.dataServerURL + "/paquets?destinatari_like=" + patro ,
+        return this.http.get(this.appConstants.dataServerURL + "/api/paquets?destinatari_like=" + patro ,
             { observe: 'response' }).subscribe(
                 (res) => {
 
@@ -97,7 +97,7 @@ export class DatabaseService {
     }
 
     getPaquetsSignats() {
-        return this.http.get(this.appConstants.dataServerURL + "/paquets?signatura_like=^data&_sort=data_arribada&_order=desc",
+        return this.http.get(this.appConstants.dataServerURL + "/api/paquets?signatura_like=^data&_sort=data_arribada&_order=desc",
                                 { observe: 'response' }).subscribe(
                 (res) => {
 
@@ -142,7 +142,7 @@ export class DatabaseService {
 
     addPaquet(paquet: Paquet) {
         //console.log(paquet);
-        return this.http.post(this.appConstants.dataServerURL + '/paquets', paquet).subscribe(
+        return this.http.post(this.appConstants.dataServerURL + '/api/paquets', paquet).subscribe(
             (data) => {
                 const paquet: Paquet = <Paquet>data;
                 this.paquetsService.addPaquet(paquet);
@@ -155,15 +155,15 @@ export class DatabaseService {
     }
 
     getPaquetQr(index: number, qrcode: number) {
-        return this.http.get(this.appConstants.dataServerURL + "/paquetqr?id=" + index + "&qrcode=" + qrcode);
+        return this.http.get(this.appConstants.dataServerURL + "/api/paquets?id=" + index + "&qrcode=" + qrcode);
     }
 
     getPaquet(index: number) {
-        return this.http.get(this.appConstants.dataServerURL + "/paquets?id=" + index);
+        return this.http.get(this.appConstants.dataServerURL + "/api/paquets?id=" + index);
     }
 
     updatePaquet(paquet: Paquet) {
-        return (this.http.patch(this.appConstants.dataServerURL + '/paquets/' + paquet.id, paquet).subscribe(
+        return (this.http.patch(this.appConstants.dataServerURL + '/api/paquets/' + paquet.id, paquet).subscribe(
             (data) => {
                 const paquet: Paquet = <Paquet>data;
                 this.paquetsService.updatePaquet(paquet);
@@ -176,7 +176,7 @@ export class DatabaseService {
     }
 
     deletePaquet(index: number) {
-        return (this.http.delete(this.appConstants.dataServerURL + '/paquets/' + index).subscribe(
+        return (this.http.delete(this.appConstants.dataServerURL + '/api/paquets/' + index).subscribe(
             (data) => {
                 this.paquetsService.deletePaquet(index);
                 this.messagesService.sendMessage(
@@ -190,7 +190,7 @@ export class DatabaseService {
     
     signaPaquet(paquet: Paquet) {
         paquet.data_lliurament = Date.now();
-        return (this.http.patch(this.appConstants.dataServerURL + '/paquets/' + paquet.id, paquet)).subscribe(
+        return (this.http.patch(this.appConstants.dataServerURL + '/api/paquets/' + paquet.id, paquet)).subscribe(
             (data) => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
                 this.messagesService.sendMessage(
@@ -202,7 +202,7 @@ export class DatabaseService {
     }
 
     updateQrPaquet(paquet: Paquet) {
-        return (this.http.patch(this.appConstants.dataServerURL + '/paquets/' + paquet.id, paquet).subscribe(
+        return (this.http.patch(this.appConstants.dataServerURL + '/api/paquets/' + paquet.id, paquet).subscribe(
             (data) => {
                 const paquet: Paquet = <Paquet>data;
                 this.paquetsService.updatePaquet(paquet);
@@ -216,7 +216,7 @@ export class DatabaseService {
     }
 
     enviaMail(paquet: Paquet) {
-        return (this.http.post(this.appConstants.dataServerURL + '/enviaMail', paquet)).subscribe(
+        return (this.http.post(this.appConstants.dataServerURL + '/api/enviaMail', paquet)).subscribe(
             (data:any) => {
                 if(data.SendMail === 'ok'){
                     this.messagesService.sendMessage(

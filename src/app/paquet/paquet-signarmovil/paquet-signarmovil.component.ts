@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit } from '@angular/core';
 import { DatabaseService } from 'src/app/shared/database.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Paquet } from 'src/app/shared/paquet.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -27,9 +27,11 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
   paquetSignatCorrectament: boolean = false;
   paquetForm: FormGroup;
   paquetEditing: Paquet;
+  formVisible:boolean = true;
 
   constructor( private databaseService: DatabaseService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private router: Router) { }
 
     public ngAfterViewInit() {
       const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -70,7 +72,7 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
     this.databaseService.getPaquetQr(this.route.snapshot.params['id'], this.route.snapshot.params['qrcode'])
       .subscribe(
         (data: any) => {
-
+          console.log(data);
           if (data.length == 0) {
             this.paquetSignatCorrectament = true;
           } else {
@@ -116,7 +118,7 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
   onSignar() {
     this.paquetEditing.dipositari = this.paquetForm.get('dipositari').value;
     this.paquetEditing.signatura = this.canvas.nativeElement.toDataURL();
-    this.databaseService.updatePaquet(this.paquetEditing);
+    this.databaseService.signaPaquet(this.paquetEditing);
     window.location.reload();
   }
 
@@ -130,8 +132,9 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
 
   onHideForm() {
     this.paquetSignatCorrectament = false;
-
+    this.formVisible=false;
     this.onClear();
+    this.router.navigate(['llista']);
   }
 
     //Tenim un canvas hidden amb les mateixes propietats

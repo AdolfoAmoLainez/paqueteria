@@ -1,4 +1,4 @@
-<div *ngIf="!paquetSignatCorrectament">
+<div *ngIf="!paquetSignatCorrectament && formVisible">
   <form [formGroup]="paquetForm" class="mb-3">
     <fieldset disabled>
       <div class="row">
@@ -27,7 +27,7 @@
     </fieldset>
   </form>
 </div>
-<div class="row" *ngIf="!paquetSignatCorrectament">
+<div class="row" *ngIf="!paquetSignatCorrectament && formVisible">
   <div class="col-md-6">
     <form [formGroup]="paquetForm" class="mb-3">
       <div class="form-group">
@@ -37,14 +37,14 @@
     </form>
   </div>
 </div>
-<div [attr.hidden]="!paquetSignatCorrectament?null:''">
+<div [attr.hidden]="!paquetSignatCorrectament && formVisible?null:''">
   <div class="row">
     <div class="col-md-6 text-center">
       <canvas #canvas></canvas>
       <canvas #canvasBlanc hidden></canvas>
     </div>
   </div>
-  <div class="row" *ngIf="!paquetSignatCorrectament">
+  <div class="row" *ngIf="!paquetSignatCorrectament && formVisible">
     <div class="col-md-6 text-center">
       <button 
       [disabled]="!paquetForm.valid"
@@ -55,7 +55,7 @@
   </div>
 </div>
 
-<div class="row mt-3" *ngIf="paquetSignatCorrectament">
+<div class="row mt-3" *ngIf="paquetSignatCorrectament && formVisible">
   <div class="col-sm-12 text-center">
     <alert type="success text-center">
       <h2><strong>El paquet s'ha signat correctament</strong></h2>
