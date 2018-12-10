@@ -1,6 +1,6 @@
 export class Paquet {
     public id: number;
-    public data_arribada: number;
+    public data_arribada: string;
     public remitent: string;
     public procedencia: string;
     public quantitat: number;
@@ -8,7 +8,7 @@ export class Paquet {
     public referencia: string;
     public destinatari: string;
     public departament: string;
-    public data_lliurament: number;
+    public data_lliurament: string;
     public dipositari: string;
     public signatura: string;
     public qrcode:number;
@@ -16,7 +16,7 @@ export class Paquet {
 
     constructor(
         id:number,
-        data_arribada: number,
+        data_arribada: string,
         remitent: string,
         procedencia: string,
         quantitat: number,
@@ -24,7 +24,7 @@ export class Paquet {
         referencia: string,
         destinatari: string,
         departament: string,
-        data_lliurament: number,
+        data_lliurament: string,
         dipositari: string,
         signatura: string,
         qrcode:number,

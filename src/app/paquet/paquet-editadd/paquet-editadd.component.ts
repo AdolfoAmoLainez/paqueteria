@@ -7,7 +7,7 @@ import { DatabaseService } from 'src/app/shared/database.service';
 
 
 
-import { BsDatepickerConfig,BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 
 
 
@@ -114,15 +114,18 @@ export class PaquetEditAddComponent implements OnInit {
         this.paquetForm.get('referencia').value,
         this.paquetForm.get('destinatari').value,
         this.paquetForm.get('departament').value,
-        0,
+        "",
         "",
         "empty",
         0,
         this.paquetForm.get('email').value));
     } else {
+
+      let data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
+
       this.databaseService.addPaquet(new Paquet(
         0,
-        this.paquetForm.get('data_arribada').value,
+        data,
         this.paquetForm.get('remitent').value,
         this.paquetForm.get('procedencia').value,
         this.paquetForm.get('quantitat').value,
@@ -130,7 +133,7 @@ export class PaquetEditAddComponent implements OnInit {
         this.paquetForm.get('referencia').value,
         this.paquetForm.get('destinatari').value,
         this.paquetForm.get('departament').value,
-        0,
+        "",
         "",
         "empty",
         0,

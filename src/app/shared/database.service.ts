@@ -189,7 +189,7 @@ export class DatabaseService {
 
     
     signaPaquet(paquet: Paquet) {
-        paquet.data_lliurament = Date.now();
+        paquet.data_lliurament = Date.now().toString();
         return (this.http.patch(this.appConstants.dataServerURL + '/api/paquets/' + paquet.id, paquet)).subscribe(
             (data) => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
@@ -216,7 +216,7 @@ export class DatabaseService {
     }
 
     enviaMail(paquet: Paquet) {
-        return (this.http.post(this.appConstants.dataServerURL + '/api/enviaMail', paquet)).subscribe(
+        return (this.http.post(this.appConstants.dataServerURL + '/enviaMail', paquet)).subscribe(
             (data:any) => {
                 if(data.SendMail === 'ok'){
                     this.messagesService.sendMessage(
