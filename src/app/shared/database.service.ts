@@ -9,7 +9,6 @@ import { MessagesService } from "../messages/messages.service";
 export class DatabaseService {
 
     appConstants = new AppConstants();
-    //dataServerURL: string = "http://bitacola.uab.cat:3000";
 
     constructor(private http: HttpClient,
         private paquetsService: PaquetsService,
@@ -19,17 +18,7 @@ export class DatabaseService {
         return this.http.get(this.appConstants.dataServerURL + "/api/paquets?signatura=empty&_sort=data_arribada&_order=desc",
                                 { observe: 'response' }).subscribe(
                 (res) => {
-                    //console.log(res);
-                    /*let link = res.headers.get('Link');
-                    if (link) {
-                        this.paquetsService.setPagination(link);
-                    }
 
-                    let totalCount = res.headers.get('X-Total-Count');
-                    if (totalCount) {
-                        this.paquetsService.setTotalPaquets(parseInt(totalCount));
-                    }*/
-                    //const lights: Light[] = <Light[]>data;
                     let paquets: Paquet[] = [];
 
                     for (let elem in res.body) {
@@ -70,7 +59,7 @@ export class DatabaseService {
                     if (totalCount) {
                         this.paquetsService.setTotalPaquets(parseInt(totalCount));
                     }
-                    //const lights: Light[] = <Light[]>data;
+
                     let paquets: Paquet[] = [];
 
                     for (let elem in res.body) {
@@ -101,17 +90,6 @@ export class DatabaseService {
                                 { observe: 'response' }).subscribe(
                 (res) => {
 
-                    //console.log(res);
-                   /* let link = res.headers.get('Link');
-                    if (link) {
-                        this.paquetsService.setPagination(link);
-                    }
-
-                    let totalCount = res.headers.get('X-Total-Count');
-                    if (totalCount) {
-                        this.paquetsService.setTotalPaquets(parseInt(totalCount));
-                    }*/
-                    //const lights: Light[] = <Light[]>data;
                     let paquets: Paquet[] = [];
 
                     for (let elem in res.body) {
