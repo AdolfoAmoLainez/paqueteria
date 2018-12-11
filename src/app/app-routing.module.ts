@@ -7,6 +7,7 @@ import { PaquetViewsignatComponent } from "./paquet/paquet-viewsignat/paquet-vie
 import { PaquetSignarComponent } from "./paquet/paquet-signar/paquet-signar.component";
 import { PaquetSignarmovilComponent } from "./paquet/paquet-signarmovil/paquet-signarmovil.component";
 import { AuthGuard } from "./auth/auth-guard.service";
+import { ErrorPageComponent } from "./shared/error-page/error-page.component";
 
 const appRoutes: Routes = [
     {path:"", component:LoginComponent},
@@ -16,9 +17,9 @@ const appRoutes: Routes = [
       {path:"entrega/:id",component:PaquetSignarComponent},
       {path:"view/:id",component:PaquetViewsignatComponent},
       {path:":mode/:id",component:PaquetEditAddComponent}
-
       ],canActivate:[AuthGuard]
-    }
+    },
+    {path:"http-error/:error",component: ErrorPageComponent}
 
 ]
 

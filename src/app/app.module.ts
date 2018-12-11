@@ -38,6 +38,7 @@ import { registerLocaleData} from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { MessagesComponent } from './messages/messages.component';
 import { MessagesService } from './messages/messages.service';
+import { ErrorPageComponent } from './shared/error-page/error-page.component';
 
 registerLocaleData(localeEs,'es');
 
@@ -52,7 +53,8 @@ registerLocaleData(localeEs,'es');
     PaquetViewsignatComponent,
     PaquetSignarComponent,
     PaquetSignarmovilComponent,
-    MessagesComponent
+    MessagesComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,
