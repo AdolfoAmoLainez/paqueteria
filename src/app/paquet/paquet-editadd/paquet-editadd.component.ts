@@ -123,7 +123,6 @@ export class PaquetEditAddComponent implements OnInit {
         this.paquetForm.get('email').value));
         console.log(this.paquetForm.get('data_arribada').value);
     } else {
-
       
       /*let data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();*/
       
