@@ -28,7 +28,7 @@
       </fieldset>
     </form>
   </div>
-    <div class="row" *ngIf="formVisible">
+    <div class="row justify-content-center" *ngIf="formVisible">
       <div class="col-md-6">
         <form [formGroup]="paquetForm" class="mb-3">
           <div class="form-group">
@@ -39,7 +39,7 @@
       </div>
     </div>
     <div [attr.hidden]="formVisible?null:''">
-    <div class="row">
+    <div class="row justify-content-center">
       <div class="col-md-6 text-center">
         <canvas #canvas></canvas>
         <canvas #canvasBlanc hidden></canvas>
@@ -53,7 +53,7 @@
       </div>
     </div>
   </div>
-    <div class="row" *ngIf="formVisible">
+    <div class="row justify-content-center" *ngIf="formVisible">
       <div class="col-md-6 text-center">
         <button type="button" 
               [disabled]="!paquetForm.valid"

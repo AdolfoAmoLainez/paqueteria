@@ -5,33 +5,35 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <div class="form-group">
         <label for="data_arribada">Data Arribada</label>
         <input bsDatepicker [bsConfig]="{ dateInputFormat: 'D/M/YYYY H:mm' }" type="text" formControlName="data_arribada"
-          name="data_arribada" id="data_arribada" class="form-control">
-      </div>
-      <div class="form-group">
-        <label for="remitent">Remitent</label>
-        <input type="text" formControlName="remitent" name="remitent" id="remitent" class="form-control">
-      </div>
-      <div class="form-group">
-        <label for="referencia">Referencia</label>
-        <input type="text" formControlName="referencia" name="referencia" id="referencia" class="form-control">
-      </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="form-group">
-        <label for="procedencia">Procedència</label>
-        <input type="text" formControlName="procedencia" name="procedencia" id="procedencia" class="form-control">
+          name="data_arribada" id="data_arribada" class="form-control" tabindex="1">
       </div>
       <div class="form-group">
         <label for="mitja_arribada">Mitjà d'Arribada</label>
-        <input type="text" formControlName="mitja_arribada" name="mitja_arribada" id="mitja_arribada" class="form-control">
+        <input type="text" formControlName="mitja_arribada" name="mitja_arribada" id="mitja_arribada" class="form-control" tabindex="4">
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label for="procedencia">Procedència</label>
+        <input type="text" formControlName="procedencia" name="procedencia" id="procedencia" class="form-control" tabindex="2">
+      </div>
+      <div class="form-group">
+        <label for="referencia">Referencia</label>
+        <input type="text" formControlName="referencia" name="referencia" id="referencia" class="form-control" tabindex="5">
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label for="remitent">Remitent</label>
+        <input type="text" formControlName="remitent" name="remitent" id="remitent" class="form-control" tabindex="3">
       </div>
       <div class="form-group">
         <label for="quantitat">Quantitat</label>
-        <input dir="rtl" type="number" formControlName="quantitat" name="quantitat" id="quantitat" class="form-control">
+        <input dir="rtl" type="number" formControlName="quantitat" name="quantitat" id="quantitat" class="form-control" tabindex="6">
       </div>
     </div>
   </div>
@@ -41,17 +43,19 @@
       </div>
     </div>
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <div class="form-group">
         <label for="destinatari">Destinatari</label>
         <input type="text" formControlName="destinatari" name="destinatari" id="destinatari" class="form-control">
       </div>
+    </div>
+    <div class="col-sm-4">
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" formControlName="email" name="email" id="email" class="form-control">
       </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-4">
       <div class="form-group">
         <label for="departament">Centre/Departament</label>
         <input type="text" formControlName="departament" name="departament" id="departament" class="form-control">

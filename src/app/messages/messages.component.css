@@ -1,0 +1,22 @@
+.toast-message {
+    padding: 0.5rem 2rem;
+    /* -webkit-animation: fadeinout 5s linear forwards;
+    animation: fadeinout 5s linear forwards; */
+    /* visibility: hidden; */
+    visibility: visible;
+  }
+  
+  @-webkit-keyframes fadeinout {
+    10%,
+    90% {
+      visibility: visible;
+    }
+  }
+  
+  @keyframes fadeinout {
+    10%,
+    90% {
+      visibility: visible;
+    }
+  }
+  

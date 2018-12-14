@@ -64,7 +64,7 @@ export class PaquetEditAddComponent implements OnInit {
             this.editMode = true;
 
             this.paquetForm.patchValue({
-              'data_arribada': new Date(this.paquetEditing.data_arribada),
+              'data_arribada': this.paquetEditing.data_arribada,
               'remitent': this.paquetEditing.remitent,
               'procedencia': this.paquetEditing.procedencia,
               'quantitat': this.paquetEditing.quantitat,
@@ -79,7 +79,8 @@ export class PaquetEditAddComponent implements OnInit {
             break;
           case 'add':
             this.formVisible = true;
-            const ahora = new Date().toLocaleString();
+            const ahora = new Date().toLocaleString('es-ES');
+            
             this.paquetForm.reset({
               'data_arribada': ahora
             });
@@ -104,9 +105,10 @@ export class PaquetEditAddComponent implements OnInit {
 
   onPaquetAction() {
     if (this.editMode) {
+      let data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString('es-ES');
       this.databaseService.updatePaquet(new Paquet(
         this.paquetEditing.id,
-        this.paquetForm.get('data_arribada').value,
+        data,
         this.paquetForm.get('remitent').value,
         this.paquetForm.get('procedencia').value,
         this.paquetForm.get('quantitat').value,
@@ -119,13 +121,15 @@ export class PaquetEditAddComponent implements OnInit {
         "empty",
         0,
         this.paquetForm.get('email').value));
+        console.log(this.paquetForm.get('data_arribada').value);
     } else {
 
-      let data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
-
+      
+      /*let data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();*/
+      
       this.databaseService.addPaquet(new Paquet(
         0,
-        data,
+        this.paquetForm.get('data_arribada').value,
         this.paquetForm.get('remitent').value,
         this.paquetForm.get('procedencia').value,
         this.paquetForm.get('quantitat').value,
