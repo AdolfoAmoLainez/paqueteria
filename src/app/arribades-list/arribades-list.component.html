@@ -56,7 +56,7 @@
               </ul>
             </div>
           </div>
-          <div class="col-sm-4 " style="margin:10px 0px 0px 0px;">
+          <div class="col-sm-4" style="margin:10px 0px 0px 0px;">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text font-weight-bold" id="basic-addon1">Destinatari:</span>
@@ -86,7 +86,8 @@
             <fa-icon icon="eye" class="fa-2x text-secondary" style="cursor: pointer;" (click)="onViewClick(paquet.id)"></fa-icon>
           </div>
         
-          <div class="col-sm-2" style="margin-left: 50px;">
+          <div class="row" style="margin-left: 50px;">
+          <div class="col-sm-2">
               <div class="col-sm-1" style="margin:10px 10px 20px 10px;" *ngIf="!allowViewPaquet">
                 <fa-icon icon="edit" class="fa-2x text-secondary" style="cursor: pointer;" (click)="onEditClick(paquet.id)"></fa-icon>
               </div>
@@ -94,6 +95,8 @@
                 <fa-icon icon="envelope" class="fa-2x" style="cursor: pointer;" (click)="onEnviarMail(paquet.id,confirmMailing)"></fa-icon>
               </div>
           </div>
+        </div>
+        <div class="row" style="margin-left: 50px;">
           <div class="col-sm-2">
               <div class="col-sm-1" style="margin:3px 10px 20px 10px;" *ngIf="!allowViewPaquet">
                 <fa-icon icon="hand-holding" class="fa-2x" style="cursor: pointer;" (click)="onEntregarPaquet(paquet.id)"></fa-icon>
@@ -102,11 +105,12 @@
                 <fa-icon icon="qrcode" class="fa-2x" style="cursor: pointer;" (click)="onGenerarQr(i)"></fa-icon>
               </div>
           </div>
-        
-          <div class="col-sm-1">
+        </div>
+        <div class="row" style="margin-left: 76px;">
+          <div class="col-sm-2">
               <fa-icon icon="trash-alt" class="fa-2x text-danger" style="cursor: pointer;" (click)="onDeleteClick(paquet.id,confirmDeletion)"></fa-icon>
           </div>
-        
+        </div>
           
         </div>
       </li>
