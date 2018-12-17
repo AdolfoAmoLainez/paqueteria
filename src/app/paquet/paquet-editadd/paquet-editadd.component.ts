@@ -79,6 +79,7 @@ export class PaquetEditAddComponent implements OnInit {
             break;
           case 'add':
             this.formVisible = true;
+            this.editMode = false;
             const ahora = new Date().toLocaleString('es-ES');
             
             this.paquetForm.reset({
