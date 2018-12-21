@@ -45,11 +45,7 @@
         <canvas #canvasBlanc hidden></canvas>
       </div>
       <div class="col-md-6" *ngIf="qrCodePaquet!=''">
-        <qrcode [qrdata]="qrCodePaquet" [size]="256" [level]="'M'" ></qrcode>
-        <br>
-        <button type="button" 
-              class="btn btn-success"
-              (click)="onAnar()" style="margin-left: 10px;">Anar</button>                
+        <qrcode [qrdata]="qrCodePaquet" [size]="256" [level]="'M'" (click)="onAnar()"  style="cursor: pointer;" ></qrcode>
       </div>
     </div>
   </div>

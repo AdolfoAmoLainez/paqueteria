@@ -15,7 +15,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CollapseModule, ModalModule } from 'ngx-bootstrap';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { AlertModule } from 'ngx-bootstrap/alert';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 
 import {QRCodeModule} from 'angularx-qrcode';
@@ -66,6 +66,7 @@ registerLocaleData(localeEs,'es');
     AlertModule.forRoot(),
     ModalModule.forRoot(),
     PaginationModule.forRoot(),
+    TooltipModule.forRoot(),
     QRCodeModule,
     HttpClientModule,
     AppRoutingModule
