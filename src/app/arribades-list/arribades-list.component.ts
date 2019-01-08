@@ -10,6 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { isUndefined } from 'util';
 
 library.add(fas);
 
@@ -61,9 +62,24 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.databaseService.getPaquetsPerSignar();
+    //this.databaseService.getPaquetsPerSignar();
     this.vistaSeguent="Signats";
     this.vistaActual="per Signar";
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    if(isUndefined(currentUser.vistaActual)){
+      this.vistaSeguent="Signats";
+      this.vistaActual="per Signar";
+      currentUser.vistaActual = this.vistaActual;
+      currentUser.vistaSeguent=this.vistaSeguent;
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      //console.log(currentUser);
+    }else{
+      this.vistaSeguent=currentUser.vistaSeguent;
+      this.vistaActual=currentUser.vistaActual;
+    }
+
+
 
     this.changePaquetsSubscription = this.paquetsService.changedPaquets.subscribe(
       (paquets: Paquet[]) => {
@@ -74,7 +90,8 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
     this.signSubscription = this.paquetsService.startedSignPaquet.subscribe(
       (paquetId:number)=>{
-        this.onEntregarPaquet(paquetId);
+        //this.onEntregarPaquet(paquetId,'nomesqr');
+        this.onViewClick(paquetId);
       }
     )
 
@@ -83,6 +100,8 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
         this.reloadLlista();
       }
     )
+
+    this.reloadLlista();
   }
 
   onEditPaquet(index: number) {
@@ -98,16 +117,18 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   }
 
-  onEntregarPaquet(index: number) {
+  onEntregarPaquet(index: number, mode: string) {
     this.signMode = true;
     this.editMode = false;
-    //this.paquetsService.startedSignPaquet.next(this.paquets[index]);
-    this.router.navigate(['entrega',index],{relativeTo: this.route});
+   
+    //this.router.navigate(['entrega',index],{relativeTo: this.route});
+    this.router.navigate(['entrega',index,mode]);
   }
 
   onViewClick(index: number) {
 
-    this.router.navigate(['view',index],{relativeTo: this.route});
+    //this.router.navigate(['view',index],{relativeTo: this.route});
+    this.router.navigate(['view',index]);
 
   }
 
@@ -187,6 +208,11 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
       this.vistaSeguent="per Signar";
       this.allowViewPaquet=true;
     }
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    currentUser.vistaActual = this.vistaActual;
+    currentUser.vistaSeguent=this.vistaSeguent;
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
   }
 
   onNouPaquet(){

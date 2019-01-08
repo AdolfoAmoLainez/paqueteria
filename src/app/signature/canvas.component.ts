@@ -1,7 +1,7 @@
 import {
-  Component, Input, ElementRef, AfterViewInit, ViewChild, OnInit, OnDestroy
+  Component, Input, ElementRef, AfterViewInit, ViewChild
 } from '@angular/core';
-import { Observable, Subscription } from 'rxjs'
+import { Observable } from 'rxjs'
 
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/takeUntil';

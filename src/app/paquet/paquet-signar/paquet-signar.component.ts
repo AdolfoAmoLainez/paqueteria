@@ -94,7 +94,7 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
           this.paquetSignatCorrectament=true;
         }else{
           this.paquetSignatCorrectament=false;
-          if (this.paquetEditing.qrcode != undefined && this.paquetEditing.qrcode != 0) {
+          if (this.paquetEditing.qrcode != undefined && this.paquetEditing.qrcode != 0 && params['mode']!='nomessignar') {
             this.qrCodePaquet = this.appConstants.signUrlServer + this.paquetEditing.id + "/" + this.paquetEditing.qrcode
           } else {
             this.qrCodePaquet = '';

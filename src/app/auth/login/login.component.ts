@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService} from "../auth.service";
 import { Subscription } from 'rxjs';
-import { ErrorInterceptor } from 'src/app/shared/httperror.interceptor';
 
 @Component({
   selector: 'app-login',
@@ -35,6 +34,4 @@ export class LoginComponent implements OnInit {
       this.loginForm.get("passwd").value,  
     )
   }
-
-
 }

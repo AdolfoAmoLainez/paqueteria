@@ -13,9 +13,9 @@ const appRoutes: Routes = [
     {path:"", component:LoginComponent},
     {path:"login", component:LoginComponent},
     {path:"signarmovil/:id/:qrcode", component:PaquetSignarmovilComponent},
+    {path:"entrega/:id/:mode",component:PaquetSignarComponent},
+    {path:"view/:id",component:PaquetViewsignatComponent},
     {path:"llista", component:ArribadesListComponent,children:[
-      {path:"entrega/:id",component:PaquetSignarComponent},
-      {path:"view/:id",component:PaquetViewsignatComponent},
       {path:":mode/:id",component:PaquetEditAddComponent}
       ],canActivate:[AuthGuard]
     },

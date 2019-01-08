@@ -62,7 +62,16 @@
           </div>
         </div>
       </fieldset>
-      <img [src]="paquetForm.get('signatura').value" />
+      <div class="row">
+        <div class="col-md-6 text-center" *ngIf="paquetEditing.signatura!='empty'">
+          <img [src]="paquetForm.get('signatura').value" />
+        </div>
+        <div class="col-md-6" *ngIf="qrCodePaquet!='' && paquetEditing.signatura=='empty'">
+          <qrcode [qrdata]="qrCodePaquet" [size]="256" [level]="'M'" style="cursor: pointer;" ></qrcode>
+        </div>
+      </div>
+      
+
     </form>
     
     <br>

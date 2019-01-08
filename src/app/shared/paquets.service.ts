@@ -14,38 +14,6 @@ export class PaquetsService {
 
     totalPaquets: number;
     paginaActual:number;
-    /*
-        new Paquet(
-            1,
-            Date.now(),
-            "Adolfo Amo",
-            "Sid Comunicacio",
-            1,
-            "Missatger",
-            "",
-            "Trini Expósito",
-            "Slipi CC",
-            0,
-            "",
-            "",
-            1245
-        ),
-        new Paquet(
-            2,
-            Date.now(),
-            "Adolfo Amo2",
-            "Sid Comunicacio",
-            1,
-            "Missatger",
-            "",
-            "Trini Expósito2",
-            "Slipi CC",
-            0,
-            "",
-            "",
-            0
-        ),
-    ]*/
 
     startedEditPaquet = new Subject<Paquet>();
     startedSignPaquet = new Subject<number>();
@@ -112,10 +80,7 @@ export class PaquetsService {
     }
 
     addPaquet(paquet: Paquet) {
-        /*const maxId=Math.max.apply(Math, this.paquets.map(
-            function(paquet){ return paquet.id})
-            )+1;
-        paquet.id=maxId;*/
+
         this.paquets.push(paquet);
         this.changedPaquets.next(this.paquets.slice());
 

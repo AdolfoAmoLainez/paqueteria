@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PaquetsService } from 'src/app/shared/paquets.service';
-import { formatDate } from '@angular/common';
+import { AppConstants } from 'src/app/app.params';
+import { Paquet } from 'src/app/shared/paquet.model';
+//import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-paquet-viewsignat',
@@ -11,11 +13,16 @@ import { formatDate } from '@angular/common';
 })
 export class PaquetViewsignatComponent implements OnInit {
 
+  appConstants = new AppConstants();
+
   paquetForm: FormGroup;
   formVisible:boolean=false;
+  qrCodePaquet: string = ''//Variable que contindrà la url amb el codi QR
+  paquetEditing: Paquet;
 
   constructor(private route: ActivatedRoute,
-    private paquetsService: PaquetsService) { }
+    private paquetsService: PaquetsService,
+    private router: Router) { }
 
   ngOnInit() {
 
@@ -36,30 +43,45 @@ export class PaquetViewsignatComponent implements OnInit {
     this.route.params.subscribe(
       (params: Params) => {
 
-        let paquetEditing = this.paquetsService.getPaquet(
+        this.paquetEditing = this.paquetsService.getPaquet(
           params['id']
         );
 
+        if (this.paquetEditing.qrcode != undefined && this.paquetEditing.qrcode) {
+          this.qrCodePaquet = this.appConstants.signUrlServer + this.paquetEditing.id + "/" + this.paquetEditing.qrcode
+        } else {
+          this.qrCodePaquet = '';
+        }
+
         this.paquetForm.patchValue({
-          'data_arribada': new Date(paquetEditing.data_arribada),
-          'remitent': paquetEditing.remitent,
-          'procedencia': paquetEditing.procedencia,
-          'quantitat': paquetEditing.quantitat,
-          'mitja_arribada': paquetEditing.mitja_arribada,
-          'referencia': paquetEditing.referencia,
-          'destinatari': paquetEditing.destinatari,
-          'departament': paquetEditing.departament,
-          'dipositari':paquetEditing.dipositari,
-          'signatura':paquetEditing.signatura,
-          'data_lliurament':paquetEditing.data_lliurament
+          'data_arribada': new Date(this.paquetEditing.data_arribada),
+          'remitent': this.paquetEditing.remitent,
+          'procedencia': this.paquetEditing.procedencia,
+          'quantitat': this.paquetEditing.quantitat,
+          'mitja_arribada': this.paquetEditing.mitja_arribada,
+          'referencia': this.paquetEditing.referencia,
+          'destinatari': this.paquetEditing.destinatari,
+          'departament': this.paquetEditing.departament,
+          'dipositari':this.paquetEditing.dipositari,
+          'signatura':this.paquetEditing.signatura,
+          'data_lliurament':this.paquetEditing.data_lliurament
 
         });
         this.formVisible=true;
+       //console.log(this.paquetEditing);
       }
     )
   }
 
   onHideForm(){
     this.formVisible=false;
+    this.router.navigate(['llista']);
   }
+/*
+  onAnar(){
+    this.router.navigate(
+      ['signarmovil/'+this.paquetEditing.id+'/'+this.paquetEditing.qrcode]
+    );
+  }
+  */
 }
