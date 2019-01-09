@@ -19,7 +19,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                 // auto logout if 401 response returned from api
                 this.authService.logout();
                 this.authService.loginIncorrect.next();
-                this.router.navigate(['/login']);
+                //this.router.navigate(['/login']);
 
             }else{
                 //console.log(err);
