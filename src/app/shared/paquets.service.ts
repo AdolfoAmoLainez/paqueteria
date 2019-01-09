@@ -66,6 +66,7 @@ export class PaquetsService {
         const index = this.paquets.findIndex((element) => {
             return element.id == indexPaquet;
         });
+        //console.log(index);
         //console.log(this.paquets);
         return this.paquets[index];
     }
@@ -91,7 +92,7 @@ export class PaquetsService {
             return element.id == indexPaquet;
         });
 
-        console.log(index + "  " + signatura);
+        //console.log(index + "  " + signatura);
         this.paquets[index].signatura = signatura;
         this.paquets[index].dipositari = dipositari;
         this.changedPaquets.next(this.paquets.slice());

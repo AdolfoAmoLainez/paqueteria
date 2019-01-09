@@ -5,11 +5,7 @@ import { PaquetsService } from 'src/app/shared/paquets.service';
 import { Paquet } from 'src/app/shared/paquet.model';
 import { DatabaseService } from 'src/app/shared/database.service';
 
-
-
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
-
-
 
 
 @Component({
@@ -54,28 +50,31 @@ export class PaquetEditAddComponent implements OnInit {
 
     this.route.params.subscribe(
       (params: Params) => {
-
         switch (params['mode']) {
           case 'edit':
             this.paquetEditing = this.paquetsService.getPaquet(
-              this.route.snapshot.params['id']
+              +this.route.snapshot.params['id']
             );
-            this.formVisible = true;
-            this.editMode = true;
 
-            this.paquetForm.patchValue({
-              'data_arribada': this.paquetEditing.data_arribada,
-              'remitent': this.paquetEditing.remitent,
-              'procedencia': this.paquetEditing.procedencia,
-              'quantitat': this.paquetEditing.quantitat,
-              'mitja_arribada': this.paquetEditing.mitja_arribada,
-              'referencia': this.paquetEditing.referencia,
-              'destinatari': this.paquetEditing.destinatari,
-              'departament': this.paquetEditing.departament,
-              'email': this.paquetEditing.email
-            });
+            if (!this.paquetEditing){
+              this.onHideForm();
+            }else{
 
+              this.formVisible = true;
+              this.editMode = true;
+              this.paquetForm.patchValue({
+                'data_arribada': this.paquetEditing.data_arribada,
+                'remitent': this.paquetEditing.remitent,
+                'procedencia': this.paquetEditing.procedencia,
+                'quantitat': this.paquetEditing.quantitat,
+                'mitja_arribada': this.paquetEditing.mitja_arribada,
+                'referencia': this.paquetEditing.referencia,
+                'destinatari': this.paquetEditing.destinatari,
+                'departament': this.paquetEditing.departament,
+                'email': this.paquetEditing.email
+              });
 
+            }
             break;
           case 'add':
             this.formVisible = true;

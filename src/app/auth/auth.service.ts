@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Subject } from "rxjs";
 import { AppConstants } from "../app.params";
+import { isUndefined } from "util";
 
 @Injectable()
 export class AuthService {
@@ -32,7 +33,13 @@ export class AuthService {
     isAuthenticated() {
         
         if (this.token == null || this.token == undefined){
-            return false;
+            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser && currentUser.token) {
+                this.token = currentUser.token;
+
+            }else{
+                return false;
+            }
         }
         return this.token != null;
     }
