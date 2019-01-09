@@ -128,6 +128,7 @@ export class DatabaseService {
                     'Paquet afegit correctament!',
                     'success'
                     );
+                    this.enviaMail(paquet);
             }
         )
     }
