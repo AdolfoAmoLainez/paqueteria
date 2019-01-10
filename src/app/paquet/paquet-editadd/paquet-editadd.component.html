@@ -63,7 +63,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-6 justify-content-left ">
+    <div class="col-12 justify-content-left ">
       <button type="submit" [disabled]="!paquetForm.valid" [class]="!paquetForm.valid?'btn btn-warning':'btn btn-success'"
         (click)="onPaquetAction()">{{ editMode ? 'Modificar' : 'Añadir'}}</button>
       <!--<button *ngIf="editMode" class="btn btn-danger" type="button" (click)="onDelete()">Delete</button>-->

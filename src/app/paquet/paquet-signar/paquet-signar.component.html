@@ -1,6 +1,6 @@
 <div *ngIf="formVisible">
   <div *ngIf="!paquetSignatCorrectament">
-    <form [formGroup]="paquetForm" class="mb-3">
+    <form [formGroup]="paquetForm" >
       <fieldset disabled>
         <div class="row">
           <div class="col-sm-6">
@@ -30,7 +30,7 @@
   </div>
     <div class="row justify-content-center" *ngIf="formVisible">
       <div class="col-md-6">
-        <form [formGroup]="paquetForm" class="mb-3">
+        <form [formGroup]="paquetForm" class="mb-1">
           <div class="form-group">
             <label for="dipositari">Dipositari</label>
             <input type="text" formControlName="dipositari" name="dipositari" id="dipositari" class="form-control">
