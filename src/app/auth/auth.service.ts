@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Subject } from "rxjs";
 import { AppConstants } from "../app.params";
+import { DatabaseService } from "../shared/database.service";
 import { isUndefined } from "util";
 
 @Injectable()
@@ -13,7 +14,8 @@ export class AuthService {
 
 
     constructor(private http: HttpClient,
-        private router: Router) { }
+        private router: Router,
+        private dbService: DatabaseService) { }
 
     loginUser(username: string, password: string) {
 
@@ -23,7 +25,9 @@ export class AuthService {
                     if (data && data.token) {
                         // store user details and jwt token in local storage to keep user logged in between page refreshes
                         localStorage.setItem('currentUser', JSON.stringify(data));
+                        console.log(data);
                         this.token = data.token;
+                        this.dbService.setTablename(data.tablename);
                         this.router.navigate(['/llista']);
                     }
                 });
@@ -44,10 +48,21 @@ export class AuthService {
         return this.token != null;
     }
 
+    getLocalUser(){
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if(isUndefined(currentUser.vistaActual)){
+            this.logout();
+            return undefined;
+        }else{
+            return currentUser;
+          }
+    }
+
     logout() {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
         this.token = null;
+        this.dbService.setTablename("");
         this.router.navigate(['login']);
     }
 }

@@ -43,6 +43,10 @@ export class Paquet {
         this.dipositari = dipositari;
         this.signatura = signatura;
         this.qrcode = qrcode;
-        this.email = email;
+        if(email==null){
+            this.email = "";
+        }else{
+            this.email = email;
+        }
     }
 }

@@ -62,8 +62,12 @@ export class PaquetEditAddComponent implements OnInit {
 
               this.formVisible = true;
               this.editMode = true;
+              let data = new Date(this.paquetEditing.data_arribada).toLocaleString('es-ES');
+              if (data==="Invalid Date") data=this.paquetEditing.data_arribada;
+              //console.log(data);
               this.paquetForm.patchValue({
-                'data_arribada': this.paquetEditing.data_arribada,
+                //'data_arribada': this.paquetEditing.data_arribada,
+                'data_arribada': data,
                 'remitent': this.paquetEditing.remitent,
                 'procedencia': this.paquetEditing.procedencia,
                 'quantitat': this.paquetEditing.quantitat,
@@ -106,9 +110,11 @@ export class PaquetEditAddComponent implements OnInit {
   onPaquetAction() {
     if (this.editMode) {
       let data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString('es-ES');
+      if (data==="Invalid Date") data=this.paquetEditing.data_arribada;
+      //console.log("Edit date: "+data);
       this.databaseService.updatePaquet(new Paquet(
         this.paquetEditing.id,
-        data,
+        this.paquetForm.get('data_arribada').value,
         this.paquetForm.get('remitent').value,
         this.paquetForm.get('procedencia').value,
         this.paquetForm.get('quantitat').value,
@@ -121,14 +127,16 @@ export class PaquetEditAddComponent implements OnInit {
         "empty",
         0,
         this.paquetForm.get('email').value));
-        console.log(this.paquetForm.get('data_arribada').value);
+        //console.log(this.paquetForm.get('data_arribada').value);
     } else {
       
-      /*let data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();*/
-      
+      let data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
+      //console.log("add date: "+ data);
+      if (data==="Invalid Date") data=this.paquetForm.get('data_arribada').value;
       this.databaseService.addPaquet(new Paquet(
         0,
-        this.paquetForm.get('data_arribada').value,
+        //this.paquetForm.get('data_arribada').value,
+        data,
         this.paquetForm.get('remitent').value,
         this.paquetForm.get('procedencia').value,
         this.paquetForm.get('quantitat').value,

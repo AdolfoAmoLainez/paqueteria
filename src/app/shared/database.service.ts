@@ -9,13 +9,28 @@ import { MessagesService } from "../messages/messages.service";
 export class DatabaseService {
 
     appConstants = new AppConstants();
+    private tablename: string="";
 
     constructor(private http: HttpClient,
         private paquetsService: PaquetsService,
-        private messagesService: MessagesService) { }
+        private messagesService: MessagesService) {
+         }
+
+
+    setTablename (tablename:string){
+        this.tablename = tablename;
+    }
+
+    testTablename (){
+        if (this.tablename==""){
+            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            this.tablename = currentUser.tablename;
+        }
+    }
 
     getPaquetsPerSignar() {
-        return this.http.get(this.appConstants.dataServerURL + "/api/crud/paquets?signatura=empty&_order[data_arribada]=DESC",
+        this.testTablename();
+        return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?signatura=empty&_order[data_arribada]=DESC",
                                 { observe: 'response' }).subscribe(
                 (res:any) => {
                     //console.log(res.body.json);
@@ -40,7 +55,7 @@ export class DatabaseService {
                             res.body.json[elem].email
                         ))
                     }
-                    console.log(paquets);
+                    //console.log(paquets);
                     this.paquetsService.setPaquets(paquets);
                 }
             );
@@ -48,6 +63,7 @@ export class DatabaseService {
     }
 
     buscaPaquets(patro: string) {
+        this.testTablename();
         return this.http.get(this.appConstants.dataServerURL + "/api/crud/paquets?destinatari[LIKE]=" + patro ,
             { observe: 'response' }).subscribe(
                 (res:any) => {
@@ -88,7 +104,8 @@ export class DatabaseService {
     }
 
     getPaquetsSignats() {
-        return this.http.get(this.appConstants.dataServerURL + "/api/crud/paquets?signatura_like=^data&_order[data_arribada]=DESC",
+        this.testTablename();
+        return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?signatura[LIKE]=data%&_order[data_arribada]=DESC",
                                 { observe: 'response' }).subscribe(
                 (res:any) => {
 
@@ -122,7 +139,8 @@ export class DatabaseService {
 
     addPaquet(paquet: Paquet) {
         //console.log(paquet);
-        return this.http.post(this.appConstants.dataServerURL + '/api/crud/paquets', paquet).subscribe(
+        this.testTablename();
+        return this.http.post(this.appConstants.dataServerURL + '/api/crud/'+this.tablename, paquet).subscribe(
             (data:any) => {
                 const paquet: Paquet = <Paquet>data.json[0];
                 this.paquetsService.addPaquet(paquet);
@@ -136,16 +154,19 @@ export class DatabaseService {
     }
 
     getPaquetQr(index: number, qrcode: number) {
-        return this.http.get(this.appConstants.dataServerURL + "/api/crud/paquets?id=" + index + "&qrcode=" + qrcode);
+        this.testTablename();
+        //return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?id=" + index + "&qrcode=" + qrcode);
+        return this.http.post(this.appConstants.dataServerURL + "/paquetqr/get",{"tablename": this.tablename,"id": index, "qrcode":qrcode});
     }
 
     getPaquet(index: number) {
-        return this.http.get(this.appConstants.dataServerURL + "/api/crud/paquets/" + index);
+        this.testTablename();
+        return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"/" + index);
     }
 
     updatePaquet(paquet: Paquet) {
-
-        return (this.http.put(this.appConstants.dataServerURL + '/api/crud/paquets/' + paquet.id, paquet).subscribe(
+        this.testTablename();
+        return (this.http.put(this.appConstants.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet).subscribe(
             (data:any) => {
                 const paquet: Paquet = <Paquet>data.json[0];
                 this.paquetsService.updatePaquet(paquet);
@@ -161,7 +182,8 @@ export class DatabaseService {
     }
 
     deletePaquet(index: number) {
-        return (this.http.delete(this.appConstants.dataServerURL + '/api/crud/paquets/' + index).subscribe(
+        this.testTablename();
+        return (this.http.delete(this.appConstants.dataServerURL + '/api/crud/'+this.tablename+'/' + index).subscribe(
             (data) => {
                 this.paquetsService.deletePaquet(index);
                 this.messagesService.sendMessage(
@@ -174,8 +196,28 @@ export class DatabaseService {
 
     
     signaPaquet(paquet: Paquet) {
+        this.testTablename();
         paquet.data_lliurament = Date.now().toString();
-        return (this.http.patch(this.appConstants.dataServerURL + '/api/crud/paquets/' + paquet.id, paquet)).subscribe(
+        return (this.http.put(this.appConstants.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet)).subscribe(
+            (data) => {
+                this.paquetsService.paquetSignatCorrectament.next(paquet.id);
+                this.messagesService.sendMessage(
+                    'Paquet signat correctament!',
+                    'success'
+                    );
+            }
+        );
+    }
+
+    signaPaquetQr(paquet: Paquet) {
+        this.testTablename();
+        paquet.data_lliurament = Date.now().toString();
+        return (this.http.post(this.appConstants.dataServerURL + '/paquetqr/signar', {
+            'tablename': this.tablename,
+            'id': paquet.id,
+            'dipositari': paquet.dipositari,
+            'signatura': paquet.signatura
+        })).subscribe(
             (data) => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
                 this.messagesService.sendMessage(
@@ -187,14 +229,16 @@ export class DatabaseService {
     }
 
     updateQrPaquet(paquet: Paquet) {
-        return (this.http.patch(this.appConstants.dataServerURL + '/api/crud/paquets/' + paquet.id, paquet).subscribe(
+        this.testTablename();
+        return (this.http.put(this.appConstants.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet).subscribe(
             (data:any) => {
-                const paquet: Paquet = <Paquet>data.json;
+                const paquet: Paquet = <Paquet>data.json[0];
                 this.paquetsService.updatePaquet(paquet);
                 this.messagesService.sendMessage(
                     'Codi bidi generat correctament!',
                     'success'
                     );
+                    //console.log(paquet);
                 this.paquetsService.startedSignPaquet.next(paquet.id);
             }
         ));

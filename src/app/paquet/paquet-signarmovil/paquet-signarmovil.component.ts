@@ -77,9 +77,11 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
             this.paquetSignatCorrectament = true;
           } else {
             for (let elem in data) {
+              let fecha = new Date(data[elem].data_arribada).toLocaleString('es-ES');
+              if (fecha==="Invalid Date") fecha=this.paquetEditing.data_arribada;
               this.paquetEditing = new Paquet(
                 data[elem].id,
-                data[elem].data_arribada,
+                fecha,
                 data[elem].remitent,
                 data[elem].procedencia,
                 data[elem].quantitat,
@@ -118,7 +120,7 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
   onSignar() {
     this.paquetEditing.dipositari = this.paquetForm.get('dipositari').value;
     this.paquetEditing.signatura = this.canvas.nativeElement.toDataURL();
-    this.databaseService.signaPaquet(this.paquetEditing);
+    this.databaseService.signaPaquetQr(this.paquetEditing);
     window.location.reload();
   }
 
