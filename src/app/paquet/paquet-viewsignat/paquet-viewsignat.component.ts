@@ -19,12 +19,18 @@ export class PaquetViewsignatComponent implements OnInit {
   formVisible:boolean=false;
   qrCodePaquet: string = ''//Variable que contindrà la url amb el codi QR
   paquetEditing: Paquet;
+  tablename:string = ""; // Guardem la taula de la BBDD de paquets de l'usuari que l'està veient
 
   constructor(private route: ActivatedRoute,
     private paquetsService: PaquetsService,
     private router: Router) { }
 
   ngOnInit() {
+
+    if (this.tablename==""){
+      let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      this.tablename = currentUser.tablename;
+  }
 
     this.paquetForm = new FormGroup({
       'data_arribada': new FormControl(null),
@@ -48,7 +54,10 @@ export class PaquetViewsignatComponent implements OnInit {
         );
 
         if (this.paquetEditing.qrcode != undefined && this.paquetEditing.qrcode) {
-          this.qrCodePaquet = this.appConstants.signUrlServer + this.paquetEditing.id + "/" + this.paquetEditing.qrcode
+          this.qrCodePaquet = this.appConstants.signUrlServer + 
+                              this.paquetEditing.id + "/" + 
+                              this.paquetEditing.qrcode + "/" + 
+                              this.tablename;
         } else {
           this.qrCodePaquet = '';
         }

@@ -67,18 +67,23 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
     if (this.route.snapshot.params['id'] != undefined &&
     this.route.snapshot.params['id'] != null &&
     this.route.snapshot.params['qrcode'] != undefined &&
-    this.route.snapshot.params['qrcode'] != null) {
+    this.route.snapshot.params['qrcode'] != null &&
+    this.route.snapshot.params['tablename'] != undefined &&
+    this.route.snapshot.params['tablename'] != null) {
 
-    this.databaseService.getPaquetQr(this.route.snapshot.params['id'], this.route.snapshot.params['qrcode'])
+    this.databaseService.getPaquetQr(this.route.snapshot.params['id'], 
+                                      this.route.snapshot.params['qrcode'],
+                                      this.route.snapshot.params['tablename'])
       .subscribe(
         (data: any) => {
           console.log(data);
           if (data.length == 0) {
             this.paquetSignatCorrectament = true;
           } else {
-            for (let elem in data) {
+            //for (let elem in data) {
+              let elem=0;
               let fecha = new Date(data[elem].data_arribada).toLocaleString('es-ES');
-              if (fecha==="Invalid Date") fecha=this.paquetEditing.data_arribada;
+              if (fecha==="Invalid Date") fecha=data[elem].data_arribada;
               this.paquetEditing = new Paquet(
                 data[elem].id,
                 fecha,
@@ -95,7 +100,7 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
                 0,
                 data[elem].email
               )
-            }
+            //}
           }
 
           this.paquetForm.patchValue({
@@ -120,7 +125,7 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
   onSignar() {
     this.paquetEditing.dipositari = this.paquetForm.get('dipositari').value;
     this.paquetEditing.signatura = this.canvas.nativeElement.toDataURL();
-    this.databaseService.signaPaquetQr(this.paquetEditing);
+    this.databaseService.signaPaquetQr(this.paquetEditing, this.route.snapshot.params['tablename']);
     window.location.reload();
   }
 

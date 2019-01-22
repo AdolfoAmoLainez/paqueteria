@@ -12,7 +12,7 @@ import { ErrorPageComponent } from "./shared/error-page/error-page.component";
 const appRoutes: Routes = [
     {path:"", component:LoginComponent},
     {path:"login", component:LoginComponent},
-    {path:"signarmovil/:id/:qrcode", component:PaquetSignarmovilComponent},
+    {path:"signarmovil/:id/:qrcode/:tablename", component:PaquetSignarmovilComponent},
     {path:"entrega/:id/:mode",component:PaquetSignarComponent},
     {path:"view/:id",component:PaquetViewsignatComponent},
     {path:"llista", component:ArribadesListComponent,children:[

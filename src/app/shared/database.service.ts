@@ -153,10 +153,10 @@ export class DatabaseService {
         )
     }
 
-    getPaquetQr(index: number, qrcode: number) {
-        this.testTablename();
+    getPaquetQr(index: number, qrcode: number, tablename: string) {
+        //this.testTablename();
         //return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?id=" + index + "&qrcode=" + qrcode);
-        return this.http.post(this.appConstants.dataServerURL + "/paquetqr/get",{"tablename": this.tablename,"id": index, "qrcode":qrcode});
+        return this.http.post(this.appConstants.dataServerURL + "/paquetqr/get",{"tablename": tablename,"id": index, "qrcode":qrcode});
     }
 
     getPaquet(index: number) {
@@ -209,11 +209,10 @@ export class DatabaseService {
         );
     }
 
-    signaPaquetQr(paquet: Paquet) {
-        this.testTablename();
+    signaPaquetQr(paquet: Paquet, tablename:string) {
         paquet.data_lliurament = Date.now().toString();
         return (this.http.post(this.appConstants.dataServerURL + '/paquetqr/signar', {
-            'tablename': this.tablename,
+            'tablename': tablename,
             'id': paquet.id,
             'dipositari': paquet.dipositari,
             'signatura': paquet.signatura
