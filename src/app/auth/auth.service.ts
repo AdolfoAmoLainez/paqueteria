@@ -25,7 +25,7 @@ export class AuthService {
                     if (data && data.token) {
                         // store user details and jwt token in local storage to keep user logged in between page refreshes
                         localStorage.setItem('currentUser', JSON.stringify(data));
-                        console.log(data);
+                        //console.log(data);
                         this.token = data.token;
                         this.dbService.setTablename(data.tablename);
                         this.router.navigate(['/llista']);
