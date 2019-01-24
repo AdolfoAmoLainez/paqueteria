@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { state,trigger, style, transition, animate, keyframes } from '@angular/animations';
 
 import { Paquet } from '../shared/paquet.model';
 import { PaquetsService } from '../shared/paquets.service';
@@ -17,8 +18,49 @@ library.add(fas);
 @Component({
   selector: 'app-arribades-list',
   templateUrl: './arribades-list.component.html',
-  styleUrls: ['./arribades-list.component.css']
-})
+  styleUrls: ['./arribades-list.component.css'],
+  animations: [
+    trigger('paquetAddAnimation',[
+      state('in',style({
+        opacity: 1,
+        transform: 'translateX(0)'
+      })),
+      transition('void => *',[
+        animate(1000,keyframes([
+          style({
+            transform: 'translateX(-100px)',
+            opacity: 0,
+            offset: 0
+          }),
+          style({
+            transform: 'translateX(-50px)',
+            opacity: 0.5,
+            offset: 0.3
+          }),
+          style({
+            transform: 'translateX(-20px)',
+            opacity: 1,
+            offset: 0.8
+          }),
+          style({
+            transform: 'translateX(-0px)',
+            opacity: 1,
+            offset: 1
+          })
+        ]))
+      ]),
+      
+      transition('* => void',[
+        animate(500, style({
+          transform: 'translateX(100px)',
+          opacity:0
+        }))
+      ]),
+    ])
+  ]
+  
+  })
+
 export class ArribadesListComponent implements OnInit, OnDestroy {
 
   editMode: boolean = true;
@@ -29,6 +71,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   //changeTotalPaquetsSubscription: Subscription;
   signSubscription: Subscription;
   paquetSignatSubscription: Subscription;
+  paquetAddedSubscription: Subscription;
 
   paquets: Paquet[] = [];
   totalPaquets:number;
@@ -84,6 +127,12 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.changePaquetsSubscription = this.paquetsService.changedPaquets.subscribe(
       (paquets: Paquet[]) => {
         this.paquets = paquets;
+      }
+    );
+
+    this.paquetAddedSubscription = this.paquetsService.paquetAdded.subscribe(
+      (paquets: Paquet) => {
+        this.paquets.unshift(paquets);
       }
     );
 

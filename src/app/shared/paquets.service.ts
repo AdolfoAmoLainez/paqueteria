@@ -21,6 +21,7 @@ export class PaquetsService {
     changedPagination = new Subject<any>();
     changedTotalPaquets = new Subject<any>();
     paquetSignatCorrectament = new Subject<number>();
+    paquetAdded = new Subject<Paquet>();    
 
 
 
@@ -66,8 +67,6 @@ export class PaquetsService {
         const index = this.paquets.findIndex((element) => {
             return element.id == indexPaquet;
         });
-        //console.log(index);
-        //console.log(this.paquets);
         return this.paquets[index];
     }
 
@@ -75,15 +74,14 @@ export class PaquetsService {
         const index = this.paquets.findIndex((element) => {
             return element.id == indexPaquet;
         });
-        //console.log(this.paquets);
         this.paquets.splice(index,1);
         this.changedPaquets.next(this.paquets.slice());
     }
 
     addPaquet(paquet: Paquet) {
 
-        this.paquets.push(paquet);
-        this.changedPaquets.next(this.paquets.slice());
+        this.paquets.unshift(paquet);
+        this.paquetAdded.next(paquet);
 
     }
 
@@ -92,7 +90,6 @@ export class PaquetsService {
             return element.id == indexPaquet;
         });
 
-        //console.log(index + "  " + signatura);
         this.paquets[index].signatura = signatura;
         this.paquets[index].dipositari = dipositari;
         this.changedPaquets.next(this.paquets.slice());

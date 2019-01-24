@@ -40,7 +40,7 @@
 <div class="row mt-3">
   <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
     <ul class="list-group">
-      <li *ngFor="let paquet of paquets; let i = index" class="list-group-item">
+      <li [@paquetAddAnimation] *ngFor="let paquet of paquets; let i = index" class="list-group-item" >
         <div class="row align-items-center">
           <div class="col-sm-1 col-md-1 col-xl-1">
               <h3><span class="badge badge-secondary">{{paquet.id}}</span></h3>
