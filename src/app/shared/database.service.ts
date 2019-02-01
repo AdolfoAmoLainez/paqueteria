@@ -28,110 +28,150 @@ export class DatabaseService {
         }
     }
 
-    getPaquetsPerSignar() {
+    tractaResposta(res:any){
+        let paquets: Paquet[] = [];
+
+        for (let elem in res.body.json) {
+            paquets.push(new Paquet(
+                res.body.json[elem].id,
+                res.body.json[elem].data_arribada,
+                res.body.json[elem].remitent,
+                res.body.json[elem].procedencia,
+                res.body.json[elem].quantitat,
+                res.body.json[elem].mitja_arribada,
+                res.body.json[elem].referencia,
+                res.body.json[elem].destinatari,
+                res.body.json[elem].departament,
+                res.body.json[elem].data_lliurament,
+                res.body.json[elem].dipositari,
+                res.body.json[elem].signatura,
+                res.body.json[elem].qrcode,
+                res.body.json[elem].email
+            ))
+        }
+        this.paquetsService.setPaquets(paquets);
+    }
+    
+
+    getCountPaquetsPerSignar(searchText?: string){
         this.testTablename();
-        return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?signatura=empty&_order[data_arribada]=DESC",
-                                { observe: 'response' }).subscribe(
-                (res:any) => {
-                    //console.log(res.body.json);
-                    let paquets: Paquet[] = [];
 
-                    for (let elem in res.body.json) {
-                        //console.log(elem);
-                        paquets.push(new Paquet(
-                            res.body.json[elem].id,
-                            res.body.json[elem].data_arribada,
-                            res.body.json[elem].remitent,
-                            res.body.json[elem].procedencia,
-                            res.body.json[elem].quantitat,
-                            res.body.json[elem].mitja_arribada,
-                            res.body.json[elem].referencia,
-                            res.body.json[elem].destinatari,
-                            res.body.json[elem].departament,
-                            res.body.json[elem].data_lliurament,
-                            res.body.json[elem].dipositari,
-                            res.body.json[elem].signatura,
-                            res.body.json[elem].qrcode,
-                            res.body.json[elem].email
-                        ))
-                    }
-                    //console.log(paquets);
-                    this.paquetsService.setPaquets(paquets);
-                }
-            );
-
+        let sql = {};
+        if (searchText!=undefined && searchText!=""){
+            sql = {
+                "query":"SELECT count(*) as totalpaquets FROM paquets WHERE (data_arribada LIKE '%"+searchText+"%' or " +
+                                                     "remitent LIKE '%"+searchText+"%' or "+
+                                                     "procedencia LIKE '%"+searchText+"%' or "+
+                                                     "mitja_arribada LIKE '%"+searchText+"%' or "+
+                                                     "referencia LIKE '%"+searchText+"%' or "+
+                                                     "destinatari LIKE '%"+searchText+"%' or "+
+                                                     "departament LIKE '%"+searchText+"%' or "+
+                                                     "data_lliurament LIKE '%"+searchText+"%' or "+
+                                                     "dipositari LIKE '%"+searchText+"%' "+
+                                                     ") AND signatura='empty';"
+              }; 
+              
+        }else{
+            sql = {"query":"SELECT count(*) as totalpaquets FROM paquets WHERE signatura='empty'"};
+        }
+        return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql);
     }
 
-    buscaPaquets(patro: string) {
+    getPaquetsPerSignar(page:number, itemsPerpage:number, searchText?: string) {
         this.testTablename();
-        return this.http.get(this.appConstants.dataServerURL + "/api/crud/paquets?destinatari[LIKE]=" + patro ,
-            { observe: 'response' }).subscribe(
+
+        let limit=""+page+","+itemsPerpage;
+
+        if (searchText!=undefined && searchText!=""){
+            let sql = {
+                "query":"SELECT * FROM paquets WHERE (data_arribada LIKE '%"+searchText+"%' or " +
+                                                     "remitent LIKE '%"+searchText+"%' or "+
+                                                     "procedencia LIKE '%"+searchText+"%' or "+
+                                                     "mitja_arribada LIKE '%"+searchText+"%' or "+
+                                                     "referencia LIKE '%"+searchText+"%' or "+
+                                                     "destinatari LIKE '%"+searchText+"%' or "+
+                                                     "departament LIKE '%"+searchText+"%' or "+
+                                                     "data_lliurament LIKE '%"+searchText+"%' or "+
+                                                     "dipositari LIKE '%"+searchText+"%' "+
+                                                     ") AND signatura='empty';"
+              }; 
+              return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
                 (res:any) => {
+                    this.tractaResposta(res);
 
-                    let link = res.headers.get('Link');
-                    if (link) {
-                        this.paquetsService.setPagination(link);
-                    }
-
-                    let totalCount = res.headers.get('X-Total-Count');
-                    if (totalCount) {
-                        this.paquetsService.setTotalPaquets(parseInt(totalCount));
-                    }
-
-                    let paquets: Paquet[] = [];
-
-                    for (let elem in res.body.json) {
-                        paquets.push(new Paquet(
-                            res.body.json[elem].id,
-                            res.body.json[elem].data_arribada,
-                            res.body.json[elem].remitent,
-                            res.body.json[elem].procedencia,
-                            res.body.json[elem].quantitat,
-                            res.body.json[elem].mitja_arribada,
-                            res.body.json[elem].referencia,
-                            res.body.json[elem].destinatari,
-                            res.body.json[elem].departament,
-                            res.body.json[elem].data_lliurament,
-                            res.body.json[elem].dipositari,
-                            res.body.json[elem].signatura,
-                            res.body.json[elem].qrcode,
-                            res.body.json[elem].email
-                        ))
-                    }
-                    this.paquetsService.setPaquets(paquets);
                 }
-            );
-    }
+                );
+        }else{
 
-    getPaquetsSignats() {
-        this.testTablename();
-        return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?signatura[LIKE]=data%&_order[data_arribada]=DESC",
+            return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?_limit="+limit+"&signatura=empty&_order[data_arribada]=DESC",
                                 { observe: 'response' }).subscribe(
                 (res:any) => {
-
-                    let paquets: Paquet[] = [];
-
-                    for (let elem in res.body.json) {
-                        paquets.push(new Paquet(
-                            res.body.json[elem].id,
-                            res.body.json[elem].data_arribada,
-                            res.body.json[elem].remitent,
-                            res.body.json[elem].procedencia,
-                            res.body.json[elem].quantitat,
-                            res.body.json[elem].mitja_arribada,
-                            res.body.json[elem].referencia,
-                            res.body.json[elem].destinatari,
-                            res.body.json[elem].departament,
-                            res.body.json[elem].data_lliurament,
-                            res.body.json[elem].dipositari,
-                            res.body.json[elem].signatura,
-                            res.body.json[elem].qrcode,
-                            res.body.json[elem].email
-                        ))
-                    }
-                    this.paquetsService.setPaquets(paquets);
+                    this.tractaResposta(res);
                 }
             );
+        }
+    }
+
+
+    getCountPaquetsSignats(searchText?: string){
+        this.testTablename();
+        let sql ={};
+        if (searchText!=undefined && searchText!=""){
+            sql = {
+                "query":"SELECT count(*) as totalpaquets FROM paquets WHERE (data_arribada LIKE '%"+searchText+"%' or " +
+                                                     "remitent LIKE '%"+searchText+"%' or "+
+                                                     "procedencia LIKE '%"+searchText+"%' or "+
+                                                     "mitja_arribada LIKE '%"+searchText+"%' or "+
+                                                     "referencia LIKE '%"+searchText+"%' or "+
+                                                     "destinatari LIKE '%"+searchText+"%' or "+
+                                                     "departament LIKE '%"+searchText+"%' or "+
+                                                     "data_lliurament LIKE '%"+searchText+"%' or "+
+                                                     "dipositari LIKE '%"+searchText+"%' "+
+                                                     ") AND NOT signatura='empty';"
+              }; 
+
+        }else{
+            sql = {"query":"SELECT count(*) as totalpaquets FROM paquets WHERE NOT signatura='empty'"};
+        }
+        return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql);        
+    }
+
+
+
+    getPaquetsSignats(page:number, itemsPerpage:number, searchText?: string) {
+        this.testTablename();
+        let limit=""+page+","+itemsPerpage;
+
+        if (searchText!=undefined && searchText!=""){
+            let sql = {
+                "query":"SELECT * FROM paquets WHERE (data_arribada LIKE '%"+searchText+"%' or " +
+                                                     "remitent LIKE '%"+searchText+"%' or "+
+                                                     "procedencia LIKE '%"+searchText+"%' or "+
+                                                     "mitja_arribada LIKE '%"+searchText+"%' or "+
+                                                     "referencia LIKE '%"+searchText+"%' or "+
+                                                     "destinatari LIKE '%"+searchText+"%' or "+
+                                                     "departament LIKE '%"+searchText+"%' or "+
+                                                     "data_lliurament LIKE '%"+searchText+"%' or "+
+                                                     "dipositari LIKE '%"+searchText+"%' "+
+                                                     ") AND signatura NOT LIKE 'empty';"
+              }; 
+              return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
+                (res:any) => {
+                    this.tractaResposta(res);
+
+                }
+                );
+        }else{
+
+            return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?_limit="+limit+"&signatura[LIKE]=data%&_order[data_arribada]=DESC",
+                                    { observe: 'response' }).subscribe(
+                    (res:any) => {
+                        this.tractaResposta(res);
+
+                    }
+                );
+                
+        }
 
     }
 

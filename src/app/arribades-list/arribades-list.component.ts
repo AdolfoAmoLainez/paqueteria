@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { state,trigger, style, transition, animate, keyframes } from '@angular/animations';
@@ -76,6 +76,10 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   paquets: Paquet[] = [];
   totalPaquets:number;
   paginaActual:number = 1;
+  itemsPerPage: number = 5;
+
+  searchString: string="";
+  searching: boolean = false;
   //Variables per controlar els paquets que veiem a la llista
   //"per Signar" o "Signats"
   vistaSeguent:string;
@@ -108,6 +112,9 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     //this.databaseService.getPaquetsPerSignar();
     this.vistaSeguent="Signats";
     this.vistaActual="per Signar";
+    this.paginaActual =1;
+    this.searchString ="";
+    this.searching=false;
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     
     if(isUndefined(currentUser.vistaActual)){
@@ -228,13 +235,26 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     //this.paginaActual=1;
     switch (this.vistaActual){
       case "per Signar": 
-        this.databaseService.getPaquetsPerSignar();
-        this.allowViewPaquet=false;
+        this.databaseService.getCountPaquetsPerSignar(this.searchString).subscribe(
+          (result: any) => {
+            this.totalPaquets = result.json[0].totalpaquets;
+            //this.paginaActual =1;
+            this.databaseService.getPaquetsPerSignar((this.paginaActual-1)*this.itemsPerPage,this.itemsPerPage, this.searchString);
+            this.allowViewPaquet=false;
+          }
+        )
 
           break;
       case "Signats":
-        this.databaseService.getPaquetsSignats();
-        this.allowViewPaquet=true;
+        this.databaseService.getCountPaquetsSignats(this.searchString).subscribe(
+          (result: any) => {
+            this.totalPaquets = result.json[0].totalpaquets;
+            //this.paginaActual =1;
+            this.databaseService.getPaquetsSignats((this.paginaActual-1)*this.itemsPerPage,this.itemsPerPage, this.searchString);
+            this.allowViewPaquet=true;
+          }
+        )
+
           break;
     } 
   }
@@ -247,15 +267,28 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   onChangeView(){
     if (this.vistaSeguent == "per Signar"){
-      this.databaseService.getPaquetsPerSignar();
-      this.vistaActual = this.vistaSeguent;
-      this.vistaSeguent="Signats";
-      this.allowViewPaquet=false;
+      this.databaseService.getCountPaquetsPerSignar(this.searchString).subscribe(
+        (result:any) => {
+          this.totalPaquets = result.json[0].totalpaquets;
+          this.paginaActual =1;
+          this.databaseService.getPaquetsPerSignar((this.paginaActual-1)*this.itemsPerPage,this.itemsPerPage,this.searchString);
+          this.vistaActual = this.vistaSeguent;
+          this.vistaSeguent="Signats";
+          this.allowViewPaquet=false;
+        }
+      )
+
     }else{
-      this.databaseService.getPaquetsSignats();
-      this.vistaActual = this.vistaSeguent;
-      this.vistaSeguent="per Signar";
-      this.allowViewPaquet=true;
+      this.databaseService.getCountPaquetsSignats(this.searchString).subscribe(
+        (result: any) => {
+          this.totalPaquets = result.json[0].totalpaquets;
+          this.paginaActual =1;
+          this.databaseService.getPaquetsSignats((this.paginaActual-1)*this.itemsPerPage,this.itemsPerPage,this.searchString);
+          this.vistaActual = this.vistaSeguent;
+          this.vistaSeguent="per Signar";
+          this.allowViewPaquet=true;
+        });
+
     }
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
     currentUser.vistaActual = this.vistaActual;
@@ -270,6 +303,35 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   onLogout(){
     this.authService.logout();
+  }
+
+  pageChanged(event: any): void {
+    this.paginaActual = event.page;
+    this.reloadLlista();
+  }
+
+  onBuscar(){
+    //console.log(this.searchInput.nativeElement.value);
+    //this.searchString = this.searchInput.nativeElement.value;
+    this.searching=true;
+    this.reloadLlista();
+  }
+
+  onBuscarKey(event){
+    //console.log(this.searchInput.nativeElement.value);
+    //this.searchString = this.searchInput.nativeElement.value;
+    console.log(event);
+    if (event.key === "Enter"){
+
+    this.searching=true;
+    this.reloadLlista();
+    }
+  }
+
+  onCancelBuscar(){
+    this.searchString ="";
+    this.searching=false;
+    this.reloadLlista();
   }
 
 }
