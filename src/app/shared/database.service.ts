@@ -93,7 +93,8 @@ export class DatabaseService {
                                                      "departament LIKE '%"+searchText+"%' or "+
                                                      "data_lliurament LIKE '%"+searchText+"%' or "+
                                                      "dipositari LIKE '%"+searchText+"%' "+
-                                                     ") AND signatura='empty';"
+                                                     ") AND signatura='empty' "+
+                                                     "ORDER BY data_arribada DESC;"
               }; 
               return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
                 (res:any) => {
@@ -153,7 +154,8 @@ export class DatabaseService {
                                                      "departament LIKE '%"+searchText+"%' or "+
                                                      "data_lliurament LIKE '%"+searchText+"%' or "+
                                                      "dipositari LIKE '%"+searchText+"%' "+
-                                                     ") AND signatura NOT LIKE 'empty';"
+                                                     ") AND signatura NOT LIKE 'empty' "+
+                                                     "ORDER BY data_lliurament DESC;"
               }; 
               return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
                 (res:any) => {
@@ -163,7 +165,7 @@ export class DatabaseService {
                 );
         }else{
 
-            return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?_limit="+limit+"&signatura[LIKE]=data%&_order[data_arribada]=DESC",
+            return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?_limit="+limit+"&signatura[LIKE]=data%&_order[data_lliurament]=DESC",
                                     { observe: 'response' }).subscribe(
                     (res:any) => {
                         this.tractaResposta(res);

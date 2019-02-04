@@ -320,7 +320,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   onBuscarKey(event){
     //console.log(this.searchInput.nativeElement.value);
     //this.searchString = this.searchInput.nativeElement.value;
-    console.log(event);
+    //console.log(event);
     if (event.key === "Enter"){
 
     this.searching=true;

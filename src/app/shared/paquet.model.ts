@@ -39,7 +39,11 @@ export class Paquet {
         this.referencia  =referencia;
         this.destinatari = destinatari;
         this.departament  =departament;
-        this.data_lliurament  =data_lliurament;
+        if (data_lliurament==null){
+            this.data_lliurament="";
+        }else{
+            this.data_lliurament=data_lliurament;
+        }
         this.dipositari = dipositari;
         this.signatura = signatura;
         this.qrcode = qrcode;
