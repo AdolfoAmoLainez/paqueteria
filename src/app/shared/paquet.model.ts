@@ -13,6 +13,8 @@ export class Paquet {
     public signatura: string;
     public qrcode:number;
     public email:string;
+    public ubicacioemail:string="";
+    public gestoremail:string="";
 
     constructor(
         id:number,

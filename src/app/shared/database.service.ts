@@ -10,6 +10,8 @@ export class DatabaseService {
 
     appConstants = new AppConstants();
     private tablename: string="";
+    private ubicacioEmail: string="";
+    private gestorEmail: string="";
 
     constructor(private http: HttpClient,
         private paquetsService: PaquetsService,
@@ -25,6 +27,17 @@ export class DatabaseService {
         if (this.tablename==""){
             let currentUser = JSON.parse(localStorage.getItem('currentUser'));
             this.tablename = currentUser.tablename;
+        }
+    }
+
+    testEmailData(){
+        if (this.ubicacioEmail==""){
+            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            this.ubicacioEmail = currentUser.ubicacioemail;
+        }
+        if (this.gestorEmail==""){
+            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            this.gestorEmail = currentUser.gestoremail;
         }
     }
 
@@ -72,7 +85,7 @@ export class DatabaseService {
               }; 
               
         }else{
-            sql = {"query":"SELECT count(*) as totalpaquets FROM paquets WHERE signatura='empty'"};
+            sql = {"query":"SELECT count(*) as totalpaquets FROM "+this.tablename+" WHERE signatura='empty'"};
         }
         return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql);
     }
@@ -84,7 +97,7 @@ export class DatabaseService {
 
         if (searchText!=undefined && searchText!=""){
             let sql = {
-                "query":"SELECT * FROM paquets WHERE (data_arribada LIKE '%"+searchText+"%' or " +
+                "query":"SELECT * FROM "+this.tablename+" WHERE (data_arribada LIKE '%"+searchText+"%' or " +
                                                      "remitent LIKE '%"+searchText+"%' or "+
                                                      "procedencia LIKE '%"+searchText+"%' or "+
                                                      "mitja_arribada LIKE '%"+searchText+"%' or "+
@@ -132,7 +145,7 @@ export class DatabaseService {
               }; 
 
         }else{
-            sql = {"query":"SELECT count(*) as totalpaquets FROM paquets WHERE NOT signatura='empty'"};
+            sql = {"query":"SELECT count(*) as totalpaquets FROM "+this.tablename+" WHERE NOT signatura='empty'"};
         }
         return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql);        
     }
@@ -145,7 +158,7 @@ export class DatabaseService {
 
         if (searchText!=undefined && searchText!=""){
             let sql = {
-                "query":"SELECT * FROM paquets WHERE (data_arribada LIKE '%"+searchText+"%' or " +
+                "query":"SELECT * FROM "+this.tablename+" WHERE (data_arribada LIKE '%"+searchText+"%' or " +
                                                      "remitent LIKE '%"+searchText+"%' or "+
                                                      "procedencia LIKE '%"+searchText+"%' or "+
                                                      "mitja_arribada LIKE '%"+searchText+"%' or "+
@@ -286,6 +299,9 @@ export class DatabaseService {
     }
 
     enviaMail(paquet: Paquet) {
+        this.testEmailData();
+        paquet.ubicacioemail = this.ubicacioEmail;
+        paquet.gestoremail = this.gestorEmail;
         return (this.http.post(this.appConstants.dataServerURL + '/enviaMail', paquet)).subscribe(
             (data:any) => {
                 if(data.SendMail === 'ok'){
