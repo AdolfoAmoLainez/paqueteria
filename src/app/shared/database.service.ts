@@ -302,21 +302,23 @@ export class DatabaseService {
         this.testEmailData();
         paquet.ubicacioemail = this.ubicacioEmail;
         paquet.gestoremail = this.gestorEmail;
-        return (this.http.post(this.appConstants.dataServerURL + '/enviaMail', paquet)).subscribe(
-            (data:any) => {
-                if(data.SendMail === 'ok'){
-                    this.messagesService.sendMessage(
-                        'Mail enviat correctament!',
-                        'success'
-                        );
-                }else{
-                    this.messagesService.sendMessage(
-                        "No s'ha pogut enviar el correu-e!",
-                        'danger'
-                        );
+        if (paquet.email!=""){
+            return (this.http.post(this.appConstants.dataServerURL + '/enviaMail', paquet)).subscribe(
+                (data:any) => {
+                    if(data.SendMail === 'ok'){
+                        this.messagesService.sendMessage(
+                            'Mail enviat correctament!',
+                            'success'
+                            );
+                    }else{
+                        this.messagesService.sendMessage(
+                            "No s'ha pogut enviar el correu-e!",
+                            'danger'
+                            );
+                    }
                 }
-            }
-        );
+            );
+        }
     }
 
 
