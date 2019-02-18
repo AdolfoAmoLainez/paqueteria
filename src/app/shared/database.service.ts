@@ -2,13 +2,14 @@ import { HttpClient } from "@angular/common/http";
 import { Paquet } from "./paquet.model";
 import { PaquetsService } from "./paquets.service";
 import { Injectable } from "@angular/core";
-import { AppConstants } from "../app.params";
 import { MessagesService } from "../messages/messages.service";
+
+import {environment} from 'src/environments/environment'
+
 
 @Injectable()
 export class DatabaseService {
 
-    appConstants = new AppConstants();
     private tablename: string="";
     private ubicacioEmail: string="";
     private gestorEmail: string="";
@@ -87,7 +88,7 @@ export class DatabaseService {
         }else{
             sql = {"query":"SELECT count(*) as totalpaquets FROM "+this.tablename+" WHERE signatura='empty'"};
         }
-        return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql);
+        return this.http.post(environment.dataServerURL + "/api/custom", sql);
     }
 
     getPaquetsPerSignar(page:number, itemsPerpage:number, searchText?: string) {
@@ -109,7 +110,7 @@ export class DatabaseService {
                                                      ") AND signatura='empty' "+
                                                      "ORDER BY data_arribada DESC;"
               }; 
-              return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
+              return this.http.post(environment.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
                 (res:any) => {
                     this.tractaResposta(res);
 
@@ -117,7 +118,7 @@ export class DatabaseService {
                 );
         }else{
 
-            return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?_limit="+limit+"&signatura=empty&_order[data_arribada]=DESC",
+            return this.http.get(environment.dataServerURL + "/api/crud/"+this.tablename+"?_limit="+limit+"&signatura=empty&_order[data_arribada]=DESC",
                                 { observe: 'response' }).subscribe(
                 (res:any) => {
                     this.tractaResposta(res);
@@ -147,7 +148,7 @@ export class DatabaseService {
         }else{
             sql = {"query":"SELECT count(*) as totalpaquets FROM "+this.tablename+" WHERE NOT signatura='empty'"};
         }
-        return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql);        
+        return this.http.post(environment.dataServerURL + "/api/custom", sql);        
     }
 
 
@@ -170,7 +171,7 @@ export class DatabaseService {
                                                      ") AND signatura NOT LIKE 'empty' "+
                                                      "ORDER BY data_lliurament DESC;"
               }; 
-              return this.http.post(this.appConstants.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
+              return this.http.post(environment.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
                 (res:any) => {
                     this.tractaResposta(res);
 
@@ -178,7 +179,7 @@ export class DatabaseService {
                 );
         }else{
 
-            return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?_limit="+limit+"&signatura[LIKE]=data%&_order[data_lliurament]=DESC",
+            return this.http.get(environment.dataServerURL + "/api/crud/"+this.tablename+"?_limit="+limit+"&signatura[LIKE]=data%&_order[data_lliurament]=DESC",
                                     { observe: 'response' }).subscribe(
                     (res:any) => {
                         this.tractaResposta(res);
@@ -195,7 +196,7 @@ export class DatabaseService {
     addPaquet(paquet: Paquet) {
         //console.log(paquet);
         this.testTablename();
-        return this.http.post(this.appConstants.dataServerURL + '/api/crud/'+this.tablename, paquet).subscribe(
+        return this.http.post(environment.dataServerURL + '/api/crud/'+this.tablename, paquet).subscribe(
             (data:any) => {
                 const paquet: Paquet = <Paquet>data.json[0];
                 this.paquetsService.addPaquet(paquet);
@@ -211,17 +212,17 @@ export class DatabaseService {
     getPaquetQr(index: number, qrcode: number, tablename: string) {
         //this.testTablename();
         //return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?id=" + index + "&qrcode=" + qrcode);
-        return this.http.post(this.appConstants.dataServerURL + "/paquetqr/get",{"tablename": tablename,"id": index, "qrcode":qrcode});
+        return this.http.post(environment.dataServerURL + "/paquetqr/get",{"tablename": tablename,"id": index, "qrcode":qrcode});
     }
 
     getPaquet(index: number) {
         this.testTablename();
-        return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"/" + index);
+        return this.http.get(environment.dataServerURL + "/api/crud/"+this.tablename+"/" + index);
     }
 
     updatePaquet(paquet: Paquet) {
         this.testTablename();
-        return (this.http.put(this.appConstants.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet).subscribe(
+        return (this.http.put(environment.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet).subscribe(
             (data:any) => {
                 const paquet: Paquet = <Paquet>data.json[0];
                 this.paquetsService.updatePaquet(paquet);
@@ -238,7 +239,7 @@ export class DatabaseService {
 
     deletePaquet(index: number) {
         this.testTablename();
-        return (this.http.delete(this.appConstants.dataServerURL + '/api/crud/'+this.tablename+'/' + index).subscribe(
+        return (this.http.delete(environment.dataServerURL + '/api/crud/'+this.tablename+'/' + index).subscribe(
             (data) => {
                 this.paquetsService.deletePaquet(index);
                 this.messagesService.sendMessage(
@@ -253,7 +254,7 @@ export class DatabaseService {
     signaPaquet(paquet: Paquet) {
         this.testTablename();
         paquet.data_lliurament = Date.now().toString();
-        return (this.http.put(this.appConstants.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet)).subscribe(
+        return (this.http.put(environment.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet)).subscribe(
             (data) => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
                 this.messagesService.sendMessage(
@@ -266,7 +267,7 @@ export class DatabaseService {
 
     signaPaquetQr(paquet: Paquet, tablename:string) {
         paquet.data_lliurament = Date.now().toString();
-        return (this.http.post(this.appConstants.dataServerURL + '/paquetqr/signar', {
+        return (this.http.post(environment.dataServerURL + '/paquetqr/signar', {
             'tablename': tablename,
             'id': paquet.id,
             'dipositari': paquet.dipositari,
@@ -284,7 +285,7 @@ export class DatabaseService {
 
     updateQrPaquet(paquet: Paquet) {
         this.testTablename();
-        return (this.http.put(this.appConstants.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet).subscribe(
+        return (this.http.put(environment.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet).subscribe(
             (data:any) => {
                 const paquet: Paquet = <Paquet>data.json[0];
                 this.paquetsService.updatePaquet(paquet);
@@ -303,7 +304,7 @@ export class DatabaseService {
         paquet.ubicacioemail = this.ubicacioEmail;
         paquet.gestoremail = this.gestorEmail;
         if (paquet.email!=""){
-            return (this.http.post(this.appConstants.dataServerURL + '/enviaMail', paquet)).subscribe(
+            return (this.http.post(environment.dataServerURL + '/enviaMail', paquet)).subscribe(
                 (data:any) => {
                     if(data.SendMail === 'ok'){
                         this.messagesService.sendMessage(

@@ -170,6 +170,8 @@ export class PaquetEditAddComponent implements OnInit {
         "empty",
         0,
         this.paquetForm.get('email').value));
+
+        this.onHideForm();
     }
   }
 

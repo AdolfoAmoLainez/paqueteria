@@ -10,7 +10,7 @@ import { PaquetsService } from 'src/app/shared/paquets.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Paquet } from 'src/app/shared/paquet.model';
 import { DatabaseService } from 'src/app/shared/database.service';
-import { AppConstants } from 'src/app/app.params';
+import {environment} from 'src/environments/environment'
 
 @Component({
   selector: 'app-paquet-signar',
@@ -18,8 +18,6 @@ import { AppConstants } from 'src/app/app.params';
   styleUrls: ['./paquet-signar.component.css']
 })
 export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
-
-  appConstants = new AppConstants();
   
   @ViewChild('canvas') public canvas: ElementRef;
   @ViewChild('canvasBlanc') public canvasBlanc: ElementRef;
@@ -95,7 +93,7 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
         }else{
           this.paquetSignatCorrectament=false;
           if (this.paquetEditing.qrcode != undefined && this.paquetEditing.qrcode != 0 && params['mode']!='nomessignar') {
-            this.qrCodePaquet = this.appConstants.signUrlServer + this.paquetEditing.id + "/" + this.paquetEditing.qrcode
+            this.qrCodePaquet = environment.signUrlServer + this.paquetEditing.id + "/" + this.paquetEditing.qrcode
           } else {
             this.qrCodePaquet = '';
           }

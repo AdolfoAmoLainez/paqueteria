@@ -2,16 +2,14 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { Subject } from "rxjs";
-import { AppConstants } from "../app.params";
 import { DatabaseService } from "../shared/database.service";
 import { isUndefined } from "util";
+import { environment } from "src/environments/environment";
 
 @Injectable()
 export class AuthService {
     token: string;
     loginIncorrect = new Subject<any>();
-    appConstants = new AppConstants();
-
 
     constructor(private http: HttpClient,
         private router: Router,
@@ -19,7 +17,7 @@ export class AuthService {
 
     loginUser(username: string, password: string) {
 
-        return this.http.post<any>(this.appConstants.loginURL, { username, password })
+        return this.http.post<any>(environment.loginURL, { username, password })
             .subscribe(
                 (data: any) => {
                     if (data && data.token) {

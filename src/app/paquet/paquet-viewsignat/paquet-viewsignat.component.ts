@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PaquetsService } from 'src/app/shared/paquets.service';
-import { AppConstants } from 'src/app/app.params';
 import { Paquet } from 'src/app/shared/paquet.model';
-//import { formatDate } from '@angular/common';
+
+import {environment} from 'src/environments/environment'
 
 @Component({
   selector: 'app-paquet-viewsignat',
@@ -12,8 +12,6 @@ import { Paquet } from 'src/app/shared/paquet.model';
   styleUrls: ['./paquet-viewsignat.component.css']
 })
 export class PaquetViewsignatComponent implements OnInit {
-
-  appConstants = new AppConstants();
 
   paquetForm: FormGroup;
   formVisible:boolean=false;
@@ -54,7 +52,7 @@ export class PaquetViewsignatComponent implements OnInit {
         );
 
         if (this.paquetEditing.qrcode != undefined && this.paquetEditing.qrcode) {
-          this.qrCodePaquet = this.appConstants.signUrlServer + 
+          this.qrCodePaquet = environment.signUrlServer + 
                               this.paquetEditing.id + "/" + 
                               this.paquetEditing.qrcode + "/" + 
                               this.tablename;
