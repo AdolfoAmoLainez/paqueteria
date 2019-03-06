@@ -5,6 +5,8 @@ import { Injectable } from "@angular/core";
 import { MessagesService } from "../messages/messages.service";
 
 import {environment} from 'src/environments/environment'
+import { UsersService } from "./users.service";
+import { User } from "./user.model";
 
 
 @Injectable()
@@ -16,7 +18,8 @@ export class DatabaseService {
 
     constructor(private http: HttpClient,
         private paquetsService: PaquetsService,
-        private messagesService: MessagesService) {
+        private messagesService: MessagesService,
+        private usersService: UsersService) {
          }
 
 
@@ -65,7 +68,7 @@ export class DatabaseService {
         }
         this.paquetsService.setPaquets(paquets);
     }
-    
+
 
     getCountPaquetsPerSignar(searchText?: string){
         this.testTablename();
@@ -83,8 +86,8 @@ export class DatabaseService {
                                                      "data_lliurament LIKE '%"+searchText+"%' or "+
                                                      "dipositari LIKE '%"+searchText+"%' "+
                                                      ") AND signatura='empty';"
-              }; 
-              
+              };
+
         }else{
             sql = {"query":"SELECT count(*) as totalpaquets FROM "+this.tablename+" WHERE signatura='empty'"};
         }
@@ -109,7 +112,7 @@ export class DatabaseService {
                                                      "dipositari LIKE '%"+searchText+"%' "+
                                                      ") AND signatura='empty' "+
                                                      "ORDER BY data_arribada DESC;"
-              }; 
+              };
               return this.http.post(environment.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
                 (res:any) => {
                     this.tractaResposta(res);
@@ -143,12 +146,12 @@ export class DatabaseService {
                                                      "data_lliurament LIKE '%"+searchText+"%' or "+
                                                      "dipositari LIKE '%"+searchText+"%' "+
                                                      ") AND NOT signatura='empty';"
-              }; 
+              };
 
         }else{
             sql = {"query":"SELECT count(*) as totalpaquets FROM "+this.tablename+" WHERE NOT signatura='empty'"};
         }
-        return this.http.post(environment.dataServerURL + "/api/custom", sql);        
+        return this.http.post(environment.dataServerURL + "/api/custom", sql);
     }
 
 
@@ -170,7 +173,7 @@ export class DatabaseService {
                                                      "dipositari LIKE '%"+searchText+"%' "+
                                                      ") AND signatura NOT LIKE 'empty' "+
                                                      "ORDER BY data_lliurament DESC;"
-              }; 
+              };
               return this.http.post(environment.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
                 (res:any) => {
                     this.tractaResposta(res);
@@ -186,7 +189,7 @@ export class DatabaseService {
 
                     }
                 );
-                
+
         }
 
     }
@@ -250,7 +253,7 @@ export class DatabaseService {
         ));
     }
 
-    
+
     signaPaquet(paquet: Paquet) {
         this.testTablename();
         paquet.data_lliurament = Date.now().toString();
@@ -286,7 +289,7 @@ export class DatabaseService {
     updateQrPaquet(paquet: Paquet) {
         this.testTablename();
         return (this.http.put(environment.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet).subscribe(
-            (data:any) => {
+            (data: any) => {
                 const paquet: Paquet = <Paquet>data.json[0];
                 this.paquetsService.updatePaquet(paquet);
                 this.messagesService.sendMessage(
@@ -322,5 +325,48 @@ export class DatabaseService {
         }
     }
 
+    getUsers() {
+      return this.http.get(environment.dataServerURL + '/api/crud/usuaris',
+      { observe: 'response' }).subscribe(
+        (res: any) => {
+          this.usersService.setUsers(res.body.json);
+        }
+        );
+    }
+
+    addUser(user: User) {
+      return this.http.post(environment.dataServerURL + '/creataula', user).subscribe(
+        (data: any) => {
+          //console.log(data);
+          this.http.post(environment.dataServerURL + '/api/crud/usuaris', user).subscribe(
+            (dbuser: any) => {
+              //console.log(dbuser);
+                this.messagesService.sendMessage(
+                    'Usuari afegit correctament!',
+                    'success'
+                    );
+                    this.usersService.addUser(dbuser.json[0]);
+            }
+          );
+        }
+      );
+  }
+
+  updateUser(user: User) {
+    this.testTablename();
+    return (this.http.put(environment.dataServerURL + '/api/crud/usuaris/' + user.id, user).subscribe(
+        (data:any) => {
+            const user: User = <User>data.json[0];
+            this.usersService.updateUser(user);
+            this.messagesService.sendMessage(
+                'Usuari modificat correctament!',
+                'success'
+                );
+        },
+        (error:any) => {
+            console.log(error);
+        }
+    ));
+}
 
 }

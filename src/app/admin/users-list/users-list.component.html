@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-sm-12">
+      <router-outlet></router-outlet>
+    </div>
+    <div class="col-sm-4 toast-container absolute fixed-top align-self-end">
+      <app-messages></app-messages>
+  </div>
+</div>
+<div class="row align-items-center">
+    <div class="col-sm-auto col-md-12 text-right" style="margin:5px 5px 5px 5px;">
+      <button class="btn btn-primary ml-2" type="button" (click)="onNouUsuari()">+ Nou Usuari</button>
+      <button class="btn btn-danger ml-4" type="button" (click)="onLogout()">
+        <fa-icon icon="power-off" class="text-white mr-2" style="cursor: pointer;"></fa-icon>Sortir
+      </button>
+    </div>
+  </div>
+<div class="row mt-3">
+  <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
+      <div class="row">
+        <div class="col-sm-12">
+            <table class="table">
+                <thead>
+                  <tr >
+                    <th scope="col">NIU</th>
+                    <th scope="col">NOM</th>
+                    <th scope="col">TAULA</th>
+                    <th scope="col">ACCIONS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of users; let i = index">
+                        <th scope="row">{{user.niu}}</th>
+                        <td>{{user.displayname}}</td>
+                        <td>{{user.tablename}}</td>
+                        <td>
+                          <fa-icon icon="edit"
+                            class="fa-2x text-secondary"
+                            style="cursor: pointer;"
+                            (click)="onEditClick(user.id)"
+                            tooltip="Editar Usuari"></fa-icon>
+                          <fa-icon icon="trash-alt"
+                            class="fa-2x text-danger ml-2"
+                            style="cursor: pointer;"
+                            (click)="onDeleteClick(user.id,confirmDeletion)"
+                            tooltip="Esborrar Usuari"></fa-icon>
+                        </td>
+                      </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+  </div>
+</div>

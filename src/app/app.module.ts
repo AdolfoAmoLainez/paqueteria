@@ -33,13 +33,16 @@ import { AuthGuard } from './auth/auth-guard.service';
 
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { esLocale } from 'ngx-bootstrap/locale';
-defineLocale('es', esLocale); 
+defineLocale('es', esLocale);
 
 import { registerLocaleData} from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { MessagesComponent } from './messages/messages.component';
 import { MessagesService } from './messages/messages.service';
 import { ErrorPageComponent } from './shared/error-page/error-page.component';
+import { UsersListComponent } from './admin/users-list/users-list.component';
+import { UserEditaddComponent } from './admin/user-editadd/user-editadd.component';
+import { UsersService } from './shared/users.service';
 
 registerLocaleData(localeEs,'es');
 
@@ -55,7 +58,9 @@ registerLocaleData(localeEs,'es');
     PaquetSignarComponent,
     PaquetSignarmovilComponent,
     MessagesComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
+    UsersListComponent,
+    UserEditaddComponent
   ],
   imports: [
     BrowserModule,
@@ -78,7 +83,7 @@ registerLocaleData(localeEs,'es');
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: LOCALE_ID, useValue: 'es' },
-    PaquetsService, DatabaseService,AuthService,AppRoutingModule,AuthGuard,MessagesService],
+    PaquetsService, DatabaseService,AuthService,AppRoutingModule,AuthGuard,MessagesService,UsersService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

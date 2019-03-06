@@ -4,9 +4,13 @@
 
 export const environment = {
   production: false,
-  loginURL: "https://bitacola.uab.cat:55023/auth/login",
-  dataServerURL: "https://bitacola.uab.cat:55023",
-  signUrlServer:'https://bitacola.uab.cat:55023/signarmovil/'
+  loginURL: "http://localhost:55023/auth/login",
+  dataServerURL: "http://localhost:55023",
+  signUrlServer:'http://localhost:55023/signarmovil/',
+  rols: [
+    {id: "1",name:"admin"},
+    {id: "2",name:"usuari"},
+  ]
 };
 
 /*

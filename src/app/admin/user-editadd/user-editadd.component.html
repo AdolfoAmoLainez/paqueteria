@@ -1,0 +1,51 @@
+<form [formGroup]="userForm" *ngIf="formVisible">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label for="niu">Niu</label>
+        <input type="text" name="niu" id="niu" class="form-control" formControlName="niu">
+      </div>
+      <div class="form-group">
+        <label for="displayname">Nom</label>
+          <input type="text" name="displayname" id="displayname" class="form-control" formControlName="displayname">
+        </div>
+      <div class="form-group">
+        <label for="tablename">Nom de la Taula</label>
+          <input [attr.disabled]="editMode ? '' : null" type="text" name="tablename" id="tablename" class="form-control" formControlName="tablename">
+        </div>
+      <div class="form-group">
+        <label for="rol_id">Rol</label>
+          <select class="custom-select form-control" name="rol_id" id="rol_id" class="form-control" formControlName="rol_id">
+            <option *ngFor="let rol of rols" [value]="rol.id">{{rol.name}}</option>
+          </select>
+        </div>
+  </div>
+  <div class="col-sm-6">
+      <div class="form-group">
+        <label for="ldapuri">Url Ldaps</label>
+          <input type="text" name="ldapuri" id="ldapuri" class="form-control" formControlName="ldapuri">
+        </div>
+      <div class="form-group">
+          <label for="uidbasedn">Base dn</label>
+          <input type="text" name="uidbasedn" id="uidbasedn" class="form-control" formControlName="uidbasedn">
+        </div>
+      <div class="form-group">
+        <label for="ubicacioemail">Ubicació</label>
+          <input type="text" name="ubicacioemail" id="ubicacioemail" class="form-control" formControlName="ubicacioemail">
+        </div>
+      <div class="form-group">
+        <label for="gestoremail">Email Gestor</label>
+          <input type="text" name="gestoremail" id="gestoremail" class="form-control" formControlName="gestoremail">
+        </div>
+  </div>
+</div>
+<div class="row">
+    <div class="col-12 justify-content-left ">
+      <button type="button" [disabled]="!userForm.valid" [class]="!userForm.valid?'btn btn-warning':'btn btn-success'"
+        (click)="onUserAction()">{{ editMode ? 'Modificar' : 'Afegir'}}</button>
+      <!--<button *ngIf="editMode" class="btn btn-danger" type="button" (click)="onDelete()">Delete</button>-->
+      <button class="btn btn-primary" type="button" (click)="onClear()" style="margin-left: 10px;">Netejar</button>
+      <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancel·lar</button>
+    </div>
+  </div>
+</form>
