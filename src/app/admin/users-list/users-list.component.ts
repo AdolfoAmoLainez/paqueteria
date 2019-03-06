@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { User } from 'src/app/shared/user.model';
 import { Subscription } from 'rxjs';
 import { UsersService } from 'src/app/shared/users.service';
 import { DatabaseService } from 'src/app/shared/database.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 @Component({
   selector: 'app-users-list',
@@ -52,10 +54,15 @@ export class UsersListComponent implements OnInit {
   changedUsersSubscription: Subscription;
   userAddedSubscription: Subscription;
 
+  deleteModalMsg: string ="Vols esborrar l'usuari i la seva BBDD?";
+  deleteModalRef: BsModalRef;
+  deleteUser: User;
+
   constructor(private usersService: UsersService,
               private databaseService: DatabaseService,
               private router: Router,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private modalService: BsModalService) { }
 
   ngOnInit() {
     this.changedUsersSubscription = this.usersService.changedUsers.subscribe(
@@ -81,6 +88,22 @@ export class UsersListComponent implements OnInit {
 
   onNouUsuari(){
     this.router.navigate(['add',0],{relativeTo: this.route});
+  }
+
+  onDeleteClick(user: User,template: TemplateRef<any>){
+    this.deleteModalRef = this.modalService.show(template, {class: 'modal-sm'});
+    this.deleteUser = user;
+  }
+
+  confirmDelete(): void {
+    this.databaseService.deleteUser(this.deleteUser);
+    this.deleteModalRef.hide();
+    this.deleteUser= undefined;
+  }
+
+  declineDelete(): void {
+    this.deleteModalRef.hide();
+    this.deleteUser= undefined;
   }
 
 }

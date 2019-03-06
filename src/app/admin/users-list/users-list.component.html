@@ -41,7 +41,7 @@
                           <fa-icon icon="trash-alt"
                             class="fa-2x text-danger ml-2"
                             style="cursor: pointer;"
-                            (click)="onDeleteClick(user.id,confirmDeletion)"
+                            (click)="onDeleteClick(user,confirmDeletion)"
                             tooltip="Esborrar Usuari"></fa-icon>
                         </td>
                       </tr>
@@ -51,3 +51,10 @@
       </div>
   </div>
 </div>
+<ng-template #confirmDeletion>
+  <div class="modal-body text-center">
+    <p>{{deleteModalMsg}}</p>
+    <button type="button" class="btn btn-default" (click)="confirmDelete()">Sí</button>
+    <button type="button" class="btn btn-primary" (click)="declineDelete()" style="margin-left: 10px;">No</button>
+  </div>
+</ng-template>

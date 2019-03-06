@@ -367,6 +367,23 @@ export class DatabaseService {
             console.log(error);
         }
     ));
-}
+  }
+
+  deleteUser(user: User) {
+
+    return this.http.post(environment.dataServerURL + '/deltaula', user).subscribe(
+      (data: any) => {
+        this.http.delete(environment.dataServerURL + '/api/crud/usuaris/' + user.id).subscribe(
+          (data2) => {
+              this.usersService.deleteUser(user.id);
+              this.messagesService.sendMessage(
+                  'Usuari esborrat correctament!',
+                  'success'
+                  );
+          }
+        );
+      }
+    );
+  }
 
 }

@@ -44,4 +44,12 @@ updateUser(user: User) {
   this.changedUsers.next(this.users.slice());
 }
 
+deleteUser(indexUser: number){
+  const index = this.users.findIndex((element) => {
+      return element.id === indexUser;
+  });
+  this.users.splice(index, 1);
+  this.changedUsers.next(this.users.slice());
+}
+
 }
