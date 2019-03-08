@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private authService: AuthService) { }
+  constructor(public authService: AuthService) { }
   loginForm: FormGroup;
   loginErrorSubscription: Subscription;
   errorMsg:string;
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
   onLogin(){
     this.authService.loginUser(
       this.loginForm.get("niu").value,
-      this.loginForm.get("passwd").value,  
+      this.loginForm.get("passwd").value,
     )
   }
 }

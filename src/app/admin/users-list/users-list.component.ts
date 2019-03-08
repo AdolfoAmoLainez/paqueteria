@@ -106,4 +106,8 @@ export class UsersListComponent implements OnInit {
     this.deleteUser= undefined;
   }
 
+  onTornarClick() {
+    this.router.navigate(['/llista']);
+  }
+
 }

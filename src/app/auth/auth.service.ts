@@ -10,6 +10,7 @@ import { environment } from "src/environments/environment";
 export class AuthService {
     token: string;
     loginIncorrect = new Subject<any>();
+    userRol = 2; // Usuari normal
 
     constructor(private http: HttpClient,
         private router: Router,
@@ -27,13 +28,19 @@ export class AuthService {
                         this.token = data.token;
                         this.dbService.setTablename(data.tablename);
                         this.router.navigate(['/llista']);
+                        this.dbService.getUserRol(data.username).subscribe(
+                          (data: any) => {
+                            console.dir(data);
+                            this.userRol = data.json[0].rol_id;
+                          }
+                        );
                     }
                 });
 
     }
 
     isAuthenticated() {
-        
+
         if (this.token == null || this.token == undefined){
             let currentUser = JSON.parse(localStorage.getItem('currentUser'));
             if (currentUser && currentUser.token) {
@@ -62,5 +69,9 @@ export class AuthService {
         this.token = null;
         this.dbService.setTablename("");
         this.router.navigate(['login']);
+    }
+
+    getUserRol(){
+      return this.userRol;
     }
 }

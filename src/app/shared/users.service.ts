@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { User } from "./user.model";
-import { useAnimation } from "@angular/animations";
 import { Subject } from "rxjs";
 
 @Injectable()
@@ -16,7 +15,6 @@ export class UsersService {
   }
 
   getUsers() {
-    //this.changedUsers.next(this.users.slice());
     this.users.slice();
   }
 

@@ -13,19 +13,25 @@
     <h3>Veient Paquets {{vistaActual}}</h3>
   </div>
   <div class="col-xs-12 col-sm-12 col-md-6 d-flex align-items-center justify-content-center">
-    <input type="text" name="searchInput" id="searchInput" [(ngModel)]="searchString" (keyup)="onBuscarKey($event)">    
+    <input type="text" name="searchInput" id="searchInput" [(ngModel)]="searchString" (keyup)="onBuscarKey($event)">
     <fa-icon *ngIf="!searching"
               icon="search"
-              class="ml-2" 
-              style="cursor: pointer;" 
+              class="ml-2"
+              style="cursor: pointer;"
               (click)="onBuscar()"
               tooltip="Cercar..."></fa-icon>
     <fa-icon *ngIf="searching"
               icon="times-circle"
-              class="ml-2" 
-              style="cursor: pointer;" 
+              class="ml-2"
+              style="cursor: pointer;"
               (click)="onCancelBuscar()"
               tooltip="Cancel·lar cerca..."></fa-icon>
+    <fa-icon *ngIf="isAdmin()"
+              icon="cog"
+              class="ml-3"
+              style="cursor: pointer;"
+              (click)="onAdminClick()"
+              tooltip="Administrar usuaris..."></fa-icon>
   </div>
 </div>
   <div class="row align-items-center">
@@ -97,26 +103,26 @@
             </div>
           </div>
           <div class="col-sm-1 text-right" *ngIf="allowViewPaquet">
-            <fa-icon icon="eye" 
-                     class="fa-2x text-secondary" 
-                     style="cursor: pointer;" 
+            <fa-icon icon="eye"
+                     class="fa-2x text-secondary"
+                     style="cursor: pointer;"
                      (click)="onViewClick(paquet.id)"
                      tooltip="Veure paquet"></fa-icon>
           </div>
-        
+
           <div class="row justify-content-center" style="margin-left: 50px;">
           <div class="col-sm-2 col-md-4 col-xl-4">
               <div class="col-sm-1" style="margin:10px 10px 20px 10px;" *ngIf="!allowViewPaquet">
-                <fa-icon icon="edit" 
-                         class="fa-2x text-secondary" 
-                         style="cursor: pointer;" 
+                <fa-icon icon="edit"
+                         class="fa-2x text-secondary"
+                         style="cursor: pointer;"
                          (click)="onEditClick(paquet.id)"
                          tooltip="Editar paquet"></fa-icon>
               </div>
               <div class="col-sm-1" style="margin:10px 10px 20px 10px;" *ngIf="!allowViewPaquet && paquet.email!=''">
-                <fa-icon icon="envelope" 
-                         class="fa-2x" 
-                         style="cursor: pointer;" 
+                <fa-icon icon="envelope"
+                         class="fa-2x"
+                         style="cursor: pointer;"
                          (click)="onEnviarMail(paquet.id,confirmMailing)"
                          tooltip="Reenviar correu-e"></fa-icon>
               </div>
@@ -125,16 +131,16 @@
         <div class="row" style="margin-left: 50px;">
           <div class="col-sm-2 col-md-4">
               <div class="col-sm-1" style="margin:3px 10px 20px 10px;" *ngIf="!allowViewPaquet">
-                <fa-icon icon="hand-holding" 
-                         class="fa-2x" 
-                         style="cursor: pointer;" 
+                <fa-icon icon="hand-holding"
+                         class="fa-2x"
+                         style="cursor: pointer;"
                          (click)="onEntregarPaquet(paquet.id,'nomessignar')"
                          tooltip="Entregar paquet"></fa-icon>
               </div>
               <div class="col-sm-1" style="margin:10px 10px 20px 10px;" *ngIf="!allowViewPaquet">
-                <fa-icon icon="qrcode" 
-                         class="fa-2x" 
-                         style="cursor: pointer;" 
+                <fa-icon icon="qrcode"
+                         class="fa-2x"
+                         style="cursor: pointer;"
                          (click)="onGenerarQr(i)"
                          tooltip="Generar codi Qr"></fa-icon>
               </div>
@@ -142,14 +148,14 @@
         </div>
         <div class="row" style="margin-left: 76px;">
           <div class="col-sm-2">
-              <fa-icon icon="trash-alt" 
-                       class="fa-2x text-danger" 
-                       style="cursor: pointer;" 
+              <fa-icon icon="trash-alt"
+                       class="fa-2x text-danger"
+                       style="cursor: pointer;"
                        (click)="onDeleteClick(paquet.id,confirmDeletion)"
                        tooltip="Esborrar paquet"></fa-icon>
           </div>
         </div>
-          
+
         </div>
       </li>
     </ul>

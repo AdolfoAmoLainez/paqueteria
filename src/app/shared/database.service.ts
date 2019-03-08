@@ -386,4 +386,8 @@ export class DatabaseService {
     );
   }
 
+  getUserRol(username: string) {
+    return this.http.get(environment.dataServerURL + '/api/crud/usuaris?niu[LIKE]=%' + username + '%&_fields=rol_id');
+  }
+
 }

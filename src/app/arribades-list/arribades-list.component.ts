@@ -49,7 +49,7 @@ library.add(fas);
           })
         ]))
       ]),
-      
+
       transition('* => void',[
         animate(500, style({
           transform: 'translateX(100px)',
@@ -58,7 +58,7 @@ library.add(fas);
       ]),
     ])
   ]
-  
+
   })
 
 export class ArribadesListComponent implements OnInit, OnDestroy {
@@ -98,7 +98,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
               private databaseService: DatabaseService,
               private router: Router,
               private route: ActivatedRoute,
-              private authService: AuthService,
+              public authService: AuthService,
               private modalService: BsModalService,) { }
 
   ngOnDestroy() {
@@ -116,7 +116,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.searchString ="";
     this.searching=false;
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    
+
     if(isUndefined(currentUser.vistaActual)){
       this.vistaSeguent="Signats";
       this.vistaActual="per Signar";
@@ -176,7 +176,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   onEntregarPaquet(index: number, mode: string) {
     this.signMode = true;
     this.editMode = false;
-   
+
     //this.router.navigate(['entrega',index],{relativeTo: this.route});
     this.router.navigate(['entrega',index,mode]);
   }
@@ -198,7 +198,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.deleteModalRef.hide();
     this.deletePaquetIndex=0;
   }
- 
+
   declineDelete(): void {
     this.deleteModalRef.hide();
     this.deletePaquetIndex=0;
@@ -215,7 +215,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.mailModalRef.hide();
     this.mailPaquetIndex=0;
   }
- 
+
   declineMailSend(): void {
     this.mailModalRef.hide();
     this.mailPaquetIndex=0;
@@ -234,7 +234,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     //console.log("reloadLLista");
     //this.paginaActual=1;
     switch (this.vistaActual){
-      case "per Signar": 
+      case "per Signar":
         this.databaseService.getCountPaquetsPerSignar(this.searchString).subscribe(
           (result: any) => {
             this.totalPaquets = result.json[0].totalpaquets;
@@ -256,7 +256,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
         )
 
           break;
-    } 
+    }
   }
 
 
@@ -332,6 +332,19 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.searchString ="";
     this.searching=false;
     this.reloadLlista();
+  }
+
+  isAdmin() {
+    if (this.authService.userRol === 1) {
+      console.log("is admin");
+      return true;
+    }
+    console.log("isnotadmin");
+    return false;
+  }
+
+  onAdminClick() {
+    this.router.navigate(['/admin']);
   }
 
 }
