@@ -21,12 +21,12 @@ library.add(fas);
   styleUrls: ['./arribades-list.component.css'],
   animations: [
     trigger('paquetAddAnimation',[
-      state('in',style({
+      state('in', style({
         opacity: 1,
         transform: 'translateX(0)'
       })),
       transition('void => *',[
-        animate(1000,keyframes([
+        animate(1000, keyframes([
           style({
             transform: 'translateX(-100px)',
             opacity: 0,
@@ -53,7 +53,7 @@ library.add(fas);
       transition('* => void',[
         animate(500, style({
           transform: 'translateX(100px)',
-          opacity:0
+          opacity: 0
         }))
       ]),
     ])
@@ -65,31 +65,30 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   editMode: boolean = true;
   signMode: boolean = false;
-  allowViewPaquet: boolean = false; //Permet veure els botons de veure i editar
+  allowViewPaquet: boolean = false; // Permet veure els botons de veure i editar
 
   changePaquetsSubscription: Subscription;
-  //changeTotalPaquetsSubscription: Subscription;
   signSubscription: Subscription;
   paquetSignatSubscription: Subscription;
   paquetAddedSubscription: Subscription;
 
   paquets: Paquet[] = [];
-  totalPaquets:number;
-  paginaActual:number = 1;
+  totalPaquets: number;
+  paginaActual: number = 1;
   itemsPerPage: number = 5;
 
   searchString: string="";
   searching: boolean = false;
-  //Variables per controlar els paquets que veiem a la llista
-  //"per Signar" o "Signats"
-  vistaSeguent:string;
-  vistaActual:string;
+  // Variables per controlar els paquets que veiem a la llista
+  // "per Signar" o "Signats"
+  vistaSeguent: string;
+  vistaActual: string;
 
-  deleteModalMsg: string ="Vols esborrar el paquet?";
+  deleteModalMsg: string ='Vols esborrar el paquet?';
   deleteModalRef: BsModalRef;
-  deletePaquetIndex:number = 0;
+  deletePaquetIndex: number = 0;
 
-  mailModalMsg: string ="Vols reenviar l'avís del paquet per correu-e?";
+  mailModalMsg: string ='Vols reenviar l\'avís del paquet per correu-e?';
   mailModalRef: BsModalRef;
   mailPaquetIndex:number = 0;
 
@@ -103,13 +102,12 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.changePaquetsSubscription.unsubscribe();
-    //this.changeTotalPaquetsSubscription.unsubscribe();
     this.signSubscription.unsubscribe();
     this.paquetSignatSubscription.unsubscribe();
   }
 
   ngOnInit() {
-    //this.databaseService.getPaquetsPerSignar();
+
     this.vistaSeguent="Signats";
     this.vistaActual="per Signar";
     this.paginaActual =1;
@@ -123,7 +121,6 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
       currentUser.vistaActual = this.vistaActual;
       currentUser.vistaSeguent=this.vistaSeguent;
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
-      //console.log(currentUser);
     }else{
       this.vistaSeguent=currentUser.vistaSeguent;
       this.vistaActual=currentUser.vistaActual;
@@ -145,17 +142,16 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
 
     this.signSubscription = this.paquetsService.startedSignPaquet.subscribe(
-      (paquetId:number)=>{
-        //this.onEntregarPaquet(paquetId,'nomesqr');
+      (paquetId: number) => {
         this.onViewClick(paquetId);
       }
     )
 
     this.paquetSignatSubscription = this.paquetsService.paquetSignatCorrectament.subscribe(
-      (paquetId:number)=>{
+      (paquetId: number) => {
         this.reloadLlista();
       }
-    )
+    );
 
     this.reloadLlista();
   }
@@ -177,13 +173,11 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.signMode = true;
     this.editMode = false;
 
-    //this.router.navigate(['entrega',index],{relativeTo: this.route});
     this.router.navigate(['entrega',index,mode]);
   }
 
   onViewClick(index: number) {
 
-    //this.router.navigate(['view',index],{relativeTo: this.route});
     this.router.navigate(['view',index]);
 
   }
@@ -230,15 +224,13 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   }
 
-  reloadLlista(){
-    //console.log("reloadLLista");
-    //this.paginaActual=1;
+  reloadLlista() {
+
     switch (this.vistaActual){
       case "per Signar":
         this.databaseService.getCountPaquetsPerSignar(this.searchString).subscribe(
           (result: any) => {
             this.totalPaquets = result.json[0].totalpaquets;
-            //this.paginaActual =1;
             this.databaseService.getPaquetsPerSignar((this.paginaActual-1)*this.itemsPerPage,this.itemsPerPage, this.searchString);
             this.allowViewPaquet=false;
           }
@@ -249,7 +241,6 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
         this.databaseService.getCountPaquetsSignats(this.searchString).subscribe(
           (result: any) => {
             this.totalPaquets = result.json[0].totalpaquets;
-            //this.paginaActual =1;
             this.databaseService.getPaquetsSignats((this.paginaActual-1)*this.itemsPerPage,this.itemsPerPage, this.searchString);
             this.allowViewPaquet=true;
           }
@@ -282,26 +273,26 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
       this.databaseService.getCountPaquetsSignats(this.searchString).subscribe(
         (result: any) => {
           this.totalPaquets = result.json[0].totalpaquets;
-          this.paginaActual =1;
+          this.paginaActual = 1;
           this.databaseService.getPaquetsSignats((this.paginaActual-1)*this.itemsPerPage,this.itemsPerPage,this.searchString);
           this.vistaActual = this.vistaSeguent;
-          this.vistaSeguent="per Signar";
-          this.allowViewPaquet=true;
+          this.vistaSeguent = 'per Signar';
+          this.allowViewPaquet = true;
         });
 
     }
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     currentUser.vistaActual = this.vistaActual;
-    currentUser.vistaSeguent=this.vistaSeguent;
+    currentUser.vistaSeguent = this.vistaSeguent;
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
   }
 
-  onNouPaquet(){
+  onNouPaquet() {
     this.router.navigate(['add',0],{relativeTo: this.route});
   }
 
-  onLogout(){
+  onLogout() {
     this.authService.logout();
   }
 
@@ -310,36 +301,29 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.reloadLlista();
   }
 
-  onBuscar(){
-    //console.log(this.searchInput.nativeElement.value);
-    //this.searchString = this.searchInput.nativeElement.value;
-    this.searching=true;
+  onBuscar() {
+    this.searching = true;
     this.reloadLlista();
   }
 
   onBuscarKey(event){
-    //console.log(this.searchInput.nativeElement.value);
-    //this.searchString = this.searchInput.nativeElement.value;
-    //console.log(event);
-    if (event.key === "Enter"){
+    if (event.key === 'Enter') {
 
-    this.searching=true;
+    this.searching = true;
     this.reloadLlista();
     }
   }
 
   onCancelBuscar(){
-    this.searchString ="";
-    this.searching=false;
+    this.searchString = '';
+    this.searching = false;
     this.reloadLlista();
   }
 
   isAdmin() {
     if (this.authService.userRol === 1) {
-      console.log("is admin");
       return true;
     }
-    console.log("isnotadmin");
     return false;
   }
 

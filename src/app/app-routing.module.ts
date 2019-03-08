@@ -10,26 +10,26 @@ import { AuthGuard } from './auth/auth-guard.service';
 import { ErrorPageComponent } from './shared/error-page/error-page.component';
 import { UsersListComponent } from './admin/users-list/users-list.component';
 import { UserEditaddComponent } from './admin/user-editadd/user-editadd.component';
+import { AdminGuard } from './auth/admin-guard.service';
 
 const appRoutes: Routes = [
-    {path:'', component:LoginComponent},
-    {path:'login', component:LoginComponent},
-    {path:'signarmovil/:id/:qrcode/:tablename', component:PaquetSignarmovilComponent},
-    {path:'entrega/:id/:mode',component:PaquetSignarComponent},
-    {path:'view/:id',component:PaquetViewsignatComponent},
-    {path:'llista', component:ArribadesListComponent,children:[
-      {path:':mode/:id',component:PaquetEditAddComponent}
-      ],canActivate:[AuthGuard]
+    {path: '', component: LoginComponent},
+    {path: 'login', component: LoginComponent},
+    {path: 'signarmovil/:id/:qrcode/:tablename', component: PaquetSignarmovilComponent},
+    {path: 'entrega/:id/:mode', component: PaquetSignarComponent},
+    {path: 'view/:id', component: PaquetViewsignatComponent},
+    {path: 'llista', component: ArribadesListComponent, children: [
+      {path: ':mode/:id', component: PaquetEditAddComponent}
+      ], canActivate: [AuthGuard]
     },
-    {path:'http-error/:error',component: ErrorPageComponent},
-    {path:'admin',component:UsersListComponent,children:[
-      {path:':mode/:id',component:UserEditaddComponent}
-    ]}
-]
+    {path: 'http-error/:error', component: ErrorPageComponent},
+    {path: 'admin', component: UsersListComponent, children: [
+      {path: ':mode/:id', component: UserEditaddComponent}
+    ], canActivate: [AdminGuard]}
+];
 
 @NgModule({
     imports: [
-      // RouterModule.forRoot(appRoutes, {useHash: true})
       RouterModule.forRoot(appRoutes)
     ],
     exports: [RouterModule]

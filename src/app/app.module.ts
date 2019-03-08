@@ -30,6 +30,7 @@ import { PaquetViewsignatComponent } from './paquet/paquet-viewsignat/paquet-vie
 import { PaquetSignarComponent } from './paquet/paquet-signar/paquet-signar.component';
 import { PaquetSignarmovilComponent } from './paquet/paquet-signarmovil/paquet-signarmovil.component';
 import { AuthGuard } from './auth/auth-guard.service';
+import { AdminGuard } from './auth/admin-guard.service';
 
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { esLocale } from 'ngx-bootstrap/locale';
@@ -44,7 +45,7 @@ import { UsersListComponent } from './admin/users-list/users-list.component';
 import { UserEditaddComponent } from './admin/user-editadd/user-editadd.component';
 import { UsersService } from './shared/users.service';
 
-registerLocaleData(localeEs,'es');
+registerLocaleData(localeEs, 'es');
 
 
 @NgModule({
@@ -83,7 +84,10 @@ registerLocaleData(localeEs,'es');
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: LOCALE_ID, useValue: 'es' },
-    PaquetsService, DatabaseService,AuthService,AppRoutingModule,AuthGuard,MessagesService,UsersService],
+    PaquetsService, DatabaseService,
+    AuthService, AppRoutingModule,
+    AuthGuard, AdminGuard,
+    MessagesService, UsersService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
