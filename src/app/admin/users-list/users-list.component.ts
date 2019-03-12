@@ -6,6 +6,7 @@ import { DatabaseService } from 'src/app/shared/database.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-users-list',
@@ -62,7 +63,8 @@ export class UsersListComponent implements OnInit {
               private databaseService: DatabaseService,
               private router: Router,
               private route: ActivatedRoute,
-              private modalService: BsModalService) { }
+              private modalService: BsModalService,
+              public authService: AuthService) { }
 
   ngOnInit() {
     this.changedUsersSubscription = this.usersService.changedUsers.subscribe(
@@ -110,4 +112,7 @@ export class UsersListComponent implements OnInit {
     this.router.navigate(['/llista']);
   }
 
+  onLogout() {
+    this.authService.logout();
+  }
 }
