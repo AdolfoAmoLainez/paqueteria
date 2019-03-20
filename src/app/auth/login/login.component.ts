@@ -29,9 +29,9 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(){
-    this.authService.loginUser(
+   /* this.authService.loginUser(
       this.loginForm.get("niu").value,
       this.loginForm.get("passwd").value,
-    )
+    )*/
   }
 }

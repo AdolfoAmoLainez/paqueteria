@@ -16,7 +16,7 @@ export class AuthService {
         private router: Router,
         private dbService: DatabaseService) { }
 
-    loginUser(username: string, password: string) {
+    loginUser() {
 
         return this.http.get<any>(environment.dataServerURL + '/getUserData')
             .subscribe(
@@ -69,7 +69,8 @@ export class AuthService {
         localStorage.removeItem('currentUser');
         this.token = null;
         this.dbService.setTablename('');
-        this.router.navigate(['login']);
+        //this.router.navigate(['login']);
+        window.location.href = environment.dataServerURL + '/logout';
     }
 
     getUserRol() {
