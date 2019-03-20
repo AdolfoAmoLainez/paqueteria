@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Router } from "@angular/router";
-import { Subject } from "rxjs";
-import { DatabaseService } from "../shared/database.service";
-import { isUndefined } from "util";
-import { environment } from "src/environments/environment";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { DatabaseService } from '../shared/database.service';
+import { isUndefined } from 'util';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AuthService {
@@ -18,20 +18,20 @@ export class AuthService {
 
     loginUser(username: string, password: string) {
 
-        return this.http.post<any>(environment.loginURL, { username, password })
+        return this.http.get<any>(environment.dataServerURL + '/getUserData')
             .subscribe(
-                (data: any) => {
-                    if (data && data.token) {
+                (dataLogin: any) => {
+                    if (dataLogin && dataLogin.username) {
                         // store user details and jwt token in local storage to keep user logged in between page refreshes
-                        localStorage.setItem('currentUser', JSON.stringify(data));
-                        //console.log(data);
-                        this.token = data.token;
-                        this.dbService.setTablename(data.tablename);
+                        localStorage.setItem('currentUser', JSON.stringify(dataLogin));
+                        // console.log(data);
+                        // this.token = data.token;
+                        this.dbService.setTablename(dataLogin.tablename);
                         this.router.navigate(['/llista']);
-                        this.dbService.getUserRol(data.username).subscribe(
-                          (data: any) => {
-                            console.dir(data);
-                            this.userRol = data.json[0].rol_id;
+                        this.dbService.getUserRol(dataLogin.username).subscribe(
+                          (dataRol: any) => {
+                            console.dir(dataRol);
+                            this.userRol = dataRol.json[0].rol_id;
                           }
                         );
                     }
@@ -40,7 +40,8 @@ export class AuthService {
     }
 
     isAuthenticated() {
-
+      return this.http.get(environment.dataServerURL + '/getUserData');
+/*
         if (this.token == null || this.token == undefined){
             let currentUser = JSON.parse(localStorage.getItem('currentUser'));
             if (currentUser && currentUser.token) {
@@ -50,15 +51,15 @@ export class AuthService {
                 return false;
             }
         }
-        return this.token != null;
+        return this.token != null;*/
     }
 
-    getLocalUser(){
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if(isUndefined(currentUser.vistaActual)){
+    getLocalUser() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (isUndefined(currentUser.vistaActual)) {
             this.logout();
             return undefined;
-        }else{
+        } else {
             return currentUser;
           }
     }
@@ -67,11 +68,11 @@ export class AuthService {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
         this.token = null;
-        this.dbService.setTablename("");
+        this.dbService.setTablename('');
         this.router.navigate(['login']);
     }
 
-    getUserRol(){
+    getUserRol() {
       return this.userRol;
     }
 }
