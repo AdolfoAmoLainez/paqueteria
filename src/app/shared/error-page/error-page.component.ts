@@ -1,31 +1,19 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute,Params} from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
+
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-error-page',
   templateUrl: './error-page.component.html',
   styleUrls: ['./error-page.component.css']
 })
-export class ErrorPageComponent implements OnInit,OnDestroy {
+export class ErrorPageComponent {
 
-  error: string;
-  paramsSubscription: Subscription;
+  title: string;
+  message: string;
 
-  constructor(private route: ActivatedRoute) { }
 
-  ngOnInit() {
-    this.error = this.route.snapshot.params['error'];
-    this.paramsSubscription=this.route.params.subscribe(
-      (params: Params) => {
-        //console.log(params);
-        this.error = params['error'];
-      }
-     );
-  }
+  constructor(public bsModalRef: BsModalRef) { }
 
-  ngOnDestroy(): void {
-    this.paramsSubscription.unsubscribe();
-  }
 
 }

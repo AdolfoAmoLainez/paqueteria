@@ -77,18 +77,18 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   paginaActual: number = 1;
   itemsPerPage: number = 5;
 
-  searchString: string="";
+  searchString = '';
   searching: boolean = false;
   // Variables per controlar els paquets que veiem a la llista
   // "per Signar" o "Signats"
   vistaSeguent: string;
   vistaActual: string;
 
-  deleteModalMsg: string ='Vols esborrar el paquet?';
+  deleteModalMsg: string = 'Vols esborrar el paquet?';
   deleteModalRef: BsModalRef;
   deletePaquetIndex: number = 0;
 
-  mailModalMsg: string ='Vols reenviar l\'avís del paquet per correu-e?';
+  mailModalMsg: string = 'Vols reenviar l\'avís del paquet per correu-e?';
   mailModalRef: BsModalRef;
   mailPaquetIndex:number = 0;
 
@@ -98,7 +98,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
               private router: Router,
               private route: ActivatedRoute,
               public authService: AuthService,
-              private modalService: BsModalService,) { }
+              private modalService: BsModalService) { }
 
   ngOnDestroy() {
     this.changePaquetsSubscription.unsubscribe();
@@ -108,22 +108,22 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.vistaSeguent="Signats";
-    this.vistaActual="per Signar";
-    this.paginaActual =1;
-    this.searchString ="";
-    this.searching=false;
-    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.vistaSeguent = 'Signats';
+    this.vistaActual = 'per Signar';
+    this.paginaActual = 1;
+    this.searchString = '';
+    this.searching = false;
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-    if(isUndefined(currentUser.vistaActual)){
-      this.vistaSeguent="Signats";
-      this.vistaActual="per Signar";
+    if (isUndefined(currentUser.vistaActual)) {
+      this.vistaSeguent = 'Signats';
+      this.vistaActual = 'per Signar';
       currentUser.vistaActual = this.vistaActual;
-      currentUser.vistaSeguent=this.vistaSeguent;
+      currentUser.vistaSeguent = this.vistaSeguent;
       localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    }else{
-      this.vistaSeguent=currentUser.vistaSeguent;
-      this.vistaActual=currentUser.vistaActual;
+    } else {
+      this.vistaSeguent = currentUser.vistaSeguent;
+      this.vistaActual = currentUser.vistaActual;
     }
 
 
@@ -145,7 +145,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
       (paquetId: number) => {
         this.onViewClick(paquetId);
       }
-    )
+    );
 
     this.paquetSignatSubscription = this.paquetsService.paquetSignatCorrectament.subscribe(
       (paquetId: number) => {
@@ -165,7 +165,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   onEditClick(index: number) {
 
-    this.router.navigate(['edit',index],{relativeTo: this.route});
+    this.router.navigate(['edit', index], {relativeTo: this.route});
 
   }
 
@@ -173,16 +173,16 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.signMode = true;
     this.editMode = false;
 
-    this.router.navigate(['entrega',index,mode]);
+    this.router.navigate(['entrega', index, mode]);
   }
 
   onViewClick(index: number) {
 
-    this.router.navigate(['view',index]);
+    this.router.navigate(['view', index]);
 
   }
 
-  onDeleteClick(index:number,template: TemplateRef<any>){
+  onDeleteClick(index: number, template: TemplateRef<any>) {
     this.deleteModalRef = this.modalService.show(template, {class: 'modal-sm'});
     this.deletePaquetIndex = index;
   }
@@ -190,15 +190,15 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   confirmDelete(): void {
     this.databaseService.deletePaquet(this.deletePaquetIndex);
     this.deleteModalRef.hide();
-    this.deletePaquetIndex=0;
+    this.deletePaquetIndex = 0;
   }
 
   declineDelete(): void {
     this.deleteModalRef.hide();
-    this.deletePaquetIndex=0;
+    this.deletePaquetIndex = 0;
   }
 
-  onEnviarMail(index:number,template: TemplateRef<any>){
+  onEnviarMail(index: number, template: TemplateRef<any>) {
     this.mailModalRef = this.modalService.show(template, {class: 'modal-sm'});
     this.mailPaquetIndex = index;
   }
@@ -207,18 +207,18 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     const paquet = this.paquetsService.getPaquet(this.mailPaquetIndex);
     this.databaseService.enviaMail(paquet);
     this.mailModalRef.hide();
-    this.mailPaquetIndex=0;
+    this.mailPaquetIndex = 0;
   }
 
   declineMailSend(): void {
     this.mailModalRef.hide();
-    this.mailPaquetIndex=0;
+    this.mailPaquetIndex = 0;
   }
 
   onGenerarQr(index: number) {
     this.signMode = true;
     this.editMode = false;
-    this.paquets[index].qrcode=Math.floor(Math.random() * 1000) + 1;
+    this.paquets[index].qrcode = Math.floor(Math.random() * 1000) + 1;
     this.databaseService.updateQrPaquet(this.paquets[index]);
 
 
@@ -226,25 +226,25 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   reloadLlista() {
 
-    switch (this.vistaActual){
-      case "per Signar":
+    switch (this.vistaActual) {
+      case 'per Signar':
         this.databaseService.getCountPaquetsPerSignar(this.searchString).subscribe(
           (result: any) => {
             this.totalPaquets = result.json[0].totalpaquets;
-            this.databaseService.getPaquetsPerSignar((this.paginaActual-1)*this.itemsPerPage,this.itemsPerPage, this.searchString);
-            this.allowViewPaquet=false;
+            this.databaseService.getPaquetsPerSignar((this.paginaActual - 1) * this.itemsPerPage, this.itemsPerPage, this.searchString);
+            this.allowViewPaquet = false;
           }
-        )
+        );
 
           break;
-      case "Signats":
+      case 'Signats':
         this.databaseService.getCountPaquetsSignats(this.searchString).subscribe(
           (result: any) => {
             this.totalPaquets = result.json[0].totalpaquets;
-            this.databaseService.getPaquetsSignats((this.paginaActual-1)*this.itemsPerPage,this.itemsPerPage, this.searchString);
-            this.allowViewPaquet=true;
+            this.databaseService.getPaquetsSignats((this.paginaActual - 1) * this.itemsPerPage, this.itemsPerPage, this.searchString);
+            this.allowViewPaquet = true;
           }
-        )
+        );
 
           break;
     }
@@ -252,29 +252,29 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
 
 
-  onSearch(valor:string){
-    console.log(valor)
+  onSearch(valor: string) {
+    console.log(valor);
   }
 
-  onChangeView(){
-    if (this.vistaSeguent == "per Signar"){
+  onChangeView() {
+    if (this.vistaSeguent === 'per Signar') {
       this.databaseService.getCountPaquetsPerSignar(this.searchString).subscribe(
-        (result:any) => {
+        (result: any) => {
           this.totalPaquets = result.json[0].totalpaquets;
-          this.paginaActual =1;
-          this.databaseService.getPaquetsPerSignar((this.paginaActual-1)*this.itemsPerPage,this.itemsPerPage,this.searchString);
+          this.paginaActual = 1;
+          this.databaseService.getPaquetsPerSignar((this.paginaActual - 1) * this.itemsPerPage, this.itemsPerPage, this.searchString);
           this.vistaActual = this.vistaSeguent;
-          this.vistaSeguent="Signats";
-          this.allowViewPaquet=false;
+          this.vistaSeguent = 'Signats';
+          this.allowViewPaquet = false;
         }
-      )
+      );
 
-    }else{
+    } else {
       this.databaseService.getCountPaquetsSignats(this.searchString).subscribe(
         (result: any) => {
           this.totalPaquets = result.json[0].totalpaquets;
           this.paginaActual = 1;
-          this.databaseService.getPaquetsSignats((this.paginaActual-1)*this.itemsPerPage,this.itemsPerPage,this.searchString);
+          this.databaseService.getPaquetsSignats((this.paginaActual - 1) * this.itemsPerPage, this.itemsPerPage, this.searchString);
           this.vistaActual = this.vistaSeguent;
           this.vistaSeguent = 'per Signar';
           this.allowViewPaquet = true;
@@ -289,7 +289,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   }
 
   onNouPaquet() {
-    this.router.navigate(['add',0],{relativeTo: this.route});
+    this.router.navigate(['add', 0], {relativeTo: this.route});
   }
 
   onLogout() {
@@ -306,7 +306,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.reloadLlista();
   }
 
-  onBuscarKey(event){
+  onBuscarKey(event) {
     if (event.key === 'Enter') {
 
     this.searching = true;
@@ -314,7 +314,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCancelBuscar(){
+  onCancelBuscar() {
     this.searchString = '';
     this.searching = false;
     this.reloadLlista();

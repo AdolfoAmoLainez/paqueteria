@@ -25,7 +25,7 @@ export class AdminGuard implements CanActivate {
             return false;
           }
         } else {
-          window.location.href = environment.dataServerURL + '/logout';
+          window.location.href = environment.dataServerURL + '/selfapi/logout';
           return false;
         }
       }

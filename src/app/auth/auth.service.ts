@@ -18,7 +18,7 @@ export class AuthService {
 
     loginUser() {
 
-        return this.http.get<any>(environment.dataServerURL + '/getUserData')
+        return this.http.get<any>(environment.dataServerURL + '/selfapi/getUserData')
             .subscribe(
                 (dataLogin: any) => {
                     if (dataLogin && dataLogin.username) {
@@ -32,13 +32,16 @@ export class AuthService {
                             this.userRol = dataRol.json[0].rol_id;
                           }
                         );
+                    } else {
+                      //window.location.href = environment.dataServerURL + '/selfapi/login';
+                      this.router.navigate(['/login']);
                     }
                 });
 
     }
 
     isAuthenticated() {
-      return this.http.get(environment.dataServerURL + '/getUserData');
+      return this.http.get(environment.dataServerURL + '/selfapi/getUserData');
     }
 
     getLocalUser() {
@@ -55,7 +58,7 @@ export class AuthService {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
         this.dbService.setTablename('');
-        window.location.href = environment.dataServerURL + '/logout';
+        window.location.href = environment.dataServerURL + '/selfapi/logout';
     }
 
     getUserRol() {

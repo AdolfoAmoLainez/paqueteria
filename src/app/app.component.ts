@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { AuthService } from './auth/auth.service';
+import {  Router } from '@angular/router';
 
 
 @Component({
@@ -11,10 +11,10 @@ import { AuthService } from './auth/auth.service';
 export class AppComponent implements OnInit {
   title = 'app';
 
-  constructor(private authService: AuthService) { }
+  constructor() { }
 
   ngOnInit() {
-    this.authService.loginUser();
+
   }
 }
 

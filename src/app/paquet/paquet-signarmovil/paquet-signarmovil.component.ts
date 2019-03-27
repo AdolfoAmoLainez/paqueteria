@@ -37,16 +37,16 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
       const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
       const canvasBlancEl: HTMLCanvasElement = this.canvasBlanc.nativeElement;
       this.cx = canvasEl.getContext('2d');
-  
+
       canvasEl.width = this.width;
       canvasEl.height = this.height;
       canvasBlancEl.width = this.width;
       canvasBlancEl.height = this.height;
-  
+
       this.cx.lineWidth = 3;
       this.cx.lineCap = 'round';
       this.cx.strokeStyle = '#000';
-  
+
       this.captureEvents(canvasEl);
     }
 
@@ -62,7 +62,6 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
       'departament': new FormControl(null),
       'dipositari': new FormControl(null,Validators.required)
     });
-    
 
     if (this.route.snapshot.params['id'] != undefined &&
     this.route.snapshot.params['id'] != null &&
@@ -71,19 +70,19 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
     this.route.snapshot.params['tablename'] != undefined &&
     this.route.snapshot.params['tablename'] != null) {
 
-    this.databaseService.getPaquetQr(this.route.snapshot.params['id'], 
+    this.databaseService.getPaquetQr(this.route.snapshot.params['id'],
                                       this.route.snapshot.params['qrcode'],
                                       this.route.snapshot.params['tablename'])
       .subscribe(
         (data: any) => {
-          console.log(data);
+          // console.log(data);
           if (data.length == 0) {
             this.paquetSignatCorrectament = true;
           } else {
-            //for (let elem in data) {
-              let elem=0;
+            // for (let elem in data) {
+              const elem = 0;
               let fecha = new Date(data[elem].data_arribada).toLocaleString('es-ES');
-              if (fecha==="Invalid Date") fecha=data[elem].data_arribada;
+              if (fecha === 'Invalid Date') { fecha = data[elem].data_arribada; }
               this.paquetEditing = new Paquet(
                 data[elem].id,
                 fecha,
@@ -99,8 +98,7 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
                 data[elem].signatura,
                 0,
                 data[elem].email
-              )
-            //}
+              );
           }
 
           this.paquetForm.patchValue({
@@ -114,8 +112,6 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
             'departament': this.paquetEditing.departament,
             'dipositari': this.paquetEditing.dipositari
           });
-
-
         }
       );
   }
@@ -139,18 +135,20 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
 
   onHideForm() {
     this.paquetSignatCorrectament = false;
-    this.formVisible=false;
+    this.formVisible = false;
     this.onClear();
-    this.router.navigate(['llista']);
+    window.close();
+    // this.router.navigate(['llista']);
   }
 
-    //Tenim un canvas hidden amb les mateixes propietats
-  //Mirem si el contingut és igual, llavors no hi ha cap signatura dibuixada
-  senseSignar():boolean{
-    if(this.canvas.nativeElement.toDataURL() == this.canvasBlanc.nativeElement.toDataURL())
+  // Tenim un canvas hidden amb les mateixes propietats
+  // Mirem si el contingut és igual, llavors no hi ha cap signatura dibuixada
+  senseSignar(): boolean {
+    if (this.canvas.nativeElement.toDataURL() == this.canvasBlanc.nativeElement.toDataURL()) {
       return true;
-    else 
+    } else {
       return false;
+    }
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
