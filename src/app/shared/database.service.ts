@@ -23,29 +23,29 @@ export class DatabaseService {
          }
 
 
-    setTablename (tablename:string){
+    setTablename (tablename:string) {
         this.tablename = tablename;
     }
 
-    testTablename (){
-        if (this.tablename==""){
-            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    testTablename () {
+        if (this.tablename === ''){
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             this.tablename = currentUser.tablename;
         }
     }
 
-    testEmailData(){
-        if (this.ubicacioEmail==""){
-            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    testEmailData() {
+        if (this.ubicacioEmail === '') {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             this.ubicacioEmail = currentUser.ubicacioemail;
         }
-        if (this.gestorEmail==""){
-            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (this.gestorEmail === ''){
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
             this.gestorEmail = currentUser.gestoremail;
         }
     }
 
-    tractaResposta(res:any){
+    tractaResposta(res: any) {
         let paquets: Paquet[] = [];
 
         for (let elem in res.body.json) {
@@ -63,8 +63,9 @@ export class DatabaseService {
                 res.body.json[elem].dipositari,
                 res.body.json[elem].signatura,
                 res.body.json[elem].qrcode,
-                res.body.json[elem].email
-            ))
+                res.body.json[elem].email,
+                res.body.json[elem].emailremitent
+            ));
         }
         this.paquetsService.setPaquets(paquets);
     }
@@ -174,13 +175,13 @@ export class DatabaseService {
                                                      ") AND signatura NOT LIKE 'empty' "+
                                                      "ORDER BY data_lliurament DESC;"
               };
-              return this.http.post(environment.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
+              return this.http.post(environment.dataServerURL + '/api/custom', sql, { observe: 'response' }).subscribe(
                 (res:any) => {
                     this.tractaResposta(res);
 
                 }
                 );
-        }else{
+        } else {
 
             return this.http.get(environment.dataServerURL + "/api/crud/"+this.tablename+"?_limit="+limit+"&signatura[LIKE]=data%&_order[data_lliurament]=DESC",
                                     { observe: 'response' }).subscribe(
@@ -199,8 +200,8 @@ export class DatabaseService {
     addPaquet(paquet: Paquet) {
         //console.log(paquet);
         this.testTablename();
-        return this.http.post(environment.dataServerURL + '/api/crud/'+this.tablename, paquet).subscribe(
-            (data:any) => {
+        return this.http.post(environment.dataServerURL + '/api/crud/' + this.tablename, paquet).subscribe(
+            (data: any) => {
                 const paquet: Paquet = <Paquet>data.json[0];
                 this.paquetsService.addPaquet(paquet);
                 this.messagesService.sendMessage(
@@ -213,20 +214,20 @@ export class DatabaseService {
     }
 
     getPaquetQr(index: number, qrcode: number, tablename: string) {
-        //this.testTablename();
-        //return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?id=" + index + "&qrcode=" + qrcode);
-        return this.http.post(environment.dataServerURL + "/selfapi/paquetqr/get",{"tablename": tablename,"id": index, "qrcode":qrcode});
+        // this.testTablename();
+        // return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?id=" + index + "&qrcode=" + qrcode);
+        return this.http.post(environment.dataServerURL + '/paquetqr/get', {'tablename': tablename, 'id': index, 'qrcode': qrcode});
     }
 
     getPaquet(index: number) {
         this.testTablename();
-        return this.http.get(environment.dataServerURL + "/api/crud/"+this.tablename+"/" + index);
+        return this.http.get(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + index);
     }
 
     updatePaquet(paquet: Paquet) {
         this.testTablename();
-        return (this.http.put(environment.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet).subscribe(
-            (data:any) => {
+        return (this.http.put(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + paquet.id, paquet).subscribe(
+            (data: any) => {
                 const paquet: Paquet = <Paquet>data.json[0];
                 this.paquetsService.updatePaquet(paquet);
                 this.messagesService.sendMessage(
@@ -234,7 +235,7 @@ export class DatabaseService {
                     'success'
                     );
             },
-            (error:any) => {
+            (error: any) => {
                 console.log(error);
             }
         ));
@@ -242,7 +243,7 @@ export class DatabaseService {
 
     deletePaquet(index: number) {
         this.testTablename();
-        return (this.http.delete(environment.dataServerURL + '/api/crud/'+this.tablename+'/' + index).subscribe(
+        return (this.http.delete(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + index).subscribe(
             (data) => {
                 this.paquetsService.deletePaquet(index);
                 this.messagesService.sendMessage(
@@ -257,20 +258,21 @@ export class DatabaseService {
     signaPaquet(paquet: Paquet) {
         this.testTablename();
         paquet.data_lliurament = Date.now().toString();
-        return (this.http.put(environment.dataServerURL + '/api/crud/'+this.tablename+'/' + paquet.id, paquet)).subscribe(
+        return (this.http.put(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + paquet.id, paquet)).subscribe(
             (data) => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
                 this.messagesService.sendMessage(
                     'Paquet signat correctament!',
                     'success'
                     );
+                this.enviaMailRemitent(paquet);
             }
         );
     }
 
-    signaPaquetQr(paquet: Paquet, tablename:string) {
+    signaPaquetQr(paquet: Paquet, tablename: string) {
         paquet.data_lliurament = Date.now().toString();
-        return (this.http.post(environment.dataServerURL + '/selfapi/paquetqr/signar', {
+        return (this.http.post(environment.dataServerURL + '/paquetqr/signar', {
             'tablename': tablename,
             'id': paquet.id,
             'dipositari': paquet.dipositari,
@@ -282,6 +284,7 @@ export class DatabaseService {
                     'Paquet signat correctament!',
                     'success'
                     );
+                this.enviaMailRemitent(paquet);
             }
         );
     }
@@ -307,7 +310,7 @@ export class DatabaseService {
         paquet.ubicacioemail = this.ubicacioEmail;
         paquet.gestoremail = this.gestorEmail;
         if (paquet.email!=""){
-            return (this.http.post(environment.dataServerURL + '/selfapi/enviaMail', paquet)).subscribe(
+            return (this.http.post(environment.dataServerURL + '/enviaMail', paquet)).subscribe(
                 (data:any) => {
                     if(data.SendMail === 'ok'){
                         this.messagesService.sendMessage(
@@ -325,6 +328,29 @@ export class DatabaseService {
         }
     }
 
+    enviaMailRemitent(paquet: Paquet) {
+      this.testEmailData();
+      paquet.ubicacioemail = this.ubicacioEmail;
+      paquet.gestoremail = this.gestorEmail;
+      if (paquet.emailremitent !== '') {
+          return (this.http.post(environment.dataServerURL + '/enviaMailRemitent', paquet)).subscribe(
+              (data: any) => {
+                  if (data.SendMail === 'ok') {
+                      this.messagesService.sendMessage(
+                          'Mail enviat correctament!',
+                          'success'
+                          );
+                  } else {
+                      this.messagesService.sendMessage(
+                          'No s\'ha pogut enviar el correu-e!',
+                          'danger'
+                          );
+                  }
+              }
+          );
+      }
+  }
+
     getUsers() {
       return this.http.get(environment.dataServerURL + '/api/crud/usuaris',
       { observe: 'response' }).subscribe(
@@ -335,7 +361,7 @@ export class DatabaseService {
     }
 
     addUser(user: User) {
-      return this.http.post(environment.dataServerURL + '/selfapi/creataula', user).subscribe(
+      return this.http.post(environment.dataServerURL + '/creataula', user).subscribe(
         (data: any) => {
           //console.log(data);
           this.http.post(environment.dataServerURL + '/api/crud/usuaris', user).subscribe(
@@ -371,7 +397,7 @@ export class DatabaseService {
 
   deleteUser(user: User) {
 
-    return this.http.post(environment.dataServerURL + '/selfapi/deltaula', user).subscribe(
+    return this.http.post(environment.dataServerURL + '/deltaula', user).subscribe(
       (data: any) => {
         this.http.delete(environment.dataServerURL + '/api/crud/usuaris/' + user.id).subscribe(
           (data2) => {

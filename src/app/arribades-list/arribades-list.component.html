@@ -88,8 +88,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text font-weight-bold" id="basic-addon1">Remitent:</span>
               </div>
-              <input type="text" class="form-control" placeholder="remitent" aria-label="remitent" aria-describedby="basic-addon1"
-                [value]="paquet.remitent" disabled>
+              <textarea class="form-control" aria-label="remitent" cols="30" rows="2" disabled style="resize: none;">{{paquet.remitent + '\n'+ paquet.emailremitent}}</textarea>
             </div>
           </div>
           <div class="col-sm-3" *ngIf="paquet.data_lliurament!=''">
