@@ -63,6 +63,7 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
       'dipositari': new FormControl(null,Validators.required)
     });
 
+
     if (this.route.snapshot.params['id'] != undefined &&
     this.route.snapshot.params['id'] != null &&
     this.route.snapshot.params['qrcode'] != undefined &&
@@ -75,11 +76,10 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
                                       this.route.snapshot.params['tablename'])
       .subscribe(
         (data: any) => {
-          // console.log(data);
+          console.log(data);
           if (data.length == 0) {
             this.paquetSignatCorrectament = true;
           } else {
-            // for (let elem in data) {
               const elem = 0;
               let fecha = new Date(data[elem].data_arribada).toLocaleString('es-ES');
               if (fecha === 'Invalid Date') { fecha = data[elem].data_arribada; }
@@ -97,7 +97,8 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
                 data[elem].dipositari,
                 data[elem].signatura,
                 0,
-                data[elem].email
+                data[elem].email,
+                data[elem].emailremitent
               );
           }
 
@@ -137,12 +138,11 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
     this.paquetSignatCorrectament = false;
     this.formVisible = false;
     this.onClear();
-    window.close();
-    // this.router.navigate(['llista']);
+    this.router.navigate(['llista']);
   }
 
-  // Tenim un canvas hidden amb les mateixes propietats
-  // Mirem si el contingut és igual, llavors no hi ha cap signatura dibuixada
+    //Tenim un canvas hidden amb les mateixes propietats
+  //Mirem si el contingut és igual, llavors no hi ha cap signatura dibuixada
   senseSignar(): boolean {
     if (this.canvas.nativeElement.toDataURL() == this.canvasBlanc.nativeElement.toDataURL()) {
       return true;
