@@ -21,7 +21,8 @@ export class ErrorInterceptor implements HttpInterceptor {
         catchError((error: HttpErrorResponse) => {
           const initialState = {
             message: error.message,
-            title: 'ERROR: ' + error.status
+            title: 'ERROR: ' + error.status,
+            status: error.status
           };
           this.errorModalRef = this.modalService.show(ErrorPageComponent, {initialState});
           return throwError(error);

@@ -138,7 +138,8 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
     this.paquetSignatCorrectament = false;
     this.formVisible = false;
     this.onClear();
-    this.router.navigate(['llista']);
+    window.close();
+    //this.router.navigate(['llista']);
   }
 
     //Tenim un canvas hidden amb les mateixes propietats

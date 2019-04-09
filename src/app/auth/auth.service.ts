@@ -33,8 +33,8 @@ export class AuthService {
                           }
                         );
                     } else {
-                      //window.location.href = environment.dataServerURL + '/selfapi/login';
-                      this.router.navigate(['/login']);
+                      window.location.href = environment.dataServerURL + '/selfapi/login';
+                      //this.router.navigate(['/login']);
                     }
                 });
 

@@ -216,7 +216,7 @@ export class DatabaseService {
     getPaquetQr(index: number, qrcode: number, tablename: string) {
         // this.testTablename();
         // return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?id=" + index + "&qrcode=" + qrcode);
-        return this.http.post(environment.dataServerURL + '/paquetqr/get', {'tablename': tablename, 'id': index, 'qrcode': qrcode});
+        return this.http.post(environment.dataServerURL + '/selfapi/paquetqr/get', {'tablename': tablename, 'id': index, 'qrcode': qrcode});
     }
 
     getPaquet(index: number) {
@@ -272,7 +272,7 @@ export class DatabaseService {
 
     signaPaquetQr(paquet: Paquet, tablename: string) {
         paquet.data_lliurament = Date.now().toString();
-        return (this.http.post(environment.dataServerURL + '/paquetqr/signar', {
+        return (this.http.post(environment.dataServerURL + '/selfapi/paquetqr/signar', {
             'tablename': tablename,
             'id': paquet.id,
             'dipositari': paquet.dipositari,
@@ -310,7 +310,7 @@ export class DatabaseService {
         paquet.ubicacioemail = this.ubicacioEmail;
         paquet.gestoremail = this.gestorEmail;
         if (paquet.email!=""){
-            return (this.http.post(environment.dataServerURL + '/enviaMail', paquet)).subscribe(
+            return (this.http.post(environment.dataServerURL + '/selfapi/enviaMail', paquet)).subscribe(
                 (data:any) => {
                     if(data.SendMail === 'ok'){
                         this.messagesService.sendMessage(
@@ -333,7 +333,7 @@ export class DatabaseService {
       paquet.ubicacioemail = this.ubicacioEmail;
       paquet.gestoremail = this.gestorEmail;
       if (paquet.emailremitent !== '') {
-          return (this.http.post(environment.dataServerURL + '/enviaMailRemitent', paquet)).subscribe(
+          return (this.http.post(environment.dataServerURL + '/selfapi/enviaMailRemitent', paquet)).subscribe(
               (data: any) => {
                   if (data.SendMail === 'ok') {
                       this.messagesService.sendMessage(
@@ -361,7 +361,7 @@ export class DatabaseService {
     }
 
     addUser(user: User) {
-      return this.http.post(environment.dataServerURL + '/creataula', user).subscribe(
+      return this.http.post(environment.dataServerURL + '/selfapi/creataula', user).subscribe(
         (data: any) => {
           //console.log(data);
           this.http.post(environment.dataServerURL + '/api/crud/usuaris', user).subscribe(
@@ -397,7 +397,7 @@ export class DatabaseService {
 
   deleteUser(user: User) {
 
-    return this.http.post(environment.dataServerURL + '/deltaula', user).subscribe(
+    return this.http.post(environment.dataServerURL + '/selfapi/deltaula', user).subscribe(
       (data: any) => {
         this.http.delete(environment.dataServerURL + '/api/crud/usuaris/' + user.id).subscribe(
           (data2) => {

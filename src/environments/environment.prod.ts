@@ -1,8 +1,8 @@
 export const environment = {
   production: true,
-  loginURL: 'https://bitacola.uab.cat:55023/auth/login',
-  dataServerURL: 'https://bitacola.uab.cat:55023',
-  signUrlServer: 'https://bitacola.uab.cat:55023/signarmovil/',
+  loginURL: 'https://chaman.uab.cat:55023/auth/login',
+  dataServerURL: 'https://chaman.uab.cat:55023',
+  signUrlServer: 'https://chaman.uab.cat:55023/signarmovil/',
   ADMIN: 1,
   USUARI: 2,
   rols: [
