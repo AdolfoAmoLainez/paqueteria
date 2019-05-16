@@ -69,10 +69,10 @@
   <div class="row">
     <div class="col-12 justify-content-left ">
       <button type="submit" [disabled]="!paquetForm.valid" [class]="!paquetForm.valid?'btn btn-warning':'btn btn-success'"
-        (click)="onPaquetAction()">{{ editMode ? 'Modificar' : 'Añadir'}}</button>
+        (click)="onPaquetAction()">{{ editMode ? 'Modificar' : 'Afegir'}}</button>
       <!--<button *ngIf="editMode" class="btn btn-danger" type="button" (click)="onDelete()">Delete</button>-->
-      <button class="btn btn-primary" type="button" (click)="onClear()" style="margin-left: 10px;">Limpiar</button>
-      <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancelar</button>
+      <button class="btn btn-primary" type="button" (click)="onClear()" style="margin-left: 10px;">Netejar</button>
+      <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancel·lar</button>
     </div>
   </div>
 </form>

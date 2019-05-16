@@ -49,12 +49,12 @@
   </div>
     <div class="row justify-content-center" *ngIf="formVisible">
       <div class="col-md-6 text-center">
-        <button type="button" 
+        <button type="button"
               [disabled]="!paquetForm.valid"
               [class]="!paquetForm.valid || senseSignar()?'btn btn-warning':'btn btn-success'"
               (click)="onSignar()" style="margin-left: 10px;">Signar</button>
-      
-        <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancelar</button>
+
+        <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancel·lar</button>
       </div>
     </div>
   </div>

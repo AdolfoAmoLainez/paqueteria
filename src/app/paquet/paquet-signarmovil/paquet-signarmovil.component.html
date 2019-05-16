@@ -44,11 +44,11 @@
   </div>
   <div class="row" *ngIf="!paquetSignatCorrectament && formVisible">
     <div class="col-md-6 text-center">
-      <button 
+      <button
       [disabled]="!paquetForm.valid"
       [class]="!paquetForm.valid || senseSignar()?'btn btn-warning':'btn btn-success'"
             type="button" (click)="onSignar()" style="margin-left: 10px;">Signar</button>
-      <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancelar</button>
+      <button class="btn btn-secondary" type="button" (click)="onHideForm()" style="margin-left: 10px;">Cancel·lar</button>
     </div>
   </div>
 </div>
