@@ -37,7 +37,7 @@ app.use(cookieParser());
 //app.use(express.cookieParser('this should be random and secure'));
 //app.use(express.cookieSession());
 app.use(session({
-	secret: 'FljhP)/&|a"N>0JDxzpDo0;Vx-u9vd3^#qDHCw6!(w73<hBmH;A+S`C^XJU8H',
+	secret: 'your_secret_random_pass_frase',
         resave: false,
         saveUninitialized: true
 	}
@@ -55,28 +55,133 @@ app.use(bodyParser.urlencoded({extended:false}));
 //app.use(cas.serviceValidate(), cas.authenticate(),express.static('public'));
 app.use(express.static('public'));
 
+app.post('/selfapi/enviaMail', (req,res,next) => {
+	if (req.body.email!=undefined && req.body.email!=''){
+
+      let code = shell.exec('echo \"Heu rebut un paquet amb n&uacute;mero de registre '+req.body.id+' i remitent '+
+                             req.body.remitent+'. \nPodeu recollir-lo per '+req.body.ubicacioemail+'\"'+
+		     ' | mail -aFrom:'+req.body.gestoremail+' -a "Content-type: text/html" -s \'Paquet rebut per part de '+req.body.remitent+'\' ' + req.body.email).code;
+	  if (code !==0){
+            res.status(200).json({ SendMail: 'ko' });
+	  }else{
+            res.status(200).json({ SendMail: 'ok' });
+	  }
+    }else{
+        res.status(200).json({ SendMail: 'ko' });
+    }
+
+});
+
+
+function getPaquetQrCallback(results, httpres, error){
+
+    if(error){
+        httpres.status(499).json({status:'499',message: error.code+": "+ error.sqlMessage})
+    }else{
+        httpres.status(200).json(results);
+    }
+
+}
 
 /**
- * A partir d'aquí definim els middlewares que farem servir
- *
- * Si volem que es verifiqui que l'usuari ha validat contra CAS
- * EX: app.post('/selfapi/example', cas.serviceValidate(), (req,res)=>{..});
- *
- * Si volem que verifiqui i validi
- * Ex: app.get('/selfapi/example', cas.serviceValidate(), cas.authenticate(), function(req, res) {..});
- *
- * Si volem un middleware sense validar amb CAS
- * Ex: app.post('/selfapi/example', (req,res,next) => {..});
- *
- * Si fem servir MysqlRest-Api forçem que l'usuari estigui validat per poder accedir via REST
- * Ex: app.use('/api', cas.serviceValidate(), function(req, res, next) {
-      if (req.session.cas && req.session.cas.user) {
-        next();
-        } else {
-            res.status(401).json({message: 'Usuari no valid!'});
-      }});
+ * Funció per tornar el paquet amb codi QR però
+ * sense haver de estar validat. Pensat per accedir
+ * des del movil, sense token
+ */
+app.post('/selfapi/paquetqr/get',(req,res) => {
+
+    dbconfig.getPaquetQr(req.body.tablename,req.body.id, req.body.qrcode,res,getPaquetQrCallback);
+
+});
+
+function signaPaquetQrCallback(results, httpres, error){
+    if(error){
+        httpres.status(499).json({status:'499',message: error.code+": "+ error.sqlMessage})
+    }else{
+        httpres.status(200).json(results);
+    }
+}
+
+/**
+ * Funció per signar el paquet amb codi QR però
+ * sense haver de estar validat. Pensat per accedir
+ * des del movil, sense token
  */
 
+app.post('/selfapi/paquetqr/signar',(req,res) => {
+    //console.log(req.body);
+    dbconfig.signaPaquetQr(req.body,res,signaPaquetQrCallback);
+
+});
+
+function newTaulaCallback(results,httpres, error){
+    if(error){
+        httpres.status(498).json({status:'498',message: error.code+": "+ error.sqlMessage});
+    }else{
+        httpres.status(200).json(results);
+    }
+}
+
+/**
+ * Funció per crear una nova taula copiada de la taula
+ * buida d'exemple
+ */
+app.post('/selfapi/creataula', cas.serviceValidate(), (req,res)=>{
+
+    if (req.session.cas && req.session.cas.user) {
+        dbconfig.creaTaula(req.body.tablename,res,newTaulaCallback);
+    } else {
+        res.status(401).json({message: 'Usuari no valid!'})
+    }
+
+});
+
+app.post('/selfapi/enviaMailRemitent', (req,res,next) => {
+	if (req.body.emailremitent!=undefined && req.body.emailremitent!=''){
+
+      let code = shell.exec('echo \"S\'ha recollit el paquet amb n&uacute;mero de registre '+req.body.id+' \"'+
+		     ' | mail -aFrom:'+req.body.gestoremail+' -a "Content-type: text/html" -s \'Paquet entregat\' ' + req.body.emailremitent).code;
+	  if (code !==0){
+            res.status(200).json({ SendMail: 'ko' });
+	  }else{
+            res.status(200).json({ SendMail: 'ok' });
+	  }
+    }else{
+        res.status(200).json({ SendMail: 'ko' });
+    }
+
+});
+
+function delTaulaCallback(results,httpres, error){
+    if(error){
+        httpres.status(498).json({status:'498',message: error.code+": "+ error.sqlMessage});
+    }else{
+        httpres.status(200).json(results);
+    }
+}
+
+/**
+ * Funció per esborrar la taula
+ * d'un usuari
+ */
+
+app.post('/selfapi/deltaula', cas.serviceValidate(), (req,res)=>{
+
+    if (req.session.cas && req.session.cas.user) {
+        dbconfig.esborraTaula(req.body.tablename,res,delTaulaCallback);
+    } else {
+        res.status(401).json({message: 'Usuari no valid!'})
+    }
+
+});
+
+app.get('/selfapi/getUserData', cas.serviceValidate(), cas.authenticate(), function(req, res) {
+    if (req.session.cas && req.session.cas.user) {
+        dbconfig.isUserOnDB(req.session.cas.user,'',res,verifyUserCallback);
+    } else {
+        res.status(401).json({message: 'Usuari no valid!'});
+    }
+});
 
 app.use('/api', cas.serviceValidate(), function(req, res, next) {
 
@@ -86,10 +191,6 @@ app.use('/api', cas.serviceValidate(), function(req, res, next) {
         res.status(401).json({message: 'Usuari no valid!'});
     }
   });
-
-/**
- * Funció per fer logout del CAS
- */
 
   app.get('/selfapi/logout', function(req, res) {
     if (!req.session) {
@@ -109,6 +210,41 @@ app.use('/api', cas.serviceValidate(), function(req, res, next) {
   });
 
 
+  function verifyUserCallback(results,httpres,username){
+    if(results.length>0){
+
+            let body = {
+                id: 1,
+                username: username,
+                tablename: results[0].tablename,
+                ubicacioemail: results[0].ubicacioemail,
+                gestoremail: results[0].gestoremail
+            };
+
+            httpres.status(200).json(body)
+    }else{
+        console.log("verifyUserCallback: Usuari no trobat a la BBDD!!");
+        const status = 401;
+        const message = 'Usuari o password incorrectes';
+        httpres.status(status).json({ status, message })
+        console.log(message);
+        return;
+    }
+}
+
+function verifyUserlogin(results,httpres,username){
+    if(results.length>0){
+        httpres.redirect(302,'/login');
+    }else{
+        console.log("verifyUserCallback: Usuari no trobat a la BBDD!!");
+        const status = 401;
+        const message = 'Usuari o password incorrectes';
+        httpres.status(status).json({ status, message })
+        console.log(message);
+        return;
+    }
+}
+
   // This route has the serviceValidate middleware, which verifies
   // that CAS authentication has taken place, and also the
   // authenticate middleware, which requests it if it has not already
@@ -116,17 +252,15 @@ app.use('/api', cas.serviceValidate(), function(req, res, next) {
 
   app.get('/selfapi/login', cas.serviceValidate(), cas.authenticate(), function(req, res) {
     // Great, we logged in, now redirect back to the home page.
-    //Si arribem aquí és que hem pogut validar. Redireccionem a la URL adequada si escau
-        httpres.redirect(302,'/login');
+    //console.log("paso por login");
+    dbconfig.isUserOnDB(req.session.cas.user,'',res,verifyUserlogin)
 
   });
 
 
-/**
- * En cas de tenir una app Angular al public, si no encaixa cap middleware
- * redireccionem sempre a l'index.html per tal que sigui el router de Angular
- * qui pugui decidir.
- */
+/*app.get('*', cas.serviceValidate(), cas.authenticate(),(req,res)=>{
+    res.sendFile(__dirname+'/public/index.html');
+})*/
 
 app.get('*',(req,res)=>{
 

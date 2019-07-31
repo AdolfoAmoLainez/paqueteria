@@ -2,6 +2,48 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
 
+See `paqueteria.sql` for database tables.
+You have to add manually the first user in the `usuaris` table for administration pourposes with `rol_id 1`. Notice the `niu` column is the username used to enter through CAS and to get access to tha app. The rol_id is hardcoded in the `environment` files of the app (1=admin, 2=standard user) by default the `2` rol is used when a user is added with the app.
+
+Important columns at `usuaris` table:
+* tablename: Table used by the user identified by `niu`. When a user is added thruogh tha app a new table is created by copying the table `paquets_buida` 
+* ubicacioemail: The text added to the mail sended to the recipient to indicate where to pick up the package.
+* gestoremail: The mail address to use on the `from` of the mail.
+
+You have to configure exim4 (or sendmail) to use de `mail` command to send mails from command line. See `app.post('/selfapi/enviaMail')` and `app.post('/selfapi/enviaMailRemitent')`middlewares on index.js
+
+## index.js
+Change `secret pass frase` at `session middleware` creation:
+
+```javascript
+app.use(session({
+	secret: 'your_secret_random_pass_frase',
+        resave: false,
+        saveUninitialized: true
+	}
+));
+```
+
+Configure https access with server certificates on `options` variable at the end of the file
+
+```javascript
+var options = {
+    key: FS.readFileSync(path.join(__dirname, './certs/chaman_uab_cat.key')),
+    cert: FS.readFileSync(path.join(__dirname, './certs/chaman_uab_cat.crt'))
+  };
+```
+## connections.js
+Configure mysql database access at the mysqlOptions variable:
+
+```javascript
+var mysqlOptions = {
+  host:'localhost',
+  user:'paqueteria',
+  password:'paqueteria',
+  database:'paqueteria'
+};
+```
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
@@ -12,7 +54,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `ng build` to build the project. The build artifacts will be stored in the `backend/public` directory. Use the `--prod` flag for a production build.
 
 ## Running unit tests
 
