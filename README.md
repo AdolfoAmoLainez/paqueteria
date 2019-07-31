@@ -21,6 +21,9 @@ npm install mysql-restapi
 ```
 
 ## index.js
+
+Change connectin port with de `PORT` variable.
+
 Change `secret pass frase` at `session middleware` creation:
 
 ```javascript
@@ -54,7 +57,8 @@ var mysqlOptions = {
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` for a frontend dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files. You can configure a mysql instance in localhost and set it up in the connections.js file. Also have to change the environment files to especify the backend URLs.
+Run `npm run start:server` to start de backend server on the localhost.
 
 ## Code scaffolding
 
@@ -62,7 +66,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `backend/public` directory. Use the `--prod` flag for a production build.
+Run `ng build --prod --aot` to build the project. The build artifacts will be stored in the `backend/public` directory. Use the `--configuration=production` flag for a production build.
 
 ## Running unit tests
 
