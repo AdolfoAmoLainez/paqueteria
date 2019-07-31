@@ -9,8 +9,16 @@ Important columns at `usuaris` table:
 * tablename: Table used by the user identified by `niu`. When a user is added thruogh tha app a new table is created by copying the table `paquets_buida` 
 * ubicacioemail: The text added to the mail sended to the recipient to indicate where to pick up the package.
 * gestoremail: The mail address to use on the `from` of the mail.
+* ldapuri: Not used at this version. Keeped for backwards compatibility.
+* uidbasedn: Not used at this version. Keeped for backwards compatibility.
 
+A linux server is recommended because of the mail needs for motifications.
 You have to configure exim4 (or sendmail) to use de `mail` command to send mails from command line. See `app.post('/selfapi/enviaMail')` and `app.post('/selfapi/enviaMailRemitent')`middlewares on index.js
+
+Mysql-restapi (https://www.npmjs.com/package/mysql-restapi) is used to have CRUD rest api access to de DB. We use a hardcoded module in the mysql-restapi folder but we need its dependencies. So we have to install manually the package with 
+```
+npm install mysql-restapi
+```
 
 ## index.js
 Change `secret pass frase` at `session middleware` creation:
