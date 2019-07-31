@@ -3,7 +3,7 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
 
 See `paqueteria.sql` for database tables.
-You have to add manually the first user in the `usuaris` table for administration pourposes with `rol_id 1`. Notice the `niu` column is the username used to enter through CAS and to get access to tha app. The rol_id is hardcoded in the `environment` files of the app (1=admin, 2=standard user) by default the `2` rol is used when a user is added with the app.
+You have to add manually the first user in the `usuaris` table for administration pourposes with `rol_id 1`. Notice the `niu` column is the username used to enter through CAS and to get access to the app. The rol_id is hardcoded in the `environment` files of the app (1=admin, 2=standard user) by default the `2` rol is used when a user is added with the app.
 
 Important columns at `usuaris` table:
 * tablename: Table used by the user identified by `niu`. When a user is added thruogh tha app a new table is created by copying the table `paquets_buida` 
@@ -23,6 +23,8 @@ npm install mysql-restapi
 ## index.js
 
 Change connectin port with de `PORT` variable.
+
+Change the CAS host at the `cas.configure` object options.
 
 Change `secret pass frase` at `session middleware` creation:
 
