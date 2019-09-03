@@ -76,6 +76,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   totalPaquets: number;
   paginaActual: number = 1;
   itemsPerPage: number = 5;
+  maxSizePagination: number = 10;
 
   searchString: string="";
   searching: boolean = false;

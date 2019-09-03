@@ -77,7 +77,8 @@ export class DatabaseService {
         let sql = {};
         if (searchText!=undefined && searchText!=""){
             sql = {
-                "query":"SELECT count(*) as totalpaquets FROM paquets WHERE (data_arribada LIKE '%"+searchText+"%' or " +
+                "query":"SELECT count(*) as totalpaquets FROM "+this.tablename+" WHERE (id LIKE '%" + searchText + "%' or " +
+                                                     "data_arribada LIKE '%"+searchText+"%' or " +
                                                      "remitent LIKE '%"+searchText+"%' or "+
                                                      "procedencia LIKE '%"+searchText+"%' or "+
                                                      "mitja_arribada LIKE '%"+searchText+"%' or "+
@@ -102,7 +103,8 @@ export class DatabaseService {
 
         if (searchText!=undefined && searchText!=""){
             let sql = {
-                "query":"SELECT * FROM "+this.tablename+" WHERE (data_arribada LIKE '%"+searchText+"%' or " +
+                "query":"SELECT * FROM "+this.tablename+" WHERE (id LIKE '%" + searchText + "%' or " +
+                                                     "data_arribada LIKE '%"+searchText+"%' or " +
                                                      "remitent LIKE '%"+searchText+"%' or "+
                                                      "procedencia LIKE '%"+searchText+"%' or "+
                                                      "mitja_arribada LIKE '%"+searchText+"%' or "+
@@ -114,6 +116,7 @@ export class DatabaseService {
                                                      ") AND signatura='empty' "+
                                                      "ORDER BY data_arribada DESC;"
               };
+
               return this.http.post(environment.dataServerURL + "/api/custom", sql, { observe: 'response' }).subscribe(
                 (res:any) => {
                     this.tractaResposta(res);
@@ -137,7 +140,8 @@ export class DatabaseService {
         let sql ={};
         if (searchText!=undefined && searchText!=""){
             sql = {
-                "query":"SELECT count(*) as totalpaquets FROM paquets WHERE (data_arribada LIKE '%"+searchText+"%' or " +
+                "query":"SELECT count(*) as totalpaquets FROM "+this.tablename+" WHERE (id LIKE '%" + searchText + "%' or " +
+                                                     "data_arribada LIKE '%"+searchText+"%' or " +
                                                      "remitent LIKE '%"+searchText+"%' or "+
                                                      "procedencia LIKE '%"+searchText+"%' or "+
                                                      "mitja_arribada LIKE '%"+searchText+"%' or "+
@@ -163,7 +167,8 @@ export class DatabaseService {
 
         if (searchText!=undefined && searchText!=""){
             let sql = {
-                "query":"SELECT * FROM "+this.tablename+" WHERE (data_arribada LIKE '%"+searchText+"%' or " +
+                "query":"SELECT * FROM "+this.tablename+" WHERE (id LIKE '%" + searchText + "%' or " +
+                                                     "data_arribada LIKE '%"+searchText+"%' or " +
                                                      "remitent LIKE '%"+searchText+"%' or "+
                                                      "procedencia LIKE '%"+searchText+"%' or "+
                                                      "mitja_arribada LIKE '%"+searchText+"%' or "+

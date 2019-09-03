@@ -16,13 +16,13 @@
     <input type="text" name="searchInput" id="searchInput" [(ngModel)]="searchString" (keyup)="onBuscarKey($event)">
     <fa-icon *ngIf="!searching"
               icon="search"
-              class="ml-2"
+              class="ml-2 fa-2x"
               style="cursor: pointer;"
               (click)="onBuscar()"
               tooltip="Cercar..."></fa-icon>
     <fa-icon *ngIf="searching"
               icon="times-circle"
-              class="ml-2"
+              class="ml-2 fa-2x"
               style="cursor: pointer;"
               (click)="onCancelBuscar()"
               tooltip="Cancel·lar cerca..."></fa-icon>
@@ -54,7 +54,12 @@
     <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 d-flex align-items-center justify-content-center">
       <pagination *ngIf="totalPaquets>itemsPerPage" class = "mt-2" [totalItems]="totalPaquets"
                   [itemsPerPage]="itemsPerPage"
+                  [rotate]="false"
+                  [boundaryLinks]="true"
         previousText="Anterior" nextText="Següent"
+        firstText="Primer" lastText="Últim"
+        [maxSize]="maxSizePagination"
+        [(ngModel)]="paginaActual"
         (pageChanged)="pageChanged($event)"></pagination>
     </div>
 </div>
