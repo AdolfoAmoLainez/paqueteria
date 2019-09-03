@@ -6,16 +6,16 @@ See `paqueteria.sql` for database tables.
 You have to add manually the first user in the `usuaris` table for administration pourposes with `rol_id 1`. Notice the `niu` column is the username used to enter through CAS and to get access to the app. The rol_id is hardcoded in the `environment` files of the app (1=admin, 2=standard user) by default the `2` rol is used when a user is added with the app.
 
 Important columns at `usuaris` table:
-* tablename: Table used by the user identified by `niu`. When a user is added thruogh tha app a new table is created by copying the table `paquets_buida` 
+* tablename: Table used by the user identified by `niu`. When a user is added thruogh the app, a new table is created by copying the table `paquets_buida` 
 * ubicacioemail: The text added to the mail sended to the recipient to indicate where to pick up the package.
 * gestoremail: The mail address to use on the `from` of the mail.
 * ldapuri: Not used at this version. Keeped for backwards compatibility.
 * uidbasedn: Not used at this version. Keeped for backwards compatibility.
 
-A linux server is recommended because of the mail needs for motifications.
+A linux server is recommended because of the mail needs for notifications.
 You have to configure exim4 (or sendmail) to use de `mail` command to send mails from command line. See `app.post('/selfapi/enviaMail')` and `app.post('/selfapi/enviaMailRemitent')`middlewares on index.js
 
-Mysql-restapi (https://www.npmjs.com/package/mysql-restapi) is used to have CRUD rest api access to de DB. We use a hardcoded module in the mysql-restapi folder but we need its dependencies. So we have to install manually the package with 
+Mysql-restapi (https://www.npmjs.com/package/mysql-restapi) is used to have CRUD rest api access to de DB. We use a hardcoded module in the mysql-restapi folder but we need its dependencies. So we have to install manually the package on the `backend` folder project with 
 ```
 npm install mysql-restapi
 ```
