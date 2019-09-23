@@ -1,16 +1,17 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, OnDestroy } from '@angular/core';
 
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/pairwise';
-import 'rxjs/add/operator/switchMap';
-import { Observable, Subscription } from 'rxjs';
+// import 'rxjs/add/observable/fromEvent';
+import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
+// import 'rxjs/add/operator/takeUntil';
+// import 'rxjs/add/operator/pairwise';
+// import 'rxjs/add/operator/switchMap';
+import { Subscription, fromEvent } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PaquetsService } from 'src/app/shared/paquets.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Paquet } from 'src/app/shared/paquet.model';
 import { DatabaseService } from 'src/app/shared/database.service';
-import {environment} from 'src/environments/environment'
+import {environment} from 'src/environments/environment';
 
 @Component({
   selector: 'app-paquet-signar',
@@ -18,19 +19,19 @@ import {environment} from 'src/environments/environment'
   styleUrls: ['./paquet-signar.component.css']
 })
 export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
-  
-  @ViewChild('canvas') public canvas: ElementRef;
-  @ViewChild('canvasBlanc') public canvasBlanc: ElementRef;
+
+  @ViewChild('canvas', {static: false}) public canvas: ElementRef;
+  @ViewChild('canvasBlanc', {static: false}) public canvasBlanc: ElementRef;
   @Input() public width = 300;
   @Input() public height = 300;
   private cx: CanvasRenderingContext2D;
 
   paquetForm: FormGroup;
   paquetEditing: Paquet;
-  qrCodePaquet: string = ''//Variable que contindrà la url amb el codi QR
+  qrCodePaquet = ''; // Variable que contindrà la url amb el codi QR
 
-  paquetSignatCorrectament: boolean = false;
-  formVisible:boolean = false;
+  paquetSignatCorrectament = false;
+  formVisible = false;
 
   paquetSignatSubscription: Subscription;
 
@@ -56,66 +57,66 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.captureEvents(canvasEl);
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.paquetSignatSubscription.unsubscribe();
   }
 
   ngOnInit() {
 
     this.paquetForm = new FormGroup({
-      'data_arribada': new FormControl(null),
-      'remitent': new FormControl(null),
-      'procedencia': new FormControl(null),
-      'quantitat': new FormControl(null),
-      'mitja_arribada': new FormControl(null),
-      'referencia': new FormControl(null),
-      'destinatari': new FormControl(null),
-      'departament': new FormControl(null),
-      'dipositari': new FormControl(null,Validators.required)
+      data_arribada: new FormControl(null),
+      remitent: new FormControl(null),
+      procedencia: new FormControl(null),
+      quantitat: new FormControl(null),
+      mitja_arribada: new FormControl(null),
+      referencia: new FormControl(null),
+      destinatari: new FormControl(null),
+      departament: new FormControl(null),
+      dipositari: new FormControl(null, Validators.required)
     });
 
     this.paquetSignatSubscription = this.paquetsService.paquetSignatCorrectament.subscribe(
-      (paquetId:number)=>{
-        this.paquetSignatCorrectament=true;
-        this.formVisible=false;
+      (paquetId: number) => {
+        this.paquetSignatCorrectament = true;
+        this.formVisible = false;
       }
-    )
-    
+    );
+
     this.route.params.subscribe(
       (params: Params) => {
 
         this.paquetEditing = this.paquetsService.getPaquet(
-          params['id']
+          params.id
         );
 
-        if(this.paquetEditing.signatura!="empty"){
-          this.paquetSignatCorrectament=true;
-        }else{
-          this.paquetSignatCorrectament=false;
-          if (this.paquetEditing.qrcode != undefined && this.paquetEditing.qrcode != 0 && params['mode']!='nomessignar') {
-            this.qrCodePaquet = environment.signUrlServer + this.paquetEditing.id + "/" + this.paquetEditing.qrcode
+        if (this.paquetEditing.signatura !== 'empty') {
+          this.paquetSignatCorrectament = true;
+        } else {
+          this.paquetSignatCorrectament = false;
+          if (this.paquetEditing.qrcode !== undefined && this.paquetEditing.qrcode !== 0 && params.mode !== 'nomessignar') {
+            this.qrCodePaquet = environment.signUrlServer + this.paquetEditing.id + '/' + this.paquetEditing.qrcode;
           } else {
             this.qrCodePaquet = '';
           }
           this.paquetForm.patchValue({
-            'data_arribada': this.paquetEditing.data_arribada,
-            'remitent': this.paquetEditing.remitent,
-            'procedencia': this.paquetEditing.procedencia,
-            'quantitat': this.paquetEditing.quantitat,
-            'mitja_arribada': this.paquetEditing.mitja_arribada,
-            'referencia': this.paquetEditing.referencia,
-            'destinatari': this.paquetEditing.destinatari,
-            'departament': this.paquetEditing.departament
+            data_arribada: this.paquetEditing.data_arribada,
+            remitent: this.paquetEditing.remitent,
+            procedencia: this.paquetEditing.procedencia,
+            quantitat: this.paquetEditing.quantitat,
+            mitja_arribada: this.paquetEditing.mitja_arribada,
+            referencia: this.paquetEditing.referencia,
+            destinatari: this.paquetEditing.destinatari,
+            departament: this.paquetEditing.departament
           });
-  
-          this.formVisible=true;
+
+          this.formVisible = true;
         }
       }
-    )
+    );
   }
 
-  onHideForm(){
-    this.formVisible=false;
+  onHideForm() {
+    this.formVisible = false;
     this.router.navigate(['llista']);
   }
 
@@ -126,33 +127,32 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.onHideForm();
   }
 
-  onAnar(){
+  onAnar() {
     this.router.navigate(
-      ['signarmovil/'+this.paquetEditing.id+'/'+this.paquetEditing.qrcode]
+      ['signarmovil/' + this.paquetEditing.id + '/' + this.paquetEditing.qrcode]
     );
   }
 
-  //Tenim un canvas hidden amb les mateixes propietats
-  //Mirem si el contingut és igual, llavors no hi ha cap signatura dibuixada
-  senseSignar():boolean{
-    if(this.canvas.nativeElement.toDataURL() == this.canvasBlanc.nativeElement.toDataURL())
+  // Tenim un canvas hidden amb les mateixes propietats
+  // Mirem si el contingut és igual, llavors no hi ha cap signatura dibuixada
+  senseSignar(): boolean {
+    if (this.canvas.nativeElement.toDataURL() === this.canvasBlanc.nativeElement.toDataURL()) {
       return true;
-    else 
+    } else {
       return false;
+    }
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
     /**
      * Gestionamos movimiento de ratón
      */
-    Observable
-      .fromEvent(canvasEl, 'mousedown')
-      .switchMap((e) => {
-        return Observable
-          .fromEvent(canvasEl, 'mousemove')
-          .takeUntil(Observable.fromEvent(canvasEl, 'mouseup'))
-          .pairwise()
-      })
+    fromEvent(canvasEl, 'mousedown').pipe(
+      switchMap((e) => {
+        return fromEvent(canvasEl, 'mousemove').pipe(
+          takeUntil(fromEvent(canvasEl, 'mouseup'))).pipe(
+          pairwise());
+      }))
       .subscribe((res: [MouseEvent, MouseEvent]) => {
         const rect = canvasEl.getBoundingClientRect();
 
@@ -173,14 +173,12 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
      * Gestionamos movimiento en pantallas
      * táctiles
      */
-    Observable
-      .fromEvent(canvasEl, 'touchstart')
-      .switchMap((e) => {
-        return Observable
-          .fromEvent(canvasEl, 'touchmove')
-          .takeUntil(Observable.fromEvent(canvasEl, 'touchend'))
-          .pairwise()
-      })
+    fromEvent(canvasEl, 'touchstart').pipe(
+      switchMap((e) => {
+        return fromEvent(canvasEl, 'touchmove').pipe(
+          takeUntil(fromEvent(canvasEl, 'touchend'))).pipe(
+          pairwise());
+      }))
       .subscribe((res: [TouchEvent, TouchEvent]) => {
 
         res[0].preventDefault();

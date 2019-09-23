@@ -4,11 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Paquet } from 'src/app/shared/paquet.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/pairwise';
-import 'rxjs/add/operator/switchMap';
-import { Observable } from 'rxjs';
+import { fromEvent} from 'rxjs';
+
+import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-paquet-signarmovil',
@@ -17,21 +16,21 @@ import { Observable } from 'rxjs';
 })
 export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('canvas') public canvas: ElementRef;
-  @ViewChild('canvasBlanc') public canvasBlanc: ElementRef; // per verificar senseSignar
+  @ViewChild('canvas', {static: false}) public canvas: ElementRef;
+  @ViewChild('canvasBlanc', {static: false}) public canvasBlanc: ElementRef; // per verificar senseSignar
   @Input() public width = 400;
   @Input() public height = 300;
 
   private cx: CanvasRenderingContext2D;
 
-  paquetSignatCorrectament: boolean = false;
+  paquetSignatCorrectament = false;
   paquetForm: FormGroup;
   paquetEditing: Paquet;
-  formVisible:boolean = true;
+  formVisible = true;
 
   constructor( private databaseService: DatabaseService,
-    private route: ActivatedRoute,
-    private router: Router) { }
+               private route: ActivatedRoute,
+               private router: Router) { }
 
     public ngAfterViewInit() {
       const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -52,32 +51,32 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.paquetForm = new FormGroup({
-      'data_arribada': new FormControl(null),
-      'remitent': new FormControl(null),
-      'procedencia': new FormControl(null),
-      'quantitat': new FormControl(null),
-      'mitja_arribada': new FormControl(null),
-      'referencia': new FormControl(null),
-      'destinatari': new FormControl(null),
-      'departament': new FormControl(null),
-      'dipositari': new FormControl(null,Validators.required)
+      data_arribada: new FormControl(null),
+      remitent: new FormControl(null),
+      procedencia: new FormControl(null),
+      quantitat: new FormControl(null),
+      mitja_arribada: new FormControl(null),
+      referencia: new FormControl(null),
+      destinatari: new FormControl(null),
+      departament: new FormControl(null),
+      dipositari: new FormControl(null, Validators.required)
     });
 
 
-    if (this.route.snapshot.params['id'] != undefined &&
-    this.route.snapshot.params['id'] != null &&
-    this.route.snapshot.params['qrcode'] != undefined &&
-    this.route.snapshot.params['qrcode'] != null &&
-    this.route.snapshot.params['tablename'] != undefined &&
-    this.route.snapshot.params['tablename'] != null) {
+    if (this.route.snapshot.params.id !== undefined &&
+    this.route.snapshot.params.id != null &&
+    this.route.snapshot.params.qrcode !== undefined &&
+    this.route.snapshot.params.qrcode != null &&
+    this.route.snapshot.params.tablename !== undefined &&
+    this.route.snapshot.params.tablename != null) {
 
-    this.databaseService.getPaquetQr(this.route.snapshot.params['id'],
-                                      this.route.snapshot.params['qrcode'],
-                                      this.route.snapshot.params['tablename'])
+    this.databaseService.getPaquetQr(this.route.snapshot.params.id,
+                                      this.route.snapshot.params.qrcode,
+                                      this.route.snapshot.params.tablename)
       .subscribe(
         (data: any) => {
           console.log(data);
-          if (data.length == 0) {
+          if (data.length === 0) {
             this.paquetSignatCorrectament = true;
           } else {
               const elem = 0;
@@ -103,15 +102,15 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
           }
 
           this.paquetForm.patchValue({
-            'data_arribada':this.paquetEditing.data_arribada,
-            'remitent': this.paquetEditing.remitent,
-            'procedencia': this.paquetEditing.procedencia,
-            'quantitat': this.paquetEditing.quantitat,
-            'mitja_arribada': this.paquetEditing.mitja_arribada,
-            'referencia': this.paquetEditing.referencia,
-            'destinatari': this.paquetEditing.destinatari,
-            'departament': this.paquetEditing.departament,
-            'dipositari': this.paquetEditing.dipositari
+            data_arribada: this.paquetEditing.data_arribada,
+            remitent: this.paquetEditing.remitent,
+            procedencia: this.paquetEditing.procedencia,
+            quantitat: this.paquetEditing.quantitat,
+            mitja_arribada: this.paquetEditing.mitja_arribada,
+            referencia: this.paquetEditing.referencia,
+            destinatari: this.paquetEditing.destinatari,
+            departament: this.paquetEditing.departament,
+            dipositari: this.paquetEditing.dipositari
           });
         }
       );
@@ -122,14 +121,14 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
   onSignar() {
     this.paquetEditing.dipositari = this.paquetForm.get('dipositari').value;
     this.paquetEditing.signatura = this.canvas.nativeElement.toDataURL();
-    this.databaseService.signaPaquetQr(this.paquetEditing, this.route.snapshot.params['tablename']);
+    this.databaseService.signaPaquetQr(this.paquetEditing, this.route.snapshot.params.tablename);
     window.location.reload();
   }
 
   onClear() {
     this.paquetForm.patchValue({
-      'dipositari': ''
-    })
+      dipositari: ''
+    });
 
     this.cx.clearRect(0, 0, this.width, this.height);
   }
@@ -139,13 +138,12 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
     this.formVisible = false;
     this.onClear();
     window.close();
-    //this.router.navigate(['llista']);
   }
 
-    //Tenim un canvas hidden amb les mateixes propietats
-  //Mirem si el contingut és igual, llavors no hi ha cap signatura dibuixada
+  // Tenim un canvas hidden amb les mateixes propietats
+  // Mirem si el contingut és igual, llavors no hi ha cap signatura dibuixada
   senseSignar(): boolean {
-    if (this.canvas.nativeElement.toDataURL() == this.canvasBlanc.nativeElement.toDataURL()) {
+    if (this.canvas.nativeElement.toDataURL() === this.canvasBlanc.nativeElement.toDataURL()) {
       return true;
     } else {
       return false;
@@ -156,14 +154,12 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
     /**
      * Gestionamos movimiento de ratón
      */
-    Observable
-      .fromEvent(canvasEl, 'mousedown')
-      .switchMap((e) => {
-        return Observable
-          .fromEvent(canvasEl, 'mousemove')
-          .takeUntil(Observable.fromEvent(canvasEl, 'mouseup'))
-          .pairwise()
-      })
+    fromEvent(canvasEl, 'mousedown').pipe(
+      switchMap((e) => {
+        return fromEvent(canvasEl, 'mousemove').pipe(
+          takeUntil(fromEvent(canvasEl, 'mouseup'))).pipe(
+          pairwise());
+      }))
       .subscribe((res: [MouseEvent, MouseEvent]) => {
         const rect = canvasEl.getBoundingClientRect();
 
@@ -184,14 +180,12 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
      * Gestionamos movimiento en pantallas
      * táctiles
      */
-    Observable
-      .fromEvent(canvasEl, 'touchstart')
-      .switchMap((e) => {
-        return Observable
-          .fromEvent(canvasEl, 'touchmove')
-          .takeUntil(Observable.fromEvent(canvasEl, 'touchend'))
-          .pairwise()
-      })
+    fromEvent(canvasEl, 'touchstart').pipe(
+      switchMap((e) => {
+        return fromEvent(canvasEl, 'touchmove').pipe(
+          takeUntil(fromEvent(canvasEl, 'touchend'))).pipe(
+          pairwise());
+      }))
       .subscribe((res: [TouchEvent, TouchEvent]) => {
 
         res[0].preventDefault();

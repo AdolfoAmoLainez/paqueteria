@@ -1,21 +1,22 @@
 import {
   Component, Input, ElementRef, AfterViewInit, ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs'
+import { fromEvent} from 'rxjs';
 
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/takeUntil';
+import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
+// import 'rxjs/add/observable/fromEvent';
+/* import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/pairwise';
-import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/switchMap'; */
 
 @Component({
   selector: 'app-canvas',
-  templateUrl:'./canvas.component.html',
+  templateUrl: './canvas.component.html',
   styles: ['canvas { border: 1px solid #000; }']
 })
 export class CanvasComponent implements AfterViewInit {
 
-  @ViewChild('canvas') public canvas: ElementRef;
+  @ViewChild('canvas', {static: false}) public canvas: ElementRef;
 
   @Input() public width = 400;
   @Input() public height = 400;
@@ -42,39 +43,37 @@ export class CanvasComponent implements AfterViewInit {
     this.captureEvents(canvasEl);
   }
 
-  logCanvas(){
-    this.imagen=this.canvas.nativeElement.toDataURL();
+  logCanvas() {
+    this.imagen = this.canvas.nativeElement.toDataURL();
   }
 
-  onHideForm(){}
+  onHideForm() {}
 
-  onSignar(){}
-  
+  onSignar() {}
+
   private captureEvents(canvasEl: HTMLCanvasElement) {
     /**
      * Gestionamos movimiento de ratón
      */
-    Observable
-      .fromEvent(canvasEl, 'mousedown')
-      .switchMap((e) => {
-        return Observable
-          .fromEvent(canvasEl, 'mousemove')
-          .takeUntil(Observable.fromEvent(canvasEl, 'mouseup'))
-          .pairwise()
-      })
+     fromEvent(canvasEl, 'mousedown').pipe(
+      switchMap((e) => {
+        return fromEvent(canvasEl, 'mousemove').pipe(
+          takeUntil(fromEvent(canvasEl, 'mouseup'))).pipe(
+          pairwise());
+      }))
       .subscribe((res: [MouseEvent, MouseEvent]) => {
         const rect = canvasEl.getBoundingClientRect();
-  
+
         const prevPos = {
           x: res[0].clientX - rect.left,
           y: res[0].clientY - rect.top
         };
-  
+
         const currentPos = {
           x: res[1].clientX - rect.left,
           y: res[1].clientY - rect.top
         };
-  
+
         this.drawOnCanvas(prevPos, currentPos);
       });
 
@@ -82,29 +81,27 @@ export class CanvasComponent implements AfterViewInit {
        * Gestionamos movimiento en pantallas
        * táctiles
        */
-      Observable
-      .fromEvent(canvasEl, 'touchstart')
-      .switchMap((e) => {
-        return Observable
-          .fromEvent(canvasEl, 'touchmove')
-          .takeUntil(Observable.fromEvent(canvasEl, 'touchend'))
-          .pairwise()
-      })
+     fromEvent(canvasEl, 'touchstart').pipe(
+      switchMap((e) => {
+        return fromEvent(canvasEl, 'touchmove').pipe(
+          takeUntil(fromEvent(canvasEl, 'touchend'))).pipe(
+          pairwise());
+      }))
       .subscribe((res: [TouchEvent, TouchEvent]) => {
 
         const rect = canvasEl.getBoundingClientRect();
-  
+
         const prevPos = {
            x: res[0].changedTouches[0].clientX - rect.left,
            y: res[0].changedTouches[0].clientY - rect.top
          };
-  
-         const currentPos = {
+
+        const currentPos = {
            x: res[1].changedTouches[0].clientX - rect.left,
            y: res[1].changedTouches[0].clientY - rect.top
          };
-  
-         this.drawOnCanvas(prevPos, currentPos);
+
+        this.drawOnCanvas(prevPos, currentPos);
       });
   }
 

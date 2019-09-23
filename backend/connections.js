@@ -4,8 +4,8 @@ var mysql = require('mysql');
 var mysqlOptions = {
   host:'localhost',
   user:'paqueteria',
-  password:'paqueteria',
-  database:'paqueteria'
+  password:'d172u^kJ',
+  database:'c2040206_paqueteria'
 };
 
 var connection=mysql.createPool(mysqlOptions);
