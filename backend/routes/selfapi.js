@@ -9,3 +9,5 @@ router.post('/creataula', SelfApiController.creaTaula);
 router.post('/enviaMailRemitent', SelfApiController.enviaMailRemitent);
 router.post('/paquetqr/signar', SelfApiController.paquetQrSignar);
 router.post('/paquetqr/get', SelfApiController.paquetQrGet);
+router.post('/getCountPaquetsPerSignar', SelfApiController.getCountPaquetsPerSignar);
+router.post('/getPaquetsPerSignar', SelfApiController.getPaquetsPerSignar);
