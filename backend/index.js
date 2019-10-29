@@ -73,7 +73,7 @@ app.post('/selfapi/enviaMail', (req,res,next) => {
 });
 
 
-function getPaquetQrCallback(results, httpres, error){
+/* function getPaquetQrCallback(results, httpres, error){
 
     if(error){
         httpres.status(499).json({status:'499',message: error.code+": "+ error.sqlMessage})
@@ -81,26 +81,26 @@ function getPaquetQrCallback(results, httpres, error){
         httpres.status(200).json(results);
     }
 
-}
+} */
 
 /**
  * Funció per tornar el paquet amb codi QR però
  * sense haver de estar validat. Pensat per accedir
  * des del movil, sense token
  */
-app.post('/selfapi/paquetqr/get',(req,res) => {
+/* app.post('/selfapi/paquetqr/get',(req,res) => {
 
     dbconfig.getPaquetQr(req.body.tablename,req.body.id, req.body.qrcode,res,getPaquetQrCallback);
 
-});
+}); */
 
-function signaPaquetQrCallback(results, httpres, error){
+/* function signaPaquetQrCallback(results, httpres, error){
     if(error){
         httpres.status(499).json({status:'499',message: error.code+": "+ error.sqlMessage})
     }else{
         httpres.status(200).json(results);
     }
-}
+} */
 
 /**
  * Funció per signar el paquet amb codi QR però
@@ -108,25 +108,25 @@ function signaPaquetQrCallback(results, httpres, error){
  * des del movil, sense token
  */
 
-app.post('/selfapi/paquetqr/signar',(req,res) => {
+/* app.post('/selfapi/paquetqr/signar',(req,res) => {
     //console.log(req.body);
     dbconfig.signaPaquetQr(req.body,res,signaPaquetQrCallback);
 
-});
+}); */
 
-function newTaulaCallback(results,httpres, error){
+/* function newTaulaCallback(results,httpres, error){
     if(error){
         httpres.status(498).json({status:'498',message: error.code+": "+ error.sqlMessage});
     }else{
         httpres.status(200).json(results);
     }
-}
+} */
 
 /**
  * Funció per crear una nova taula copiada de la taula
  * buida d'exemple
  */
-app.post('/selfapi/creataula', cas.serviceValidate(), (req,res)=>{
+/* app.post('/selfapi/creataula', cas.serviceValidate(), (req,res)=>{
 
     if (req.session.cas && req.session.cas.user) {
         dbconfig.creaTaula(req.body.tablename,res,newTaulaCallback);
@@ -134,9 +134,9 @@ app.post('/selfapi/creataula', cas.serviceValidate(), (req,res)=>{
         res.status(401).json({message: 'Usuari no valid!'})
     }
 
-});
+}); */
 
-app.post('/selfapi/enviaMailRemitent', (req,res,next) => {
+/* app.post('/selfapi/enviaMailRemitent', (req,res,next) => {
 	if (req.body.emailremitent!=undefined && req.body.emailremitent!=''){
 
       let code = shell.exec('echo \"S\'ha recollit el paquet amb n&uacute;mero de registre '+req.body.id+' \"'+
@@ -150,22 +150,22 @@ app.post('/selfapi/enviaMailRemitent', (req,res,next) => {
         res.status(200).json({ SendMail: 'ko' });
     }
 
-});
+}); */
 
-function delTaulaCallback(results,httpres, error){
+/* function delTaulaCallback(results,httpres, error){
     if(error){
         httpres.status(498).json({status:'498',message: error.code+": "+ error.sqlMessage});
     }else{
         httpres.status(200).json(results);
     }
-}
+} */
 
 /**
  * Funció per esborrar la taula
  * d'un usuari
  */
 
-app.post('/selfapi/deltaula', cas.serviceValidate(), (req,res)=>{
+/* app.post('/selfapi/deltaula', cas.serviceValidate(), (req,res)=>{
 
     if (req.session.cas && req.session.cas.user) {
         dbconfig.esborraTaula(req.body.tablename,res,delTaulaCallback);
@@ -173,15 +173,15 @@ app.post('/selfapi/deltaula', cas.serviceValidate(), (req,res)=>{
         res.status(401).json({message: 'Usuari no valid!'})
     }
 
-});
+}); */
 
-app.get('/selfapi/getUserData', cas.serviceValidate(), cas.authenticate(), function(req, res) {
+/* app.get('/selfapi/getUserData', cas.serviceValidate(), cas.authenticate(), function(req, res) {
     if (req.session.cas && req.session.cas.user) {
         dbconfig.isUserOnDB(req.session.cas.user,'',res,verifyUserCallback);
     } else {
         res.status(401).json({message: 'Usuari no valid!'});
     }
-});
+}); */
 
 app.use('/api', cas.serviceValidate(), function(req, res, next) {
 
@@ -192,7 +192,7 @@ app.use('/api', cas.serviceValidate(), function(req, res, next) {
     }
   });
 
-  app.get('/selfapi/logout', function(req, res) {
+/*   app.get('/selfapi/logout', function(req, res) {
     if (!req.session) {
       return res.redirect('/selfapi/login');
     }
@@ -208,7 +208,7 @@ app.use('/api', cas.serviceValidate(), function(req, res, next) {
     options.pathname = options.paths.logout;
     return res.redirect(url.format(options));
   });
-
+ */
 
   function verifyUserCallback(results,httpres,username){
     if(results.length>0){
