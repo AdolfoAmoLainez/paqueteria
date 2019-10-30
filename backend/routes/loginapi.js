@@ -2,9 +2,6 @@ const express = require("express");
 const LoginApiController = require("../controllers/loginapi");
 
 var cas = require('connect-cas');
-var url = require('url');
-var session = require('express-session');
-var cookieParser = require('cookie-parser');
 
 cas.configure({ 'host': 'sacnt.uab.cat', 'protocol': 'https',
 paths: {

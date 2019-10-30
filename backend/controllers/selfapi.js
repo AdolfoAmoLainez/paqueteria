@@ -1,4 +1,5 @@
 var dbconfig = require('../connections');
+const shell = require('shelljs');
 
 exports.isUserOnDB = (userId, callbackFunc) => {
 
@@ -124,6 +125,36 @@ exports.enviaMailRemitent= (req,res) => {
 
       let code = shell.exec('echo \"S\'ha recollit el paquet amb n&uacute;mero de registre '+req.body.id+' \"'+
 		     ' | mail -aFrom:'+req.body.gestoremail+' -a "Content-type: text/html" -s \'Paquet entregat\' ' + req.body.emailremitent).code;
+	  if (code !==0){
+            res.status(200).json({ SendMail: 'ko' });
+	  }else{
+            res.status(200).json({ SendMail: 'ok' });
+	  }
+    }else{
+        res.status(200).json({ SendMail: 'ko' });
+    }
+
+}
+
+/**
+ * Request
+ *  id
+ *  email
+ *  remitent
+ *  ubicacioemail
+ *  gestoremail
+ *
+ * Response:
+ *  200: ok o ko
+ *
+ */
+
+exports.enviaMail = (req, res) => {
+	if (req.body.email!=undefined && req.body.email!=''){
+
+      let code = shell.exec('echo \"Heu rebut un paquet amb n&uacute;mero de registre '+req.body.id+' i remitent '+
+                             req.body.remitent+'. \nPodeu recollir-lo per '+req.body.ubicacioemail+'\"'+
+		     ' | mail -aFrom:'+req.body.gestoremail+' -a "Content-type: text/html" -s \'Paquet rebut per part de '+req.body.remitent+'\' ' + req.body.email).code;
 	  if (code !==0){
             res.status(200).json({ SendMail: 'ko' });
 	  }else{

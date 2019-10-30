@@ -7,7 +7,6 @@ var mysqlrestapi  = require('./mysql-restapi');
 var dbconfig = require('./connections');
 var app = express();
 var bodyParser = require('body-parser');
-const shell = require('shelljs');
 var cas = require('connect-cas');
 var url = require('url');
 var session = require('express-session');
