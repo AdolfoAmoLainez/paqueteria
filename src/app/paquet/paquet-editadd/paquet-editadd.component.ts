@@ -6,6 +6,8 @@ import { Paquet } from 'src/app/shared/paquet.model';
 import { DatabaseService } from 'src/app/shared/database.service';
 
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { esLocale } from 'ngx-bootstrap/locale';
+import { defineLocale } from 'ngx-bootstrap/chronos';
 
 
 @Component({
@@ -14,18 +16,19 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
   styleUrls: ['./paquet-editadd.component.css']
 })
 export class PaquetEditAddComponent implements OnInit {
-  formVisible: boolean = false;
+  formVisible = false;
   paquetForm: FormGroup;
 
   paquetEditing: Paquet;
-  editMode: boolean = false;
+  editMode = false;
 
   constructor(private route: ActivatedRoute,
-    private router: Router,
-    private paquetsService: PaquetsService,
-    private databaseService: DatabaseService,
-    private localeService: BsLocaleService) {
+              private router: Router,
+              private paquetsService: PaquetsService,
+              private databaseService: DatabaseService,
+              private localeService: BsLocaleService) {
 
+      defineLocale('es', esLocale);
       this.localeService.use('es');
 
   }
@@ -34,16 +37,16 @@ export class PaquetEditAddComponent implements OnInit {
 
     // this.localeService.use('es');
     this.paquetForm = new FormGroup({
-      'data_arribada': new FormControl(null, Validators.required),
-      'remitent': new FormControl(null, Validators.required),
-      'procedencia': new FormControl(null),
-      'quantitat': new FormControl(null, [Validators.required, Validators.min(1)]),
-      'mitja_arribada': new FormControl(null),
-      'referencia': new FormControl(null),
-      'destinatari': new FormControl(null, Validators.required),
-      'departament': new FormControl(null, Validators.required),
-      'email': new FormControl(null, Validators.email),
-      'emailremitent': new FormControl(null, Validators.email)
+      data_arribada: new FormControl(null, Validators.required),
+      remitent: new FormControl(null, Validators.required),
+      procedencia: new FormControl(null),
+      quantitat: new FormControl(null, [Validators.required, Validators.min(1)]),
+      mitja_arribada: new FormControl(null),
+      referencia: new FormControl(null),
+      destinatari: new FormControl(null, Validators.required),
+      departament: new FormControl(null, Validators.required),
+      email: new FormControl(null, Validators.email),
+      emailremitent: new FormControl(null, Validators.email)
       // 'dipositari': new FormControl(null,Validators.required)
     });
 
@@ -51,19 +54,19 @@ export class PaquetEditAddComponent implements OnInit {
 
     this.route.params.subscribe(
       (params: Params) => {
-        switch (params['mode']) {
+        switch (params.mode) {
           case 'edit':
             this.paquetEditing = this.paquetsService.getPaquet(
-              +this.route.snapshot.params['id']
+              +this.route.snapshot.params.id
             );
 
-            if (!this.paquetEditing){
+            if (!this.paquetEditing) {
               this.onHideForm();
             } else {
 
               this.formVisible = true;
               this.editMode = true;
-              let data:string = this.paquetEditing.data_arribada.toLocaleString();
+              let data: string = this.paquetEditing.data_arribada.toLocaleString();
               // console.log(data);
               if (data.indexOf('.000Z') !== -1) {
                 data = new Date(this.paquetEditing.data_arribada).toLocaleString();
@@ -76,16 +79,16 @@ export class PaquetEditAddComponent implements OnInit {
               // console.log("add date: "+ data);
               this.paquetForm.patchValue({
                 // 'data_arribada': this.paquetEditing.data_arribada,
-                'data_arribada': data,
-                'remitent': this.paquetEditing.remitent,
-                'procedencia': this.paquetEditing.procedencia,
-                'quantitat': this.paquetEditing.quantitat,
-                'mitja_arribada': this.paquetEditing.mitja_arribada,
-                'referencia': this.paquetEditing.referencia,
-                'destinatari': this.paquetEditing.destinatari,
-                'departament': this.paquetEditing.departament,
-                'email': this.paquetEditing.email,
-                'emailremitent': this.paquetEditing.emailremitent
+                data_arribada: data,
+                remitent: this.paquetEditing.remitent,
+                procedencia: this.paquetEditing.procedencia,
+                quantitat: this.paquetEditing.quantitat,
+                mitja_arribada: this.paquetEditing.mitja_arribada,
+                referencia: this.paquetEditing.referencia,
+                destinatari: this.paquetEditing.destinatari,
+                departament: this.paquetEditing.departament,
+                email: this.paquetEditing.email,
+                emailremitent: this.paquetEditing.emailremitent
               });
 
             }
@@ -96,16 +99,16 @@ export class PaquetEditAddComponent implements OnInit {
             const ahora = new Date().toLocaleString('es-ES');
 
             this.paquetForm.reset({
-              'data_arribada': ahora
+              data_arribada: ahora
             });
             break;
         }
       }
-    )
+    );
   }
 
   onClear() {
-    this.paquetForm.reset()
+    this.paquetForm.reset();
   }
 
   onHideForm() {
@@ -116,17 +119,17 @@ export class PaquetEditAddComponent implements OnInit {
 
   onPaquetAction() {
     if (this.editMode) {
-      let data:string=this.paquetForm.get('data_arribada').value.toLocaleString();
-      //console.log(data);
-      if (data.indexOf(".000Z")!==-1){
+      let data: string = this.paquetForm.get('data_arribada').value.toLocaleString();
+      // console.log(data);
+      if (data.indexOf('.000Z') !== -1) {
         data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
-        let dataDate = new Date(this.paquetForm.get('data_arribada').value);
-        data=dataDate.getDate+"/"+(dataDate.getMonth()+1) + "/"+ dataDate.getFullYear()+" "+
-             dataDate.getHours()+":"+dataDate.getMinutes();
-      }else{
+        const dataDate = new Date(this.paquetForm.get('data_arribada').value);
+        data = dataDate.getDate + '/' + (dataDate.getMonth() + 1) + '/' + dataDate.getFullYear() + ' ' +
+             dataDate.getHours() + ':' + dataDate.getMinutes();
+      } else {
         data = this.paquetForm.get('data_arribada').value.toLocaleString();
       }
-      //console.log("Edit date: "+data);
+      // console.log("Edit date: "+data);
       this.databaseService.updatePaquet(new Paquet(
         this.paquetEditing.id,
         data,
@@ -137,21 +140,21 @@ export class PaquetEditAddComponent implements OnInit {
         this.paquetForm.get('referencia').value,
         this.paquetForm.get('destinatari').value,
         this.paquetForm.get('departament').value,
-        "",
-        "",
-        "empty",
+        '',
+        '',
+        'empty',
         0,
         this.paquetForm.get('email').value,
         this.paquetForm.get('emailremitent').value)
         );
-        //console.log(this.paquetForm.get('data_arribada').value);
+        // console.log(this.paquetForm.get('data_arribada').value);
     } else {
       let data: string = this.paquetForm.get('data_arribada').value.toLocaleString();
-      //console.log(data);
-      if (data.indexOf(".000Z")!==-1){
+      // console.log(data);
+      if (data.indexOf('.000Z') !== -1) {
         data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
         const dataDate = new Date(this.paquetForm.get('data_arribada').value);
-        data = dataDate.getDate + '/' + (dataDate.getMonth()+1) + '/' + dataDate.getFullYear() + ' ' +
+        data = dataDate.getDate + '/' + (dataDate.getMonth() + 1) + '/' + dataDate.getFullYear() + ' ' +
              dataDate.getHours() + ':' + dataDate.getMinutes();
       } else {
         data = this.paquetForm.get('data_arribada').value.toLocaleString();
@@ -177,7 +180,7 @@ export class PaquetEditAddComponent implements OnInit {
         this.paquetForm.get('emailremitent').value
         ));
 
-        this.onHideForm();
+      this.onHideForm();
     }
   }
 
