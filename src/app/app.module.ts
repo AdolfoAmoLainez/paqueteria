@@ -26,8 +26,20 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import {QRCodeModule} from 'angularx-qrcode';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {FontAwesomeModule, FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import { AuthService } from './auth/auth.service';
+import { DatabaseService } from './shared/database.service';
+import { PaquetsService } from './shared/paquets.service';
+import { MessagesService } from './messages/messages.service';
+import { UsersService } from './shared/users.service';
+import { AuthGuard } from './auth/auth-guard.service';
+import { AdminGuard } from './auth/admin-guard.service';
 
+import localeEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+import { fas, faQrcode } from '@fortawesome/free-solid-svg-icons';
+
+registerLocaleData(localeEs, 'es');
 
 @NgModule({
   declarations: [
@@ -63,7 +75,15 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     //    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: LOCALE_ID, useValue: 'es' }, ],
+        { provide: LOCALE_ID, useValue: 'es' },
+        AuthService, DatabaseService, PaquetsService, MessagesService, UsersService, AuthGuard, AdminGuard ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+  constructor(iconLibrary: FaIconLibrary) {
+    iconLibrary.addIconPacks(fas);
+    iconLibrary.addIcons(faQrcode);
+  }
+
+}

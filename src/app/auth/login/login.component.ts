@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
 
-    this.activatedRoute.data.subscribe(
+    /*this.activatedRoute.data.subscribe(
       (data) => {
         if(!data.ticket) {
           this.authService.loginUser();
@@ -29,26 +29,25 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/llista']);
         }
       }
-    );
+    );*/
 
-    this.authService.loginUser();
+    // this.authService.loginUser();
 
-    /*this.loginForm = new FormGroup({
-      "niu": new FormControl(null),
-      "passwd": new FormControl(null)
+    this.loginForm = new FormGroup({
+      niu: new FormControl(null),
+      passwd: new FormControl(null)
     });
     this.loginErrorSubscription = this.authService.loginIncorrect.subscribe(
-      (error)=>{
-        this.errorMsg="Usuari o password incorrectes!";
+      (error) => {
+        this.errorMsg = 'Usuari o password incorrectes!';
         console.log(this.errorMsg);
       }
-    )*/
+    );
   }
 
   onLogin() {
-   /* this.authService.loginUser(
-      this.loginForm.get("niu").value,
-      this.loginForm.get("passwd").value,
-    )*/
+    this.authService.loginUser(
+      this.loginForm.get('niu').value
+    );
   }
 }

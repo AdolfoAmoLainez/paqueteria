@@ -1,4 +1,4 @@
-var dbconfig = require('../mysqlconn');
+var dbconfig = require('../connections');
 
 exports.isUserOnDB = (userId, callbackFunc) => {
 
@@ -26,7 +26,12 @@ exports.isUserOnDB = (userId, callbackFunc) => {
  *  500 => Error al fer consulta BBDD
  */
 
-exports.getUserData = (username) => {
+exports.getUserData = (req, res) => {
+
+  console.log('getUserData');
+
+  const username = req.body.username;
+
 
   dbconfig.connection.query(
     "SELECT * FROM usuaris WHERE niu = ?" ,[username],
@@ -43,12 +48,12 @@ exports.getUserData = (username) => {
             gestoremail: results[0].gestoremail
         };
 
-        httpres.status(200).json(body)
+        res.status(200).json(body)
       }else{
           console.log("verifyUserCallback: Usuari no trobat a la BBDD!!");
           const status = 401;
           const message = 'Usuari o password incorrectes';
-          httpres.status(status).json({ status, message })
+          res.status(status).json({ status, message })
           console.log(message);
           return;
       }
@@ -219,7 +224,6 @@ exports.getCountPaquetsPerSignar=(req,res) => {
       }
     });
 
-
 }
 
 
@@ -242,7 +246,7 @@ exports.getPaquetsPerSignar = (req, res) => {
   let sql = '';
 
   if (searchText!=undefined && searchText!=""){
-    sql = "SELECT * FROM "+this.tablename+" WHERE (id LIKE '%" + searchText + "%' or " +
+    sql = "SELECT * FROM " + tablename + " WHERE (id LIKE '%" + searchText + "%' or " +
                                          "data_arribada LIKE '%"+searchText+"%' or " +
                                          "remitent LIKE '%"+searchText+"%' or "+
                                          "procedencia LIKE '%"+searchText+"%' or "+
@@ -262,6 +266,100 @@ exports.getPaquetsPerSignar = (req, res) => {
     sql,
     (errorSel, consulta) => {
     if (errorSel){
+      console.log(errorSel);
+
+      res.status(499).json({message: "No s'ha pogut consultar el llistat de paquets."});
+    } else {
+      res.status(200).json(consulta);
+    }
+  });
+
+}
+
+/**
+ * Request:
+ *  tablename: Nom de la taula de paquets
+ *  searchText: Filtre a aplicar
+ */
+
+exports.getCountPaquetsSignats=(req,res) => {
+  console.log('getCountPaquetsSignats');
+  console.log(req.body);
+
+  let sql = '';
+  tablename = req.body.tablename;
+  searchText = req.body.searchText;
+
+  if (searchText!=undefined && searchText!=""){
+    sql = "SELECT count(id) as totalpaquets FROM "+tablename+" WHERE (id LIKE '%" + searchText + "%' or " +
+                                             "data_arribada LIKE '%"+searchText+"%' or " +
+                                             "remitent LIKE '%"+searchText+"%' or "+
+                                             "procedencia LIKE '%"+searchText+"%' or "+
+                                             "mitja_arribada LIKE '%"+searchText+"%' or "+
+                                             "referencia LIKE '%"+searchText+"%' or "+
+                                             "destinatari LIKE '%"+searchText+"%' or "+
+                                             "departament LIKE '%"+searchText+"%' or "+
+                                             "data_lliurament LIKE '%"+searchText+"%' or "+
+                                             "dipositari LIKE '%"+searchText+"%' "+
+                                             ") AND signatura NOT LIKE 'empty';";
+
+  }else{
+      sql = "SELECT count(id) as totalpaquets FROM "+tablename+" WHERE signatura NOT LIKE 'empty'";
+  }
+
+  dbconfig.connection.query(
+      sql,
+      (errorSel, consulta) => {
+      if (errorSel){
+        res.status(499).json({message: "No s'ha pogut consultar el nombre de paquets."});
+      } else {
+        res.status(200).json(consulta);
+      }
+    });
+
+}
+
+/**
+ * Request:
+ *  tablename: Nom de la taula de paquets
+ *  page: Numero de plana segons els itemsPerPage
+ *  itemsPerPage: Numero de registes per plana
+ *  searchText: Text de búsqueda, opcional
+ */
+exports.getPaquetsSignats = (req, res) => {
+  console.log("getPaquetsSignats");
+  console.log(req.body);
+
+  const page = req.body.page;
+  const itemsPerPage = req.body.itemsPerPage;
+  const limit = ""+page+","+itemsPerPage;
+  const searchText = req.body.searchText;
+  const tablename = req.body.tablename;
+  let sql = '';
+
+  if (searchText!=undefined && searchText!=""){
+    sql = "SELECT * FROM " + tablename + " WHERE (id LIKE '%" + searchText + "%' or " +
+                                         "data_arribada LIKE '%"+searchText+"%' or " +
+                                         "remitent LIKE '%"+searchText+"%' or "+
+                                         "procedencia LIKE '%"+searchText+"%' or "+
+                                         "mitja_arribada LIKE '%"+searchText+"%' or "+
+                                         "referencia LIKE '%"+searchText+"%' or "+
+                                         "destinatari LIKE '%"+searchText+"%' or "+
+                                         "departament LIKE '%"+searchText+"%' or "+
+                                         "data_lliurament LIKE '%"+searchText+"%' or "+
+                                         "dipositari LIKE '%"+searchText+"%' "+
+                                         ") AND signatura NOT LIKE 'empty' "+
+                                         "ORDER BY data_arribada DESC;"
+  } else {
+    sql ="SELECT * FROM " + tablename + " WHERE signatura NOT LIKE 'empty' ORDER BY data_arribada DESC;"
+  }
+
+  dbconfig.connection.query(
+    sql,
+    (errorSel, consulta) => {
+    if (errorSel){
+      console.log(errorSel);
+
       res.status(499).json({message: "No s'ha pogut consultar el llistat de paquets."});
     } else {
       res.status(200).json(consulta);

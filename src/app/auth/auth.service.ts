@@ -6,19 +6,22 @@ import { DatabaseService } from '../shared/database.service';
 import { isUndefined } from 'util';
 import { environment } from 'src/environments/environment';
 
-@Injectable()
+
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
 
     loginIncorrect = new Subject<any>();
     userRol = 2; // Usuari normal
 
     constructor(private http: HttpClient,
-        private router: Router,
-        private dbService: DatabaseService) { }
+                private router: Router,
+                private dbService: DatabaseService) { }
 
-    loginUser() {
+    loginUser(username) {
 
-        return this.http.get<any>(environment.dataServerURL + '/selfapi/getUserData')
+        return this.http.post<any>(environment.dataServerURL + '/selfapi/getUserData', {username})
             .subscribe(
                 (dataLogin: any) => {
                     if (dataLogin && dataLogin.username) {
@@ -33,15 +36,20 @@ export class AuthService {
                           }
                         );
                     } else {
-                      window.location.href = environment.dataServerURL + '/selfapi/login';
-                      //this.router.navigate(['/login']);
+                      //window.location.href = environment.dataServerURL + '/selfapi/login';
+                       this.router.navigate(['/login']);
                     }
                 });
 
     }
 
     isAuthenticated() {
-      return this.http.get(environment.dataServerURL + '/selfapi/getUserData');
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+      const obj = {
+        username: currentUser.username
+      };
+      return this.http.post(environment.dataServerURL + '/selfapi/getUserData', obj);
     }
 
     getLocalUser() {

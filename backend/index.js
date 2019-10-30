@@ -12,8 +12,9 @@ var cas = require('connect-cas');
 var url = require('url');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
+const selfApiRoutes = require("./routes/selfapi");
 
-const PORT = 55023;
+const PORT = 55022;
 
 
 // Your CAS server's hostname
@@ -43,7 +44,7 @@ app.use(session({
 	}
 ));
 
-var api = mysqlrestapi(app, dbconfig);
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
@@ -55,7 +56,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 //app.use(cas.serviceValidate(), cas.authenticate(),express.static('public'));
 app.use(express.static('public'));
 
-app.post('/selfapi/enviaMail', (req,res,next) => {
+/* app.post('/selfapi/enviaMail', (req,res,next) => {
 	if (req.body.email!=undefined && req.body.email!=''){
 
       let code = shell.exec('echo \"Heu rebut un paquet amb n&uacute;mero de registre '+req.body.id+' i remitent '+
@@ -71,7 +72,7 @@ app.post('/selfapi/enviaMail', (req,res,next) => {
     }
 
 });
-
+ */
 
 /* function getPaquetQrCallback(results, httpres, error){
 
@@ -183,14 +184,14 @@ app.post('/selfapi/enviaMail', (req,res,next) => {
     }
 }); */
 
-app.use('/api', cas.serviceValidate(), function(req, res, next) {
+/* app.use('/api', cas.serviceValidate(), function(req, res, next) {
 
     if (req.session.cas && req.session.cas.user) {
       next();
     } else {
         res.status(401).json({message: 'Usuari no valid!'});
     }
-  });
+  }); */
 
 /*   app.get('/selfapi/logout', function(req, res) {
     if (!req.session) {
@@ -210,7 +211,7 @@ app.use('/api', cas.serviceValidate(), function(req, res, next) {
   });
  */
 
-  function verifyUserCallback(results,httpres,username){
+/*   function verifyUserCallback(results,httpres,username){
     if(results.length>0){
 
             let body = {
@@ -230,9 +231,9 @@ app.use('/api', cas.serviceValidate(), function(req, res, next) {
         console.log(message);
         return;
     }
-}
+} */
 
-function verifyUserlogin(results,httpres,username){
+/* function verifyUserlogin(results,httpres,username){
     if(results.length>0){
         httpres.redirect(302,'/login');
     }else{
@@ -243,24 +244,27 @@ function verifyUserlogin(results,httpres,username){
         console.log(message);
         return;
     }
-}
+} */
 
   // This route has the serviceValidate middleware, which verifies
   // that CAS authentication has taken place, and also the
   // authenticate middleware, which requests it if it has not already
   // taken place.
 
-  app.get('/selfapi/login', cas.serviceValidate(), cas.authenticate(), function(req, res) {
+/*   app.get('/selfapi/login', cas.serviceValidate(), cas.authenticate(), function(req, res) {
     // Great, we logged in, now redirect back to the home page.
     //console.log("paso por login");
     dbconfig.isUserOnDB(req.session.cas.user,'',res,verifyUserlogin)
 
-  });
+  }); */
 
 
 /*app.get('*', cas.serviceValidate(), cas.authenticate(),(req,res)=>{
     res.sendFile(__dirname+'/public/index.html');
 })*/
+
+var api = mysqlrestapi(app, dbconfig);
+app.use("/selfapi", selfApiRoutes);
 
 app.get('*',(req,res)=>{
 

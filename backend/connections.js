@@ -2,10 +2,10 @@
 var mysql = require('mysql');
 
 var mysqlOptions = {
-  host:'localhost',
-  user:'paqueteria',
-  password:'d172u^kJ',
-  database:'c2040206_paqueteria'
+  host:'minerva.ccomunicacio',
+  user:'desa_paqueteria',
+  password:'paquete',
+  database:'desa_paqueteria'
 };
 
 var connection=mysql.createPool(mysqlOptions);
