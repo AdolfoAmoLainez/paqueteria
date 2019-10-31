@@ -1,4 +1,23 @@
-var dbconfig = require('../mysqlconn');
+var dbconfig = require('../connections');
+const shell = require('shelljs');
+
+/**
+ * Funció per convertir caràcters especials a HTML
+ * es fa servir per enviar el cos dels mails
+ */
+
+function char_convert(str) {
+
+  var chars = ["©","Û","®","ž","Ü","Ÿ","Ý","$","Þ","%","¡","ß","¢","à","£","á","À","¤","â","Á","¥","ã","Â","¦","ä","Ã","§","å","Ä","¨","æ","Å","©","ç","Æ","ª","è","Ç","«","é","È","¬","ê","É","­","ë","Ê","®","ì","Ë","¯","í","Ì","°","î","Í","±","ï","Î","²","ð","Ï","³","ñ","Ð","´","ò","Ñ","µ","ó","Õ","¶","ô","Ö","·","õ","Ø","¸","ö","Ù","¹","÷","Ú","º","ø","Û","»","ù","Ü","@","¼","ú","Ý","½","û","Þ","€","¾","ü","ß","¿","ý","à","‚","À","þ","á","ƒ","Á","ÿ","å","„","Â","æ","…","Ã","ç","†","Ä","è","‡","Å","é","ˆ","Æ","ê","‰","Ç","ë","Š","È","ì","‹","É","í","Œ","Ê","î","Ë","ï","Ž","Ì","ð","Í","ñ","Î","ò","‘","Ï","ó","’","Ð","ô","“","Ñ","õ","”","Ò","ö","•","Ó","ø","–","Ô","ù","—","Õ","ú","˜","Ö","û","™","×","ý","š","Ø","þ","›","Ù","ÿ","œ","Ú"];
+  var codes = ["&copy;","&#219;","&reg;","&#158;","&#220;","&#159;","&#221;","&#36;","&#222;","&#37;","&#161;","&#223;","&#162;","&#224;","&#163;","&#225;","&Agrave;","&#164;","&#226;","&Aacute;","&#165;","&#227;","&Acirc;","&#166;","&#228;","&Atilde;","&#167;","&#229;","&Auml;","&#168;","&#230;","&Aring;","&#169;","&#231;","&AElig;","&#170;","&#232;","&Ccedil;","&#171;","&#233;","&Egrave;","&#172;","&#234;","&Eacute;","&#173;","&#235;","&Ecirc;","&#174;","&#236;","&Euml;","&#175;","&#237;","&Igrave;","&#176;","&#238;","&Iacute;","&#177;","&#239;","&Icirc;","&#178;","&#240;","&Iuml;","&#179;","&#241;","&ETH;","&#180;","&#242;","&Ntilde;","&#181;","&#243;","&Otilde;","&#182;","&#244;","&Ouml;","&#183;","&#245;","&Oslash;","&#184;","&#246;","&Ugrave;","&#185;","&#247;","&Uacute;","&#186;","&#248;","&Ucirc;","&#187;","&#249;","&Uuml;","&#64;","&#188;","&#250;","&Yacute;","&#189;","&#251;","&THORN;","&#128;","&#190;","&#252","&szlig;","&#191;","&#253;","&agrave;","&#130;","&#192;","&#254;","&aacute;","&#131;","&#193;","&#255;","&aring;","&#132;","&#194;","&aelig;","&#133;","&#195;","&ccedil;","&#134;","&#196;","&egrave;","&#135;","&#197;","&eacute;","&#136;","&#198;","&ecirc;","&#137;","&#199;","&euml;","&#138;","&#200;","&igrave;","&#139;","&#201;","&iacute;","&#140;","&#202;","&icirc;","&#203;","&iuml;","&#142;","&#204;","&eth;","&#205;","&ntilde;","&#206;","&ograve;","&#145;","&#207;","&oacute;","&#146;","&#208;","&ocirc;","&#147;","&#209;","&otilde;","&#148;","&#210;","&ouml;","&#149;","&#211;","&oslash;","&#150;","&#212;","&ugrave;","&#151;","&#213;","&uacute;","&#152;","&#214;","&ucirc;","&#153;","&#215;","&yacute;","&#154;","&#216;","&thorn;","&#155;","&#217;","&yuml;","&#156;","&#218;"];
+
+  for(x=0; x<chars.length; x++){
+     str = str.replace(chars[x], codes[x]);
+  }
+
+  return str;
+}
+
 
 exports.isUserOnDB = (userId, callbackFunc) => {
 
@@ -26,7 +45,12 @@ exports.isUserOnDB = (userId, callbackFunc) => {
  *  500 => Error al fer consulta BBDD
  */
 
-exports.getUserData = (username) => {
+exports.getUserData = (req, res) => {
+
+  console.log('getUserData');
+
+  const username = req.body.username;
+
 
   dbconfig.connection.query(
     "SELECT * FROM usuaris WHERE niu = ?" ,[username],
@@ -43,12 +67,12 @@ exports.getUserData = (username) => {
             gestoremail: results[0].gestoremail
         };
 
-        httpres.status(200).json(body)
+        res.status(200).json(body)
       }else{
           console.log("verifyUserCallback: Usuari no trobat a la BBDD!!");
           const status = 401;
           const message = 'Usuari o password incorrectes';
-          httpres.status(status).json({ status, message })
+          res.status(status).json({ status, message })
           console.log(message);
           return;
       }
@@ -119,6 +143,43 @@ exports.enviaMailRemitent= (req,res) => {
 
       let code = shell.exec('echo \"S\'ha recollit el paquet amb n&uacute;mero de registre '+req.body.id+' \"'+
 		     ' | mail -aFrom:'+req.body.gestoremail+' -a "Content-type: text/html" -s \'Paquet entregat\' ' + req.body.emailremitent).code;
+	  if (code !==0){
+            res.status(200).json({ SendMail: 'ko' });
+	  }else{
+            res.status(200).json({ SendMail: 'ok' });
+	  }
+    }else{
+        res.status(200).json({ SendMail: 'ko' });
+    }
+
+}
+
+/**
+ * Request
+ *  id
+ *  email
+ *  remitent
+ *  ubicacioemail
+ *  gestoremail
+ *
+ * Response:
+ *  200: ok o ko
+ *
+ */
+
+exports.enviaMail = (req, res) => {
+
+	if (req.body.email!=undefined && req.body.email!=''){
+
+    const cuerpo = char_convert('echo \"Heu rebut un paquet amb n&uacute;mero de registre '+req.body.id+' i remitent '+
+      req.body.remitent+'. \nPodeu recollir-lo per '+ req.body.ubicacioemail+'\"');
+
+    const cmd = cuerpo + ' | mail -aFrom:'+req.body.gestoremail+
+                ' -a "Content-type: text/html" -s "Paquet rebut per part de '+
+                req.body.remitent+'" ' + req.body.email;
+
+    let code = shell.exec(cmd).code;
+
 	  if (code !==0){
             res.status(200).json({ SendMail: 'ko' });
 	  }else{
@@ -219,7 +280,6 @@ exports.getCountPaquetsPerSignar=(req,res) => {
       }
     });
 
-
 }
 
 
@@ -242,7 +302,7 @@ exports.getPaquetsPerSignar = (req, res) => {
   let sql = '';
 
   if (searchText!=undefined && searchText!=""){
-    sql = "SELECT * FROM "+this.tablename+" WHERE (id LIKE '%" + searchText + "%' or " +
+    sql = "SELECT * FROM " + tablename + " WHERE (id LIKE '%" + searchText + "%' or " +
                                          "data_arribada LIKE '%"+searchText+"%' or " +
                                          "remitent LIKE '%"+searchText+"%' or "+
                                          "procedencia LIKE '%"+searchText+"%' or "+
@@ -262,6 +322,100 @@ exports.getPaquetsPerSignar = (req, res) => {
     sql,
     (errorSel, consulta) => {
     if (errorSel){
+      console.log(errorSel);
+
+      res.status(499).json({message: "No s'ha pogut consultar el llistat de paquets."});
+    } else {
+      res.status(200).json(consulta);
+    }
+  });
+
+}
+
+/**
+ * Request:
+ *  tablename: Nom de la taula de paquets
+ *  searchText: Filtre a aplicar
+ */
+
+exports.getCountPaquetsSignats=(req,res) => {
+  console.log('getCountPaquetsSignats');
+  console.log(req.body);
+
+  let sql = '';
+  tablename = req.body.tablename;
+  searchText = req.body.searchText;
+
+  if (searchText!=undefined && searchText!=""){
+    sql = "SELECT count(id) as totalpaquets FROM "+tablename+" WHERE (id LIKE '%" + searchText + "%' or " +
+                                             "data_arribada LIKE '%"+searchText+"%' or " +
+                                             "remitent LIKE '%"+searchText+"%' or "+
+                                             "procedencia LIKE '%"+searchText+"%' or "+
+                                             "mitja_arribada LIKE '%"+searchText+"%' or "+
+                                             "referencia LIKE '%"+searchText+"%' or "+
+                                             "destinatari LIKE '%"+searchText+"%' or "+
+                                             "departament LIKE '%"+searchText+"%' or "+
+                                             "data_lliurament LIKE '%"+searchText+"%' or "+
+                                             "dipositari LIKE '%"+searchText+"%' "+
+                                             ") AND signatura NOT LIKE 'empty';";
+
+  }else{
+      sql = "SELECT count(id) as totalpaquets FROM "+tablename+" WHERE signatura NOT LIKE 'empty'";
+  }
+
+  dbconfig.connection.query(
+      sql,
+      (errorSel, consulta) => {
+      if (errorSel){
+        res.status(499).json({message: "No s'ha pogut consultar el nombre de paquets."});
+      } else {
+        res.status(200).json(consulta);
+      }
+    });
+
+}
+
+/**
+ * Request:
+ *  tablename: Nom de la taula de paquets
+ *  page: Numero de plana segons els itemsPerPage
+ *  itemsPerPage: Numero de registes per plana
+ *  searchText: Text de búsqueda, opcional
+ */
+exports.getPaquetsSignats = (req, res) => {
+  console.log("getPaquetsSignats");
+  console.log(req.body);
+
+  const page = req.body.page;
+  const itemsPerPage = req.body.itemsPerPage;
+  const limit = ""+page+","+itemsPerPage;
+  const searchText = req.body.searchText;
+  const tablename = req.body.tablename;
+  let sql = '';
+
+  if (searchText!=undefined && searchText!=""){
+    sql = "SELECT * FROM " + tablename + " WHERE (id LIKE '%" + searchText + "%' or " +
+                                         "data_arribada LIKE '%"+searchText+"%' or " +
+                                         "remitent LIKE '%"+searchText+"%' or "+
+                                         "procedencia LIKE '%"+searchText+"%' or "+
+                                         "mitja_arribada LIKE '%"+searchText+"%' or "+
+                                         "referencia LIKE '%"+searchText+"%' or "+
+                                         "destinatari LIKE '%"+searchText+"%' or "+
+                                         "departament LIKE '%"+searchText+"%' or "+
+                                         "data_lliurament LIKE '%"+searchText+"%' or "+
+                                         "dipositari LIKE '%"+searchText+"%' "+
+                                         ") AND signatura NOT LIKE 'empty' "+
+                                         "ORDER BY data_arribada DESC;"
+  } else {
+    sql ="SELECT * FROM " + tablename + " WHERE signatura NOT LIKE 'empty' ORDER BY data_arribada DESC;"
+  }
+
+  dbconfig.connection.query(
+    sql,
+    (errorSel, consulta) => {
+    if (errorSel){
+      console.log(errorSel);
+
       res.status(499).json({message: "No s'ha pogut consultar el llistat de paquets."});
     } else {
       res.status(200).json(consulta);

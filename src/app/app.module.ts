@@ -28,6 +28,11 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import {QRCodeModule} from 'angularx-qrcode';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
+import localeEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+import { fas, faQrcode } from '@fortawesome/free-solid-svg-icons';
+
+registerLocaleData(localeEs, 'es');
 
 @NgModule({
   declarations: [
@@ -66,4 +71,11 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
         { provide: LOCALE_ID, useValue: 'es' }, ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+  constructor(iconLibrary: FaIconLibrary) {
+    iconLibrary.addIconPacks(fas);
+    iconLibrary.addIcons(faQrcode);
+  }
+
+ }
