@@ -33,7 +33,7 @@ export class AuthService {
                           }
                         );
                     } else {
-                      window.location.href = environment.dataServerURL + '/selfapi/login';
+                      window.location.href = environment.dataServerURL + '/loginapi/login';
                       //this.router.navigate(['/login']);
                     }
                 });
@@ -58,7 +58,7 @@ export class AuthService {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
         this.dbService.setTablename('');
-        window.location.href = environment.dataServerURL + '/selfapi/logout';
+        window.location.href = environment.dataServerURL + '/loginapi/logout';
     }
 
     getUserRol() {

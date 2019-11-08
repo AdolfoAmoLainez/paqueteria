@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
           if (auth && auth.username) {
             return true;
           } else {
-            window.location.href = environment.dataServerURL + '/selfapi/login';
+            window.location.href = environment.dataServerURL + '/loginapi/login';
             return false;
           }
         }

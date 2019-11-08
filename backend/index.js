@@ -12,13 +12,14 @@ var url = require('url');
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
 const selfApiRoutes = require("./routes/selfapi");
+const loginApiRoutes = require('./routes/loginapi');
 
-const PORT = 55022;
+const PORT = 55023;
 
 
 // Your CAS server's hostname
 
-cas.configure({ 'host': 'sso.uab.cat', 'protocol': 'https',
+cas.configure({ 'host': 'sacnt.uab.cat', 'protocol': 'https',
 paths: {
         validate: '/validate',
         serviceValidate: '/p3/serviceValidate', // CAS 3.0
@@ -55,6 +56,8 @@ app.use(express.static('public'));
 
 var api = mysqlrestapi(app, dbconfig);
 app.use("/selfapi", selfApiRoutes);
+app.use("/loginapi", loginApiRoutes);
+
 
 /*app.get('*', cas.serviceValidate(), cas.authenticate(),(req,res)=>{
     res.sendFile(__dirname+'/public/index.html');
@@ -74,8 +77,8 @@ app.get('*',(req,res)=>{
  */
 
 var options = {
-    key: FS.readFileSync(path.join(__dirname, './certs/chaman_uab_cat.key')),
-    cert: FS.readFileSync(path.join(__dirname, './certs/chaman_uab_cat.crt'))
+    key: FS.readFileSync(path.join(__dirname, './certs/bitacola_uab_cat.key')),
+    cert: FS.readFileSync(path.join(__dirname, './certs/bitacola_uab_cat.crt'))
   };
 
 /*app.listen(PORT, function(){
