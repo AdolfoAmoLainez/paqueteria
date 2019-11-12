@@ -2,6 +2,7 @@
 
 # compiled output
 /backend/public
+/backend/certs
 /tmp
 /out-tsc
 # Only exists if Bazel was run
