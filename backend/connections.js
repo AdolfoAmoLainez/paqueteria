@@ -5,7 +5,7 @@ var mysqlOptions = {
   host:'localhost',
   user:'paqueteria',
   password:'d172u^kJ',
-  database:'c2040206_paqueteria'
+  database:'paquets'
 };
 
 var connection=mysql.createPool(mysqlOptions);

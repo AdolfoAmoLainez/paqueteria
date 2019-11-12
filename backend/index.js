@@ -77,8 +77,8 @@ app.get('*',(req,res)=>{
  */
 
 var options = {
-    key: FS.readFileSync(path.join(__dirname, './certs/bitacola_uab_cat.key')),
-    cert: FS.readFileSync(path.join(__dirname, './certs/bitacola_uab_cat.crt'))
+    key: FS.readFileSync(path.join(__dirname, './certs/paqueteria_uab_cat.key')),
+    cert: FS.readFileSync(path.join(__dirname, './certs/paqueteria_uab_cat.crt'))
   };
 
 /*app.listen(PORT, function(){
