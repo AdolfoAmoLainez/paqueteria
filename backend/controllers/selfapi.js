@@ -172,7 +172,7 @@ exports.enviaMail = (req, res) => {
 	if (req.body.email!=undefined && req.body.email!=''){
 
     const cuerpo = char_convert('echo \"Heu rebut un paquet amb n&uacute;mero de registre '+req.body.id+' i remitent '+
-      req.body.remitent+'. \nPodeu recollir-lo per '+ req.body.ubicacioemail+'\"');
+      req.body.remitent+'. \nPodreu recollir-lo '+ req.body.ubicacioemail+'\"');
 
     const cmd = cuerpo + ' | mail -aFrom:'+req.body.gestoremail+
                 ' -a "Content-type: text/html" -s "Paquet rebut per part de '+
