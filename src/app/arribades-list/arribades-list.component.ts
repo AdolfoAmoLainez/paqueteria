@@ -314,6 +314,10 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.searching = true;
     this.reloadLlista();
     }
+    if (this.searchString === '') {
+      this.searching = false;
+      this.reloadLlista();
+    }
   }
 
   onCancelBuscar() {
