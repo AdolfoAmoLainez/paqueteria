@@ -4,8 +4,8 @@ export interface User {
   displayname: string;
   rol_id: number;
   tablename: string;
-  ldapuri: string;
-  uidbasedn: string;
+/*   ldapuri: string;
+  uidbasedn: string; */
   ubicacioemail: string;
   gestoremail: string;
 }
