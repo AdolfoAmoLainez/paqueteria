@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
 
     this.activatedRoute.data.subscribe(
       (data) => {
-        if(!data.ticket) {
+        if (!data.ticket) {
           this.authService.loginUser();
         } else {
           this.router.navigate(['/llista']);
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
       }
     );
 
-    this.authService.loginUser();
+    //this.authService.loginUser();
 
     /*this.loginForm = new FormGroup({
       "niu": new FormControl(null),

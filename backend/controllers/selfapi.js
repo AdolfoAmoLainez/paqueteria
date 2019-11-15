@@ -49,14 +49,24 @@ exports.getUserData = (req, res) => {
 
   console.log('getUserData');
 
-  const username = req.body.username;
+  //const username = req.body.username;
+
+
+  if (typeof req.session.cas === 'undefined'){
+    const status = 401;
+    const message = 'Usuari no autoritzat';
+    res.status(status).json({ status, message })
+  }
+
+  console.log(req.session.cas.user);
+
+  const username = req.session.cas.user;
 
 
   dbconfig.connection.query(
     "SELECT * FROM usuaris WHERE niu = ?" ,[username],
     (errorSel, results) => {
     if (!errorSel){
-      console.log(results);
       if(results.length>0){
 
         let body = {
@@ -78,9 +88,9 @@ exports.getUserData = (req, res) => {
       }
 
     } else {
-      console.log(errorSel);
-
-      callback(500);
+      const status = 401;
+      const message = 'Usuari no autoritzat';
+      res.status(status).json({ status, message })
     }
   });
 }
@@ -91,26 +101,42 @@ exports.getUserData = (req, res) => {
  */
 
 exports.esborraTaula = (req, res) => {
+  console.log("EsborraTaula");
+  console.log(req.body);
 
   nomTaula = req.body.tablename;
 
-  sql = "DROP TABLE `"+nomTaula+"`;";
+  const sql = "DROP TABLE `"+nomTaula+"`;";
 
   dbconfig.connection.query(sql, function(error,results){
 
     if(error){
-      httpres.status(498).json({status:'498',message: error.code+": "+ error.sqlMessage});
+      res.status(498).json({status:'498',message: error.code+": "+ error.sqlMessage});
     }else{
-      httpres.status(200).json(results);
+      res.status(200).json(results);
     }
   });
 }
 
 /**
  * Crea una nova taula de paquests des de la buida
+ * Request: Usuari
+ *  id: number;
+    niu: string;
+    displayname: string;
+    rol_id: number;
+    tablename: string;
+    ubicacioemail: string;
+    gestoremail: string;
+ *
  */
 
 exports.creaTaula = (req,res)=>{
+  console.log("Crar Taula");
+  console.log(req.body);
+
+
+  const nomTaula = req.body.tablename
 
   if (req.session.cas && req.session.cas.user) {
     sql = "CREATE TABLE `"+nomTaula+"` LIKE paquets_buida;";
@@ -200,7 +226,9 @@ exports.enviaMail = (req, res) => {
  */
 
 exports.paquetQrSignar = (req,res) => {
-  //console.log(req.body);
+
+  console.log("PaquetQrSignar");
+  console.log(req.body);
 
   paquet = req.body;
 

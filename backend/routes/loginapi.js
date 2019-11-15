@@ -3,7 +3,7 @@ const LoginApiController = require("../controllers/loginapi");
 
 var cas = require('connect-cas');
 
-cas.configure({ 'host': 'sacnt.uab.cat', 'protocol': 'https',
+cas.configure({ 'host': 'sso.uab.cat', 'protocol': 'https',
 paths: {
         validate: '/validate',
         serviceValidate: '/p3/serviceValidate', // CAS 3.0

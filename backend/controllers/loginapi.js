@@ -18,6 +18,7 @@ exports.login = (req, res) => {
   console.log("\nloginapi.login!");
 
   SelfApiController.isUserOnDB(req.session.cas.user, (codi) => {
+
     switch (codi) {
       case 200:
         res.redirect(302,'/login');

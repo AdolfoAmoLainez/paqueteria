@@ -19,12 +19,27 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
       return next.handle(request).pipe(
         catchError((error: HttpErrorResponse) => {
-          const initialState = {
-            message: error.message,
-            title: 'ERROR: ' + error.status,
-            status: error.status
-          };
-          this.errorModalRef = this.modalService.show(ErrorPageComponent, {initialState});
+
+          if (error.status === 401) {
+            const initialState = {
+              message: 'Usuari no Autoritzat',
+              title: 'ERROR: ' + 'Usuari no autoritzat o bé la sessió ha expirat.',
+              status: error.status
+            };
+            this.errorModalRef = this.modalService.show(ErrorPageComponent, {initialState});
+
+            setTimeout(() => {
+              this.authService.logout();
+            }, 4000);
+
+          } else {
+            const initialState = {
+              message: error.message,
+              title: 'ERROR: ' + error.status,
+              status: error.status
+            };
+            this.errorModalRef = this.modalService.show(ErrorPageComponent, {initialState});
+          }
           return throwError(error);
         })
       );

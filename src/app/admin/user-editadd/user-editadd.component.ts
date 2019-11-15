@@ -31,8 +31,8 @@ export class UserEditaddComponent implements OnInit {
       'displayname' : new FormControl (null, Validators.required),
       'tablename' : new FormControl (null, Validators.required),
       'rol_id' : new FormControl (null, Validators.required),
-      'uidbasedn' : new FormControl (null, Validators.required),
-      'ldapuri' : new FormControl (null, Validators.required),
+/*       'uidbasedn' : new FormControl (null, Validators.required),
+      'ldapuri' : new FormControl (null, Validators.required), */
       'ubicacioemail' : new FormControl (null, Validators.required),
       'gestoremail' : new FormControl (null, Validators.required)
     });
@@ -54,8 +54,8 @@ export class UserEditaddComponent implements OnInit {
                 'displayname' : this.userEditing.displayname,
                 'tablename' : this.userEditing.tablename,
                 'rol_id' : this.userEditing.rol_id,
-                'uidbasedn' : this.userEditing.uidbasedn,
-                'ldapuri' : this.userEditing.ldapuri,
+/*                 'uidbasedn' : this.userEditing.uidbasedn,
+                'ldapuri' : this.userEditing.ldapuri, */
                 'ubicacioemail' : this.userEditing.ubicacioemail,
                 'gestoremail' : this.userEditing.gestoremail
               });

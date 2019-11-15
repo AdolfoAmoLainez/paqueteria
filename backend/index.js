@@ -19,7 +19,7 @@ const PORT = 55023;
 
 // Your CAS server's hostname
 
-cas.configure({ 'host': 'sacnt.uab.cat', 'protocol': 'https',
+cas.configure({ 'host': 'sso.uab.cat', 'protocol': 'https',
 paths: {
         validate: '/validate',
         serviceValidate: '/p3/serviceValidate', // CAS 3.0
@@ -42,8 +42,6 @@ app.use(session({
 	}
 ));
 
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
@@ -55,6 +53,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static('public'));
 
 var api = mysqlrestapi(app, dbconfig);
+
 app.use("/selfapi", selfApiRoutes);
 app.use("/loginapi", loginApiRoutes);
 
