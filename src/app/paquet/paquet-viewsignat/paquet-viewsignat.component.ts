@@ -61,7 +61,7 @@ export class PaquetViewsignatComponent implements OnInit {
         }
 
         this.paquetForm.patchValue({
-          data_arribada: new Date(this.paquetEditing.data_arribada),
+          data_arribada: this.paquetEditing.data_arribada,
           remitent: this.paquetEditing.remitent,
           procedencia: this.paquetEditing.procedencia,
           quantitat: this.paquetEditing.quantitat,
