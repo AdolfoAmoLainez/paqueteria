@@ -4,8 +4,8 @@
       <div class="col-sm-6">
         <div class="form-group">
           <label for="data_arribada">Data Arribada</label>
-          <input bsDatepicker [bsConfig]="{ dateInputFormat: 'D/M/YYYY' }" type="text" formControlName="data_arribada"
-            name="data_arribada" id="data_arribada" class="form-control">
+           <input type="text" formControlName="data_arribada"
+            name="dipositari" id="dipositari" class="form-control">
         </div>
         <div class="form-group">
           <label for="remitent">Remitent</label>
@@ -55,7 +55,7 @@
           <div class="col-md-6 text-center">
             <div class="form-group">
               <label for="dipositari">Data Lliurament</label>
-              <input type="text" formControlName="data_lliurament" 
+              <input type="text" formControlName="data_lliurament"
                       name="dipositari" id="dipositari" class="form-control"
                       [value]="paquetForm.get('data_lliurament').value |  date:'d/M/yyyy H:mm'">
             </div>
@@ -70,7 +70,7 @@
           <qrcode [qrdata]="qrCodePaquet" [size]="200" [level]="'M'" style="cursor: pointer;" ></qrcode>
         </div>
       </div>
-      
+
 
     </form>
 
