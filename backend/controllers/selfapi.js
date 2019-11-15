@@ -91,26 +91,42 @@ exports.getUserData = (req, res) => {
  */
 
 exports.esborraTaula = (req, res) => {
+  console.log("EsborraTaula");
+  console.log(req.body);
 
   nomTaula = req.body.tablename;
 
-  sql = "DROP TABLE `"+nomTaula+"`;";
+  const sql = "DROP TABLE `"+nomTaula+"`;";
 
   dbconfig.connection.query(sql, function(error,results){
 
     if(error){
-      httpres.status(498).json({status:'498',message: error.code+": "+ error.sqlMessage});
+      res.status(498).json({status:'498',message: error.code+": "+ error.sqlMessage});
     }else{
-      httpres.status(200).json(results);
+      res.status(200).json(results);
     }
   });
 }
 
 /**
  * Crea una nova taula de paquests des de la buida
+ *  * Request: Usuari
+ *  id: number;
+    niu: string;
+    displayname: string;
+    rol_id: number;
+    tablename: string;
+    ubicacioemail: string;
+    gestoremail: string;
+ *
  */
 
 exports.creaTaula = (req,res)=>{
+  console.log("Crar Taula");
+  console.log(req.body);
+
+
+  const nomTaula = req.body.tablename
 
   if (req.session.cas && req.session.cas.user) {
     sql = "CREATE TABLE `"+nomTaula+"` LIKE paquets_buida;";
@@ -172,7 +188,7 @@ exports.enviaMail = (req, res) => {
 	if (req.body.email!=undefined && req.body.email!=''){
 
     const cuerpo = char_convert('echo \"Heu rebut un paquet amb n&uacute;mero de registre '+req.body.id+' i remitent '+
-      req.body.remitent+'. \nPodreu recollir-lo '+ req.body.ubicacioemail+'\"');
+      req.body.remitent+'. \nPodreu recollir-lo per '+ req.body.ubicacioemail+'\"');
 
     const cmd = cuerpo + ' | mail -aFrom:'+req.body.gestoremail+
                 ' -a "Content-type: text/html" -s "Paquet rebut per part de '+
@@ -201,6 +217,9 @@ exports.enviaMail = (req, res) => {
 
 exports.paquetQrSignar = (req,res) => {
   //console.log(req.body);
+
+  console.log("PaquetQrSignar");
+  console.log(req.body);
 
   paquet = req.body;
 
