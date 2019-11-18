@@ -4,7 +4,7 @@ import { PaquetsService } from './paquets.service';
 import { Injectable } from '@angular/core';
 import { MessagesService } from '../messages/messages.service';
 
-import {environment} from 'src/environments/environment'
+import {environment} from 'src/environments/environment';
 import { UsersService } from './users.service';
 import { User } from './user.model';
 
@@ -45,7 +45,7 @@ export class DatabaseService {
         }
     }
 
-    tractaResposta(res: any) {
+/*     tractaResposta(res: any) {
         let paquets: Paquet[] = [];
 
 
@@ -70,7 +70,7 @@ export class DatabaseService {
         });
 
         this.paquetsService.setPaquets(paquets);
-    }
+    } */
 
 
     getCountPaquetsPerSignar(searchText?: string) {
@@ -86,30 +86,21 @@ export class DatabaseService {
     getPaquetsPerSignar(page: number, itemsPerpage: number, searchText?: string) {
         this.testTablename();
 
-        const limit = '' + page + ',' + itemsPerpage;
-
-        if (searchText !== undefined && searchText !== '') {
-                const obj = {
+        const obj = {
                   tablename: this.tablename,
-                  searchText
+                  searchText,
+                  page,
+                  itemsPerpage
                 };
-                return this.http.post(environment.dataServerURL + '/selfapi/getPaquetsPerSignar', obj).subscribe(
-                (res: any) => {
-                  this.tractaResposta(res);
+        return this.http.post<{paquets: Paquet[]}>(environment.dataServerURL + '/selfapi/getPaquetsPerSignar', obj).subscribe(
+                (res) => {
+                  // this.tractaResposta(res);
+
+                  this.paquetsService.setPaquets(res.paquets);
 
                 }
                 );
-        } else {
 
-            return this.http.get(environment.dataServerURL + '/api/crud/' +
-                                 this.tablename + '?_limit=' + limit +
-                                 '&signatura=empty&_order[data_arribada]=DESC').subscribe(
-                (res: any) => {
-
-                  this.tractaResposta(res.json);
-                }
-            );
-        }
     }
 
 
@@ -127,32 +118,21 @@ export class DatabaseService {
 
     getPaquetsSignats(page: number, itemsPerpage: number, searchText?: string) {
         this.testTablename();
-        const limit = '' + page + ',' + itemsPerpage;
 
-        if (searchText !== undefined && searchText !== '') {
-
-                const obj = {
+        const obj = {
                   tablename: this.tablename,
-                  searchText
+                  searchText,
+                  page,
+                  itemsPerpage
                 };
 
-                return this.http.post(environment.dataServerURL + '/selfapi/getPaquetsSignats', obj).subscribe(
-                  (res: any) => {
-                    this.tractaResposta(res);
+        return this.http.post<{paquets: Paquet[]}>(environment.dataServerURL + '/selfapi/getPaquetsSignats', obj).subscribe(
+                  (res) => {
+
+                    this.paquetsService.setPaquets(res.paquets);
 
                   }
                 );
-        } else {
-
-            return this.http.get(environment.dataServerURL + '/api/crud/' + this.tablename + '?_limit=' +
-            limit + '&signatura[LIKE]=data%&_order[data_lliurament]=DESC').subscribe(
-                    (res: any) => {
-                        this.tractaResposta(res.json);
-
-                    }
-                );
-
-        }
 
     }
 
