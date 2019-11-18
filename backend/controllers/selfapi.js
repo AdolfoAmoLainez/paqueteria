@@ -332,9 +332,9 @@ exports.getPaquetsPerSignar = (req, res) => {
                                          "data_lliurament LIKE '%"+searchText+"%' or "+
                                          "dipositari LIKE '%"+searchText+"%' "+
                                          ") AND signatura='empty' "+
-                                         "ORDER BY data_arribada DESC;"
+                                         "ORDER BY STR_TO_DATE(data_arribada, '%d/%m/%Y %H:%i:%s') DESC;"
   } else {
-    sql ="SELECT * FROM " + tablename + " WHERE signatura='empty' ORDER BY data_arribada DESC;"
+    sql ="SELECT * FROM " + tablename + " WHERE signatura='empty' ORDER BY STR_TO_DATE(data_arribada, '%d/%m/%Y %H:%i:%s') DESC;"
   }
 
   dbconfig.connection.query(
@@ -424,9 +424,9 @@ exports.getPaquetsSignats = (req, res) => {
                                          "data_lliurament LIKE '%"+searchText+"%' or "+
                                          "dipositari LIKE '%"+searchText+"%' "+
                                          ") AND signatura NOT LIKE 'empty' "+
-                                         "ORDER BY data_arribada DESC;"
+                                         "ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC;"
   } else {
-    sql ="SELECT * FROM " + tablename + " WHERE signatura NOT LIKE 'empty' ORDER BY data_arribada DESC;"
+    sql ="SELECT * FROM " + tablename + " WHERE signatura NOT LIKE 'empty' ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC;"
   }
 
   dbconfig.connection.query(
