@@ -306,16 +306,14 @@ exports.getCountPaquetsPerSignar=(req,res) => {
  * Request:
  *  tablename: Nom de la taula de paquets
  *  page: Numero de plana segons els itemsPerPage
- *  itemsPerPage: Numero de registes per plana
+ *  itemsPerpage: Numero de registes per plana
  *  searchText: Text de búsqueda, opcional
  */
 exports.getPaquetsPerSignar = (req, res) => {
   console.log("getPaquetsPerSignar");
   console.log(req.body);
 
-  const page = req.body.page;
-  const itemsPerPage = req.body.itemsPerPage;
-  const limit = ""+page+","+itemsPerPage;
+  const limit = ""+req.body.page+","+req.body.itemsPerpage;
   const searchText = req.body.searchText;
   const tablename = req.body.tablename;
   let sql = '';
@@ -332,9 +330,11 @@ exports.getPaquetsPerSignar = (req, res) => {
                                          "data_lliurament LIKE '%"+searchText+"%' or "+
                                          "dipositari LIKE '%"+searchText+"%' "+
                                          ") AND signatura='empty' "+
-                                         "ORDER BY STR_TO_DATE(data_arribada, '%d/%m/%Y %H:%i:%s') DESC;"
+                                         "ORDER BY STR_TO_DATE(data_arribada, '%d/%m/%Y %H:%i:%s') DESC " +
+                                         "LIMIT " + limit+";";
   } else {
-    sql ="SELECT * FROM " + tablename + " WHERE signatura='empty' ORDER BY STR_TO_DATE(data_arribada, '%d/%m/%Y %H:%i:%s') DESC;"
+    sql ="SELECT * FROM " + tablename + " WHERE signatura='empty' ORDER BY STR_TO_DATE(data_arribada, '%d/%m/%Y %H:%i:%s') DESC " +
+         "LIMIT " + limit+";"
   }
 
   dbconfig.connection.query(
@@ -345,7 +345,9 @@ exports.getPaquetsPerSignar = (req, res) => {
 
       res.status(499).json({message: "No s'ha pogut consultar el llistat de paquets."});
     } else {
-      res.status(200).json(consulta);
+
+      res.status(200).json({paquets:consulta});
+
     }
   });
 
@@ -398,16 +400,14 @@ exports.getCountPaquetsSignats=(req,res) => {
  * Request:
  *  tablename: Nom de la taula de paquets
  *  page: Numero de plana segons els itemsPerPage
- *  itemsPerPage: Numero de registes per plana
+ *  itemsPerpage: Numero de registes per plana
  *  searchText: Text de búsqueda, opcional
  */
 exports.getPaquetsSignats = (req, res) => {
   console.log("getPaquetsSignats");
   console.log(req.body);
 
-  const page = req.body.page;
-  const itemsPerPage = req.body.itemsPerPage;
-  const limit = ""+page+","+itemsPerPage;
+  const limit = ""+req.body.page+","+req.body.itemsPerpage;
   const searchText = req.body.searchText;
   const tablename = req.body.tablename;
   let sql = '';
@@ -424,9 +424,11 @@ exports.getPaquetsSignats = (req, res) => {
                                          "data_lliurament LIKE '%"+searchText+"%' or "+
                                          "dipositari LIKE '%"+searchText+"%' "+
                                          ") AND signatura NOT LIKE 'empty' "+
-                                         "ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC;"
+                                         "ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC " +
+                                         "LIMIT " + limit+";";
   } else {
-    sql ="SELECT * FROM " + tablename + " WHERE signatura NOT LIKE 'empty' ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC;"
+    sql ="SELECT * FROM " + tablename + " WHERE signatura NOT LIKE 'empty' ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC " +
+         "LIMIT " + limit+";";
   }
 
   dbconfig.connection.query(
@@ -437,7 +439,9 @@ exports.getPaquetsSignats = (req, res) => {
 
       res.status(499).json({message: "No s'ha pogut consultar el llistat de paquets."});
     } else {
-      res.status(200).json(consulta);
+
+      res.status(200).json({paquets: consulta});
+
     }
   });
 

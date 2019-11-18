@@ -84,6 +84,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   // "per Signar" o "Signats"
   vistaSeguent: string;
   vistaActual: string;
+  isLoading = true;
 
   deleteModalMsg = 'Vols esborrar el paquet?';
   deleteModalRef: BsModalRef;
@@ -132,6 +133,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.changePaquetsSubscription = this.paquetsService.changedPaquets.subscribe(
       (paquets: Paquet[]) => {
         this.paquets = paquets;
+        this.isLoading = false;
       }
     );
 
@@ -235,6 +237,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
             this.totalPaquets = result[0].totalpaquets;
             this.databaseService.getPaquetsPerSignar((this.paginaActual - 1) * this.itemsPerPage, this.itemsPerPage, this.searchString);
             this.allowViewPaquet = false;
+            this.isLoading = true;
           }
         );
 
@@ -245,6 +248,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
             this.totalPaquets = result[0].totalpaquets;
             this.databaseService.getPaquetsSignats((this.paginaActual - 1) * this.itemsPerPage, this.itemsPerPage, this.searchString);
             this.allowViewPaquet = true;
+            this.isLoading = true;
           }
         );
 
@@ -268,6 +272,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
           this.vistaActual = this.vistaSeguent;
           this.vistaSeguent = 'Signats';
           this.allowViewPaquet = false;
+          this.isLoading = true;
         }
       );
 
@@ -280,6 +285,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
           this.vistaActual = this.vistaSeguent;
           this.vistaSeguent = 'per Signar';
           this.allowViewPaquet = true;
+          this.isLoading = true;
         });
 
     }
