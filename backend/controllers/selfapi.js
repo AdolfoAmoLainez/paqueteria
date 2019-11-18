@@ -198,7 +198,7 @@ exports.enviaMail = (req, res) => {
 	if (req.body.email!=undefined && req.body.email!=''){
 
     const cuerpo = char_convert('echo \"Heu rebut un paquet amb n&uacute;mero de registre '+req.body.id+' i remitent '+
-      req.body.remitent+'. \nPodeu recollir-lo per '+ req.body.ubicacioemail+'\"');
+      req.body.remitent+'. \nPodreu recollir-lo per '+ req.body.ubicacioemail+'\"');
 
     const cmd = cuerpo + ' | mail -aFrom:'+req.body.gestoremail+
                 ' -a "Content-type: text/html" -s "Paquet rebut per part de '+
@@ -341,9 +341,9 @@ exports.getPaquetsPerSignar = (req, res) => {
                                          "data_lliurament LIKE '%"+searchText+"%' or "+
                                          "dipositari LIKE '%"+searchText+"%' "+
                                          ") AND signatura='empty' "+
-                                         "ORDER BY data_arribada DESC;"
+                                         "ORDER BY STR_TO_DATE(data_arribada, '%d/%m/%Y %H:%i:%s') DESC;"
   } else {
-    sql ="SELECT * FROM " + tablename + " WHERE signatura='empty' ORDER BY data_arribada DESC;"
+    sql ="SELECT * FROM " + tablename + " WHERE signatura='empty' ORDER BY STR_TO_DATE(data_arribada, '%d/%m/%Y %H:%i:%s') DESC;"
   }
 
   dbconfig.connection.query(
@@ -433,9 +433,9 @@ exports.getPaquetsSignats = (req, res) => {
                                          "data_lliurament LIKE '%"+searchText+"%' or "+
                                          "dipositari LIKE '%"+searchText+"%' "+
                                          ") AND signatura NOT LIKE 'empty' "+
-                                         "ORDER BY data_arribada DESC;"
+                                         "ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC;"
   } else {
-    sql ="SELECT * FROM " + tablename + " WHERE signatura NOT LIKE 'empty' ORDER BY data_arribada DESC;"
+    sql ="SELECT * FROM " + tablename + " WHERE signatura NOT LIKE 'empty' ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC;"
   }
 
   dbconfig.connection.query(
