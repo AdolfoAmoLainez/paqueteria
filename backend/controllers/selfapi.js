@@ -56,6 +56,7 @@ exports.getUserData = (req, res) => {
     const status = 401;
     const message = 'Usuari no autoritzat';
     res.status(status).json({ status, message })
+    return;
   }
 
   console.log(req.session.cas);
@@ -433,10 +434,10 @@ exports.getPaquetsSignats = (req, res) => {
                                          "data_lliurament LIKE '%"+searchText+"%' or "+
                                          "dipositari LIKE '%"+searchText+"%' "+
                                          ") AND signatura NOT LIKE 'empty' "+
-                                         "ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC " +
+                                         "ORDER BY data_lliurament DESC " +
                                          "LIMIT " + limit+";";
   } else {
-    sql ="SELECT * FROM " + tablename + " WHERE signatura NOT LIKE 'empty' ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC " +
+    sql ="SELECT * FROM " + tablename + " WHERE signatura NOT LIKE 'empty' ORDER BY data_lliurament DESC " +
          "LIMIT " + limit+";";
   }
 
