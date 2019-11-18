@@ -45,34 +45,6 @@ export class DatabaseService {
         }
     }
 
-/*     tractaResposta(res: any) {
-        let paquets: Paquet[] = [];
-
-
-        res.forEach((element, index) => {
-          paquets.push(new Paquet(
-            res[index].id,
-            res[index].data_arribada,
-            res[index].remitent,
-            res[index].procedencia,
-            res[index].quantitat,
-            res[index].mitja_arribada,
-            res[index].referencia,
-            res[index].destinatari,
-            res[index].departament,
-            res[index].data_lliurament,
-            res[index].dipositari,
-            res[index].signatura,
-            res[index].qrcode,
-            res[index].email,
-            res[index].emailremitent
-        ));
-        });
-
-        this.paquetsService.setPaquets(paquets);
-    } */
-
-
     getCountPaquetsPerSignar(searchText?: string) {
         this.testTablename();
 
