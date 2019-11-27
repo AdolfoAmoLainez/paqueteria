@@ -117,7 +117,13 @@ export class PaquetEditAddComponent implements OnInit {
   }
 
   onClear() {
-    this.paquetForm.reset();
+    const ahora = new Date().toLocaleString('es-ES');
+    const ubicacioemail = this.authService.getLocalUser().ubicacioemail;
+
+    this.paquetForm.reset({
+      data_arribada: ahora,
+      ubicacioemail
+    });
   }
 
   onHideForm() {
