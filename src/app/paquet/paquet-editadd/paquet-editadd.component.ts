@@ -8,6 +8,7 @@ import { DatabaseService } from 'src/app/shared/database.service';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { esLocale } from 'ngx-bootstrap/locale';
 import { defineLocale } from 'ngx-bootstrap/chronos';
+import { AuthService } from 'src/app/auth/auth.service';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class PaquetEditAddComponent implements OnInit {
               private router: Router,
               private paquetsService: PaquetsService,
               private databaseService: DatabaseService,
-              private localeService: BsLocaleService) {
+              private localeService: BsLocaleService,
+              private authService: AuthService) {
 
       defineLocale('es', esLocale);
       this.localeService.use('es');
@@ -46,7 +48,8 @@ export class PaquetEditAddComponent implements OnInit {
       destinatari: new FormControl(null, Validators.required),
       departament: new FormControl(null, Validators.required),
       email: new FormControl(null, Validators.email),
-      emailremitent: new FormControl(null, Validators.email)
+      emailremitent: new FormControl(null, Validators.email),
+      ubicacioemail: new FormControl(null, Validators.required)
       // 'dipositari': new FormControl(null,Validators.required)
     });
 
@@ -54,6 +57,7 @@ export class PaquetEditAddComponent implements OnInit {
 
     this.route.params.subscribe(
       (params: Params) => {
+
         switch (params.mode) {
           case 'edit':
             this.paquetEditing = this.paquetsService.getPaquet(
@@ -77,6 +81,7 @@ export class PaquetEditAddComponent implements OnInit {
                 data = this.paquetEditing.data_arribada.toLocaleString();
               }
               // console.log("add date: "+ data);
+
               this.paquetForm.patchValue({
                 // 'data_arribada': this.paquetEditing.data_arribada,
                 data_arribada: data,
@@ -88,7 +93,8 @@ export class PaquetEditAddComponent implements OnInit {
                 destinatari: this.paquetEditing.destinatari,
                 departament: this.paquetEditing.departament,
                 email: this.paquetEditing.email,
-                emailremitent: this.paquetEditing.emailremitent
+                emailremitent: this.paquetEditing.emailremitent,
+                ubicacioemail: this.paquetEditing.ubicacioemail
               });
 
             }
@@ -97,9 +103,11 @@ export class PaquetEditAddComponent implements OnInit {
             this.formVisible = true;
             this.editMode = false;
             const ahora = new Date().toLocaleString('es-ES');
+            const ubicacioemail = this.authService.getLocalUser().ubicacioemail;
 
             this.paquetForm.reset({
-              data_arribada: ahora
+              data_arribada: ahora,
+              ubicacioemail
             });
             break;
         }
@@ -145,7 +153,8 @@ export class PaquetEditAddComponent implements OnInit {
         'empty',
         0,
         this.paquetForm.get('email').value,
-        this.paquetForm.get('emailremitent').value)
+        this.paquetForm.get('emailremitent').value,
+        this.paquetForm.value.ubicacioemail)
         );
         // console.log(this.paquetForm.get('data_arribada').value);
     } else {
@@ -177,7 +186,8 @@ export class PaquetEditAddComponent implements OnInit {
         'empty',
         0,
         this.paquetForm.get('email').value,
-        this.paquetForm.get('emailremitent').value
+        this.paquetForm.get('emailremitent').value,
+        this.paquetForm.value.ubicacioemail
         ));
 
       this.onHideForm();

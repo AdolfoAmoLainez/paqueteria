@@ -32,7 +32,8 @@ export class Paquet {
         signatura: string,
         qrcode: number,
         email: string,
-        emailremitent: string
+        emailremitent: string,
+        ubicacioemail: string
     ){
         this.id = id;
         this.data_arribada = data_arribada;
@@ -61,6 +62,12 @@ export class Paquet {
           this.emailremitent = '';
         } else {
             this.emailremitent = emailremitent;
+        }
+
+        if (ubicacioemail == null) {
+          this.ubicacioemail = '';
+        } else {
+            this.ubicacioemail = ubicacioemail;
         }
     }
 }
