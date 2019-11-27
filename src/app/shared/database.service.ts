@@ -45,6 +45,8 @@ export class DatabaseService {
         }
     }
 
+
+
     getCountPaquetsPerSignar(searchText?: string) {
         this.testTablename();
 
@@ -90,6 +92,7 @@ export class DatabaseService {
 
     getPaquetsSignats(page: number, itemsPerpage: number, searchText?: string) {
         this.testTablename();
+
 
         const obj = {
                   tablename: this.tablename,
@@ -217,7 +220,7 @@ export class DatabaseService {
 
     enviaMail(paquet: Paquet) {
         this.testEmailData();
-        paquet.ubicacioemail = this.ubicacioEmail;
+        // paquet.ubicacioemail = this.ubicacioEmail;
         paquet.gestoremail = this.gestorEmail;
         if (paquet.email !== '') {
             return (this.http.post(environment.dataServerURL + '/selfapi/enviaMail', paquet)).subscribe(
@@ -240,7 +243,7 @@ export class DatabaseService {
 
     enviaMailRemitent(paquet: Paquet) {
       this.testEmailData();
-      paquet.ubicacioemail = this.ubicacioEmail;
+      // paquet.ubicacioemail = this.ubicacioEmail;
       paquet.gestoremail = this.gestorEmail;
       if (paquet.emailremitent !== '') {
           return (this.http.post(environment.dataServerURL + '/selfapi/enviaMailRemitent', paquet)).subscribe(
