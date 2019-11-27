@@ -151,6 +151,10 @@ export class DatabaseService {
             },
             (error: any) => {
                 console.log(error);
+                this.messagesService.sendMessage(
+                  'No s\'ha pogut modificar el paquet!',
+                  'danger'
+                  );
             }
         ));
     }
@@ -304,6 +308,10 @@ export class DatabaseService {
         },
         (error: any) => {
             console.log(error);
+            this.messagesService.sendMessage(
+              'No s\'ha pogut modificar l\'usuari!',
+              'danger'
+              );
         }
     ));
   }
