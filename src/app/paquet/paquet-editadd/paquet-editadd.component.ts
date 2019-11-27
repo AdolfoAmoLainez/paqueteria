@@ -94,7 +94,7 @@ export class PaquetEditAddComponent implements OnInit {
                 departament: this.paquetEditing.departament,
                 email: this.paquetEditing.email,
                 emailremitent: this.paquetEditing.emailremitent,
-                ubicacioemail: this.paquetEditing.ubicacioemail
+                ubicacioemail: this.paquetEditing.ubicacioemail.replace('\\', '')
               });
 
             }
@@ -103,7 +103,7 @@ export class PaquetEditAddComponent implements OnInit {
             this.formVisible = true;
             this.editMode = false;
             const ahora = new Date().toLocaleString('es-ES');
-            const ubicacioemail = this.authService.getLocalUser().ubicacioemail;
+            const ubicacioemail = this.authService.getLocalUser().ubicacioemail.replace('\\', '');
 
             this.paquetForm.reset({
               data_arribada: ahora,
@@ -116,7 +116,13 @@ export class PaquetEditAddComponent implements OnInit {
   }
 
   onClear() {
-    this.paquetForm.reset();
+    const ahora = new Date().toLocaleString('es-ES');
+    const ubicacioemail = this.authService.getLocalUser().ubicacioemail;
+
+    this.paquetForm.reset({
+      data_arribada: ahora,
+      ubicacioemail
+    });
   }
 
   onHideForm() {
@@ -154,7 +160,7 @@ export class PaquetEditAddComponent implements OnInit {
         0,
         this.paquetForm.get('email').value,
         this.paquetForm.get('emailremitent').value,
-        this.paquetForm.value.ubicacioemail)
+        this.paquetForm.value.ubicacioemail.replace('\\', ''))
         );
         // console.log(this.paquetForm.get('data_arribada').value);
     } else {
@@ -187,7 +193,7 @@ export class PaquetEditAddComponent implements OnInit {
         0,
         this.paquetForm.get('email').value,
         this.paquetForm.get('emailremitent').value,
-        this.paquetForm.value.ubicacioemail
+        this.paquetForm.value.ubicacioemail.replace('\\', '')
         ));
 
       this.onHideForm();
