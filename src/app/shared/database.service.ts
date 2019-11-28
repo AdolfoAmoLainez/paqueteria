@@ -116,13 +116,14 @@ export class DatabaseService {
         this.testTablename();
         return this.http.post(environment.dataServerURL + '/api/crud/' + this.tablename, paquet).subscribe(
             (data: any) => {
-                // const paquete = data.json[0] as Paquet;
-                this.paquetsService.addPaquet(paquet);
+                const paquete = data.json[0] as Paquet;
+                this.paquetsService.addPaquet(paquete);
                 this.messagesService.sendMessage(
                     'Paquet afegit correctament!',
                     'success'
                     );
-                this.enviaMail(paquet);
+                paquete.ubicacioemail = paquete.ubicacioemail.replace('\\', '');
+                this.enviaMail(paquete);
             }
         );
     }
@@ -142,8 +143,8 @@ export class DatabaseService {
         this.testTablename();
         return (this.http.put(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + paquet.id, paquet).subscribe(
             (data: any) => {
-                // const paquet: Paquet = data.json[0] as Paquet;
-                this.paquetsService.updatePaquet(paquet);
+                const paquete = data.json[0] as Paquet;
+                this.paquetsService.updatePaquet(paquete);
                 this.messagesService.sendMessage(
                     'Paquet modificat correctament!',
                     'success'
