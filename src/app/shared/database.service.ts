@@ -116,7 +116,7 @@ export class DatabaseService {
         this.testTablename();
         return this.http.post(environment.dataServerURL + '/api/crud/' + this.tablename, paquet).subscribe(
             (data: any) => {
-                const paquet = data.json[0] as Paquet;
+                // const paquete = data.json[0] as Paquet;
                 this.paquetsService.addPaquet(paquet);
                 this.messagesService.sendMessage(
                     'Paquet afegit correctament!',
@@ -142,7 +142,7 @@ export class DatabaseService {
         this.testTablename();
         return (this.http.put(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + paquet.id, paquet).subscribe(
             (data: any) => {
-                const paquet: Paquet = data.json[0] as Paquet;
+                // const paquet: Paquet = data.json[0] as Paquet;
                 this.paquetsService.updatePaquet(paquet);
                 this.messagesService.sendMessage(
                     'Paquet modificat correctament!',
@@ -151,6 +151,10 @@ export class DatabaseService {
             },
             (error: any) => {
                 console.log(error);
+                this.messagesService.sendMessage(
+                  'No s\'ha pogut modificar el paquet!',
+                  'danger'
+                  );
             }
         ));
     }
@@ -207,8 +211,8 @@ export class DatabaseService {
         this.testTablename();
         return (this.http.put(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + paquet.id, paquet).subscribe(
             (data: any) => {
-                const paquet: Paquet = <Paquet> data.json[0];
-                this.paquetsService.updatePaquet(paquet);
+                const paquete = data.json[0];
+                this.paquetsService.updatePaquet(paquete);
                 this.messagesService.sendMessage(
                     'Codi bidi generat correctament!',
                     'success'
@@ -295,7 +299,7 @@ export class DatabaseService {
     this.testTablename();
     return (this.http.put(environment.dataServerURL + '/api/crud/usuaris/' + user.id, user).subscribe(
         (data: any) => {
-            const user: User = <User> data.json[0];
+            // const user: User = <User> data.json[0];
             this.usersService.updateUser(user);
             this.messagesService.sendMessage(
                 'Usuari modificat correctament!',
@@ -304,6 +308,10 @@ export class DatabaseService {
         },
         (error: any) => {
             console.log(error);
+            this.messagesService.sendMessage(
+              'No s\'ha pogut modificar l\'usuari!',
+              'danger'
+              );
         }
     ));
   }
