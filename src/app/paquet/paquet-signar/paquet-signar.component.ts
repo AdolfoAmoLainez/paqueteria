@@ -20,8 +20,8 @@ import {environment} from 'src/environments/environment';
 })
 export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @ViewChild('canvas', {static: false}) public canvas: ElementRef;
-  @ViewChild('canvasBlanc', {static: false}) public canvasBlanc: ElementRef;
+  @ViewChild('canvas') public canvas: ElementRef;
+  @ViewChild('canvasBlanc') public canvasBlanc: ElementRef;
   @Input() public width = 300;
   @Input() public height = 300;
   private cx: CanvasRenderingContext2D;

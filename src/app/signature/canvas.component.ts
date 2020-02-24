@@ -16,7 +16,7 @@ import 'rxjs/add/operator/switchMap'; */
 })
 export class CanvasComponent implements AfterViewInit {
 
-  @ViewChild('canvas', {static: false}) public canvas: ElementRef;
+  @ViewChild('canvas') public canvas: ElementRef;
 
   @Input() public width = 400;
   @Input() public height = 400;

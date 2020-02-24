@@ -16,8 +16,8 @@ import { switchMap, takeUntil, pairwise } from 'rxjs/operators';
 })
 export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('canvas', {static: false}) public canvas: ElementRef;
-  @ViewChild('canvasBlanc', {static: false}) public canvasBlanc: ElementRef; // per verificar senseSignar
+  @ViewChild('canvas') public canvas: ElementRef;
+  @ViewChild('canvasBlanc') public canvasBlanc: ElementRef; // per verificar senseSignar
   @Input() public width = 400;
   @Input() public height = 300;
 
