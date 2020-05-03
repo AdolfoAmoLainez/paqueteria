@@ -25,8 +25,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
-import {QRCodeModule} from 'angularx-qrcode';
-import {FontAwesomeModule, FaIconLibrary} from '@fortawesome/angular-fontawesome';
+import { QRCodeModule } from 'angularx-qrcode';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthService } from './auth/auth.service';
 import { DatabaseService } from './shared/database.service';
 import { PaquetsService } from './shared/paquets.service';
@@ -81,9 +81,6 @@ registerLocaleData(localeEs, 'es');
 })
 export class AppModule {
 
-  constructor(iconLibrary: FaIconLibrary) {
-    iconLibrary.addIconPacks(fas);
-    iconLibrary.addIcons(faQrcode);
-  }
+  constructor() {}
 
 }

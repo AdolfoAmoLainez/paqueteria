@@ -11,7 +11,7 @@
       <button class="btn btn-primary ml-2" type="button" (click)="onNouUsuari()">+ Nou Usuari</button>
       <button class="btn btn-primary ml-4" type="button" (click)="onTornarClick()">Tornar</button>
       <button class="btn btn-danger ml-4" type="button" (click)="onLogout()">
-        <fa-icon icon="power-off" class="text-white mr-2" style="cursor: pointer;"></fa-icon>Sortir
+        <fa-icon [icon]="faPowerOff" class="text-white mr-2" style="cursor: pointer;"></fa-icon>Sortir
       </button>
     </div>
   </div>
@@ -34,12 +34,12 @@
                         <td>{{user.displayname}}</td>
                         <td>{{user.tablename}}</td>
                         <td>
-                          <fa-icon icon="edit"
+                          <fa-icon [icon]="faEdit"
                             class="fa-2x text-secondary"
                             style="cursor: pointer;"
                             (click)="onEditClick(user.id)"
                             tooltip="Editar Usuari"></fa-icon>
-                          <fa-icon icon="trash-alt"
+                          <fa-icon [icon]="faTrashAlt"
                             class="fa-2x text-danger ml-2"
                             style="cursor: pointer;"
                             (click)="onDeleteClick(user,confirmDeletion)"

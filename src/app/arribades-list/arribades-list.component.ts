@@ -1,7 +1,29 @@
-import { Component, OnInit, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { state, trigger, style, transition, animate, keyframes } from '@angular/animations';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  TemplateRef,
+} from '@angular/core';
+import {
+  faSearch,
+  faTimesCircle,
+  faCog,
+  faEye,
+  faEdit,
+  faEnvelope,
+  faHandHolding,
+  faQrcode,
+  faTrashAlt,
+  faPowerOff,
+} from '@fortawesome/free-solid-svg-icons';
+import {
+  state,
+  trigger,
+  style,
+  transition,
+  animate,
+  keyframes,
+} from '@angular/animations';
 
 import { Paquet } from '../shared/paquet.model';
 import { PaquetsService } from '../shared/paquets.service';
@@ -11,9 +33,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { isUndefined } from 'util';
-
-library.add(fas);
 
 @Component({
   selector: 'app-arribades-list',
@@ -21,47 +40,65 @@ library.add(fas);
   styleUrls: ['./arribades-list.component.css'],
   animations: [
     trigger('paquetAddAnimation', [
-      state('in', style({
-        opacity: 1,
-        transform: 'translateX(0)'
-      })),
+      state(
+        'in',
+        style({
+          opacity: 1,
+          transform: 'translateX(0)',
+        })
+      ),
       transition('void => *', [
-        animate(1000, keyframes([
-          style({
-            transform: 'translateX(-100px)',
-            opacity: 0,
-            offset: 0
-          }),
-          style({
-            transform: 'translateX(-50px)',
-            opacity: 0.5,
-            offset: 0.3
-          }),
-          style({
-            transform: 'translateX(-20px)',
-            opacity: 1,
-            offset: 0.8
-          }),
-          style({
-            transform: 'translateX(-0px)',
-            opacity: 1,
-            offset: 1
-          })
-        ]))
+        animate(
+          1000,
+          keyframes([
+            style({
+              transform: 'translateX(-100px)',
+              opacity: 0,
+              offset: 0,
+            }),
+            style({
+              transform: 'translateX(-50px)',
+              opacity: 0.5,
+              offset: 0.3,
+            }),
+            style({
+              transform: 'translateX(-20px)',
+              opacity: 1,
+              offset: 0.8,
+            }),
+            style({
+              transform: 'translateX(-0px)',
+              opacity: 1,
+              offset: 1,
+            }),
+          ])
+        ),
       ]),
 
       transition('* => void', [
-        animate(500, style({
-          transform: 'translateX(100px)',
-          opacity: 0
-        }))
+        animate(
+          500,
+          style({
+            transform: 'translateX(100px)',
+            opacity: 0,
+          })
+        ),
       ]),
-    ])
-  ]
-
-  })
-
+    ]),
+  ],
+})
 export class ArribadesListComponent implements OnInit, OnDestroy {
+  // Icones
+  faSearch = faSearch;
+  faTimesCircle = faTimesCircle;
+  faCog = faCog;
+  faEye = faEye;
+  faEdit = faEdit;
+  faEnvelope = faEnvelope;
+  faHandHolding = faHandHolding;
+  faQrcode = faQrcode;
+  faTrashAlt = faTrashAlt;
+  faPowerOff = faPowerOff;
 
   editMode = true;
   signMode = false;
@@ -94,13 +131,14 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   mailModalRef: BsModalRef;
   mailPaquetIndex = 0;
 
-
-  constructor(private paquetsService: PaquetsService,
-              private databaseService: DatabaseService,
-              private router: Router,
-              private route: ActivatedRoute,
-              public authService: AuthService,
-              private modalService: BsModalService) { }
+  constructor(
+    private paquetsService: PaquetsService,
+    private databaseService: DatabaseService,
+    private router: Router,
+    private route: ActivatedRoute,
+    public authService: AuthService,
+    private modalService: BsModalService
+  ) {}
 
   ngOnDestroy() {
     this.changePaquetsSubscription.unsubscribe();
@@ -109,7 +147,6 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.vistaSeguent = 'Signats';
     this.vistaActual = 'per Signar';
     this.paginaActual = 1;
@@ -117,7 +154,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.searching = false;
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-    if (isUndefined(currentUser.vistaActual)) {
+    if (currentUser.vistaActual === undefined ) {
       this.vistaSeguent = 'Signats';
       this.vistaActual = 'per Signar';
       currentUser.vistaActual = this.vistaActual;
@@ -127,8 +164,6 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
       this.vistaSeguent = currentUser.vistaSeguent;
       this.vistaActual = currentUser.vistaActual;
     }
-
-
 
     this.changePaquetsSubscription = this.paquetsService.changedPaquets.subscribe(
       (paquets: Paquet[]) => {
@@ -142,7 +177,6 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
         this.paquets.unshift(paquets);
       }
     );
-
 
     this.signSubscription = this.paquetsService.startedSignPaquet.subscribe(
       (paquetId: number) => {
@@ -163,13 +197,10 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.signMode = false;
     this.editMode = true;
     this.paquetsService.startedEditPaquet.next(this.paquets[index]);
-
   }
 
   onEditClick(index: number) {
-
-    this.router.navigate(['edit', index], {relativeTo: this.route});
-
+    this.router.navigate(['edit', index], { relativeTo: this.route });
   }
 
   onEntregarPaquet(index: number, mode: string) {
@@ -180,13 +211,13 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   }
 
   onViewClick(index: number) {
-
     this.router.navigate(['view', index]);
-
   }
 
   onDeleteClick(index: number, template: TemplateRef<any>) {
-    this.deleteModalRef = this.modalService.show(template, {class: 'modal-sm'});
+    this.deleteModalRef = this.modalService.show(template, {
+      class: 'modal-sm',
+    });
     this.deletePaquetIndex = index;
   }
 
@@ -202,7 +233,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   }
 
   onEnviarMail(index: number, template: TemplateRef<any>) {
-    this.mailModalRef = this.modalService.show(template, {class: 'modal-sm'});
+    this.mailModalRef = this.modalService.show(template, { class: 'modal-sm' });
     this.mailPaquetIndex = index;
   }
 
@@ -223,40 +254,42 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.editMode = false;
     this.paquets[index].qrcode = Math.floor(Math.random() * 1000) + 1;
     this.databaseService.updateQrPaquet(this.paquets[index]);
-
-
   }
 
   reloadLlista() {
-
     switch (this.vistaActual) {
       case 'per Signar':
-        this.databaseService.getCountPaquetsPerSignar(this.searchString).subscribe(
-          (result: any) => {
-
+        this.databaseService
+          .getCountPaquetsPerSignar(this.searchString)
+          .subscribe((result: any) => {
             this.totalPaquets = result[0].totalpaquets;
-            this.databaseService.getPaquetsPerSignar((this.paginaActual - 1) * this.itemsPerPage, this.itemsPerPage, this.searchString);
+            this.databaseService.getPaquetsPerSignar(
+              (this.paginaActual - 1) * this.itemsPerPage,
+              this.itemsPerPage,
+              this.searchString
+            );
             this.allowViewPaquet = false;
             this.isLoading = true;
-          }
-        );
+          });
 
         break;
       case 'Signats':
-        this.databaseService.getCountPaquetsSignats(this.searchString).subscribe(
-          (result: any) => {
+        this.databaseService
+          .getCountPaquetsSignats(this.searchString)
+          .subscribe((result: any) => {
             this.totalPaquets = result[0].totalpaquets;
-            this.databaseService.getPaquetsSignats((this.paginaActual - 1) * this.itemsPerPage, this.itemsPerPage, this.searchString);
+            this.databaseService.getPaquetsSignats(
+              (this.paginaActual - 1) * this.itemsPerPage,
+              this.itemsPerPage,
+              this.searchString
+            );
             this.allowViewPaquet = true;
             this.isLoading = true;
-          }
-        );
+          });
 
         break;
     }
   }
-
-
 
   onSearch(valor: string) {
     console.log(valor);
@@ -264,40 +297,46 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   onChangeView() {
     if (this.vistaSeguent === 'per Signar') {
-      this.databaseService.getCountPaquetsPerSignar(this.searchString).subscribe(
-        (result: any) => {
+      this.databaseService
+        .getCountPaquetsPerSignar(this.searchString)
+        .subscribe((result: any) => {
           this.totalPaquets = result[0].totalpaquets;
           this.paginaActual = 1;
-          this.databaseService.getPaquetsPerSignar((this.paginaActual - 1) * this.itemsPerPage, this.itemsPerPage, this.searchString);
+          this.databaseService.getPaquetsPerSignar(
+            (this.paginaActual - 1) * this.itemsPerPage,
+            this.itemsPerPage,
+            this.searchString
+          );
           this.vistaActual = this.vistaSeguent;
           this.vistaSeguent = 'Signats';
           this.allowViewPaquet = false;
           this.isLoading = true;
-        }
-      );
-
+        });
     } else {
-      this.databaseService.getCountPaquetsSignats(this.searchString).subscribe(
-        (result: any) => {
+      this.databaseService
+        .getCountPaquetsSignats(this.searchString)
+        .subscribe((result: any) => {
           this.totalPaquets = result[0].totalpaquets;
           this.paginaActual = 1;
-          this.databaseService.getPaquetsSignats((this.paginaActual - 1) * this.itemsPerPage, this.itemsPerPage, this.searchString);
+          this.databaseService.getPaquetsSignats(
+            (this.paginaActual - 1) * this.itemsPerPage,
+            this.itemsPerPage,
+            this.searchString
+          );
           this.vistaActual = this.vistaSeguent;
           this.vistaSeguent = 'per Signar';
           this.allowViewPaquet = true;
           this.isLoading = true;
         });
-
     }
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     currentUser.vistaActual = this.vistaActual;
     currentUser.vistaSeguent = this.vistaSeguent;
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
   }
 
   onNouPaquet() {
-    this.router.navigate(['add', 0], {relativeTo: this.route});
+    this.router.navigate(['add', 0], { relativeTo: this.route });
   }
 
   onLogout() {
@@ -316,9 +355,8 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   onBuscarKey(event) {
     if (event.key === 'Enter') {
-
-    this.searching = true;
-    this.reloadLlista();
+      this.searching = true;
+      this.reloadLlista();
     }
     if (this.searchString === '') {
       this.searching = false;
@@ -342,5 +380,4 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   onAdminClick() {
     this.router.navigate(['/admin']);
   }
-
 }
