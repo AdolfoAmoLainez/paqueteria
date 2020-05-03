@@ -73,15 +73,15 @@ app.get('*',(req,res)=>{
  * *
  */
 
-var options = {
+/* var options = {
     key: FS.readFileSync(path.join(__dirname, './certs/bitacola_uab_cat.key')),
     cert: FS.readFileSync(path.join(__dirname, './certs/bitacola_uab_cat.crt'))
-  };
+  }; */
 
-/*app.listen(PORT, function(){
+app.listen(PORT, function(){
     console.log('Servidor escuchando por el puerto '+PORT);
-});*/
+});
 
-https.createServer(options, app).listen(PORT, function() {
+/* https.createServer(options, app).listen(PORT, function() {
     console.log('API REST FUNCIONANDO con HTTPS ' + PORT);
-  });
+  }); */
