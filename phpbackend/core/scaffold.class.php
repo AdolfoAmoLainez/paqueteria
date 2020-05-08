@@ -671,9 +671,11 @@ class scaffold {
             $connection->setLogUser(self::$userName);
             $query = $connection->prepare($sql);
             $connection->execute($query);
+            $lastId = $connection->getLastId();
 
             unset($connection);
-            return TRUE;
+            // return TRUE;
+            return $lastId;
         } catch (\PDOException $e) {
             error::writeLog($e->getMessage().' '.$sql, __METHOD__);
         }

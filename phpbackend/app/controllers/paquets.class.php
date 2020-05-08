@@ -112,6 +112,7 @@ class paquets extends AppAuthorizator {
 
     $resultat = paquet::add($body['tablename'], $body['paquet']);
     if ($resultat) {
+      $body['paquet']['id'] = $resultat;
       echo json_encode($body['paquet']);
     }
   }
@@ -190,6 +191,8 @@ class paquets extends AppAuthorizator {
       $subject = 'Paquet rebut per part de '.$body['remitent'];
       $arrayMailsTo = array($body['email']);
 
+      print_r($arrayMailsTo);
+
       $code = mailer::sendMail($body['gestoremail'],$subject, $arrayMailsTo, $cuerpo);
 
       if (!$code){
@@ -234,6 +237,19 @@ class paquets extends AppAuthorizator {
     }
 
     echo json_encode($resultat);
+  }
+
+  public function creaTaula($nom) {
+
+    paquet::creaTaula($nom);
+
+    echo "";
+
+  }
+
+  public function delTaula($nom) {
+    paquet::delTaula($nom);
+    echo "";
   }
 
 

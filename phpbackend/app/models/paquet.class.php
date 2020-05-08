@@ -168,7 +168,41 @@ class paquet {
       return scaffold::superDelete($tableName, $id);
     }
 
+    public static function creaTaula($nom) {
+      try{
 
+        $sql = "CREATE TABLE `".$nom."` LIKE paquets_buida;";
+
+        $connection = Database::instance();
+        $query = $connection->prepare($sql);
+        $connection->execute($query);
+
+        unset($connection);
+        return true;
+
+      } catch (\PDOException $e) {
+          print 'Error!: ' . $e->getMessage();
+      }
+
+    }
+
+    public static function delTaula($nom) {
+      try{
+
+        $sql = "DROP TABLE `".$nom."`;";
+
+        $connection = Database::instance();
+        $query = $connection->prepare($sql);
+        $connection->execute($query);
+
+        unset($connection);
+        return true;
+
+      } catch (\PDOException $e) {
+          print 'Error!: ' . $e->getMessage();
+      }
+
+    }
 
 }
 

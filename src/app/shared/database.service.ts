@@ -119,7 +119,7 @@ export class DatabaseService {
           paquet
 
         };
-        return this.http.post(environment.dataServerURL + '/paquet/add', obj).subscribe(
+        return this.http.post(environment.dataServerURL + '/paquets/add', obj).subscribe(
           (data: Paquet) => {
               this.paquetsService.addPaquet(data);
               this.messagesService.sendMessage(
@@ -264,7 +264,7 @@ export class DatabaseService {
       // paquet.ubicacioemail = this.ubicacioEmail;
       paquet.gestoremail = this.gestorEmail;
       if (paquet.emailremitent !== '') {
-          return (this.http.post(environment.dataServerURL + '/selfapi/enviaMailRemitent', paquet)).subscribe(
+          return (this.http.post(environment.dataServerURL + '/paquets/enviaMailRemitent', paquet)).subscribe(
               (data: any) => {
                   if (data.SendMail === 'ok') {
                       this.messagesService.sendMessage(
@@ -283,26 +283,26 @@ export class DatabaseService {
   }
 
     getUsers() {
-      return this.http.get(environment.dataServerURL + '/api/crud/usuaris',
-      { observe: 'response' }).subscribe(
-        (res: any) => {
-          this.usersService.setUsers(res.body.json);
+      return this.http.get<User[]>(environment.dataServerURL + '/users/getAll')
+      .subscribe(
+        (users) => {
+          this.usersService.setUsers(users);
         }
         );
     }
 
     addUser(user: User) {
-      return this.http.post(environment.dataServerURL + '/selfapi/creataula', user).subscribe(
-        (data: any) => {
+      return this.http.get(environment.dataServerURL + '/paquets/creataula/' + user.tablename).subscribe(
+        () => {
 
-          this.http.post(environment.dataServerURL + '/api/crud/usuaris', user).subscribe(
+          this.http.post(environment.dataServerURL + '/users/add', user).subscribe(
             (dbuser: any) => {
 
                 this.messagesService.sendMessage(
                     'Usuari afegit correctament!',
                     'success'
                     );
-                this.usersService.addUser(dbuser.json[0]);
+                this.usersService.addUser(dbuser);
             }
           );
         }
@@ -311,10 +311,10 @@ export class DatabaseService {
 
   updateUser(user: User) {
     this.testTablename();
-    return (this.http.put(environment.dataServerURL + '/api/crud/usuaris/' + user.id, user).subscribe(
-        (data: any) => {
+    return (this.http.put<User>(environment.dataServerURL + '/users/update', user).subscribe(
+        (data) => {
             // const user: User = <User> data.json[0];
-            this.usersService.updateUser(user);
+            this.usersService.updateUser(data);
             this.messagesService.sendMessage(
                 'Usuari modificat correctament!',
                 'success'
@@ -332,10 +332,10 @@ export class DatabaseService {
 
   deleteUser(user: User) {
 
-    return this.http.post(environment.dataServerURL + '/selfapi/deltaula', user).subscribe(
-      (data: any) => {
-        this.http.delete(environment.dataServerURL + '/api/crud/usuaris/' + user.id).subscribe(
-          (data2) => {
+    return this.http.get(environment.dataServerURL + '/paquets/delTaula/' + user.tablename).subscribe(
+      () => {
+        this.http.get(environment.dataServerURL + '/users/del/' + user.id).subscribe(
+          () => {
               this.usersService.deleteUser(user.id);
               this.messagesService.sendMessage(
                   'Usuari esborrat correctament!',
@@ -348,7 +348,7 @@ export class DatabaseService {
   }
 
   getUserRol(username: string) {
-    return this.http.get(environment.dataServerURL + '/api/crud/usuaris?niu[LIKE]=%' + username + '%&_fields=rol_id');
+    return this.http.get(environment.dataServerURL + '/users/getUserRol/' + username);
   }
 
 }

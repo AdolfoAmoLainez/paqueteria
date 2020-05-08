@@ -17,7 +17,7 @@ export class AdminGuard implements CanActivate {
     return this.authService.isAuthenticated()
     .pipe( map(
       (auth: any) => {
-        if (auth && auth.username) {
+        if (auth && auth[0].username) {
           if (this.authService.userRol === environment.ADMIN) {
             return true;
           } else {

@@ -54,14 +54,14 @@ class database {
      * @access private
      */
     private static $_instance;
-    
+
     /**
      * @desc nivell de punt de transacció
      * @var $_transactionDepth
      * @access private
      */
     private $_transactionDepth = 0;
-    
+
     /**
      * @desc últim id obtingut en una operació a la base de dades
      * @var $_lastId
@@ -74,7 +74,7 @@ class database {
      */
     private $sessionUser;
     private $sessionIp;
-    
+
     private function __construct() {
         try {
             //load from config/config.ini
@@ -136,7 +136,7 @@ class database {
         try {
             $result = $query->execute();
             $this->_lastId = $this->_connection->lastInsertId();
-            
+
             if ($this->_connection->errorCode() === 1205) {
                 $this->rollBack();
                 //bloqueig, canviar a mode REPEATABLE-READ
@@ -186,7 +186,7 @@ class database {
         $sql = 'DESCRIBE ' . $tableName;
         try {
             $descTable = array();
-            
+
             $query = $this->_connection->prepare($sql);
             $result = $query->execute();
             if ($result)
@@ -217,8 +217,8 @@ class database {
     }
 
     private function prepareStatementLog($parQuery, $params) {
-        foreach ($params as $key => $value)  $parQuery = strtr($parQuery,array($key => $value));  
-            //$parQuery = str_replace($key, $value, $parQuery);  
+        foreach ($params as $key => $value)  $parQuery = strtr($parQuery,array($key => $value));
+            //$parQuery = str_replace($key, $value, $parQuery);
         return $parQuery;
     }
 
@@ -236,7 +236,7 @@ class database {
                 //Evitem errors amb les cometes
                 //$parSQL2Log = str_replace('\'', ' ', $parSQL2Log);
                 $parSQL2Log = strtr($parSQL2Log,array('\'' => ' '));
-                
+
                 //Evitem la grabació de passwords als logs
                 $posFins = strpos($parSQL2Log, 'PASSWORD');
                 if ($posFins)
@@ -257,7 +257,7 @@ class database {
             $this->registerError('SQL: ' . $e->getMessage() , __METHOD__);
         }
     }
-    
+
     /* CHP 06/10/2017 */
     /* Suport per Nested Transactions (transaccions anidades) */
     public function beginTrans($isolationLevel = 'SERIALIZABLE') {
@@ -272,13 +272,13 @@ class database {
             else {
                 $this->_connection->exec("SAVEPOINT LEVEL{$this->_transactionDepth}");
             }
-                
+
             $this->_transactionDepth++;
         } catch (\PDOException $e) {
             $this->registerError($e->getMessage(),__METHOD__);
         }
     }
-    
+
     public function commit() {
         try {
             $this->_transactionDepth--;
@@ -289,12 +289,12 @@ class database {
             else {
                 $this->_connection->exec("RELEASE SAVEPOINT LEVEL{$this->_transactionDepth}");
             }
-            
+
         } catch (\PDOException $e) {
             $this->registerError($e->getMessage(),__METHOD__);
         }
     }
-    
+
     public function rollBack() {
         try {
             if ( $this->_transactionDepth === 0 )   throw new PDOException('Rollback error : No hi ha cap transacció iniciada');
@@ -308,7 +308,7 @@ class database {
             else {
                 $this->_connection->exec("ROLLBACK TO SAVEPOINT LEVEL{$this->_transactionDepth}");
             }
-            
+
         } catch (\PDOException $e) {
             $this->registerError($e->getMessage() , __METHOD__);
         }

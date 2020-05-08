@@ -60,8 +60,6 @@ export class PaquetViewsignatComponent implements OnInit {
           this.qrCodePaquet = '';
         }
 
-        console.log(this.paquetEditing);
-
         this.paquetForm.patchValue({
           data_arribada: this.paquetEditing.data_arribada,
           remitent: this.paquetEditing.remitent,
@@ -76,8 +74,7 @@ export class PaquetViewsignatComponent implements OnInit {
           data_lliurament: this.paquetEditing.data_lliurament
 
         });
-        this.formVisible = true;
-       // console.log(this.paquetEditing);
+
       }
     );
   }
