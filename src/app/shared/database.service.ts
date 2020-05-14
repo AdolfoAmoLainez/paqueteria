@@ -114,7 +114,19 @@ export class DatabaseService {
                   itemsPerpage
                 };
 
-        return this.http.post<{paquets: Paquet[]}>(environment.dataServerURL + '/paquets/getPaquetsSignats', obj).subscribe(
+        return this.http.post<{paquets: Paquet[]}>(environment.dataServerURL + '/paquets/getPaquetsSignats', obj)
+        .pipe(
+          map(
+            paqs => {
+              paqs.paquets.forEach(element => {
+                element.id = +element.id;
+
+              });
+              return paqs;
+            }
+          )
+        )
+        .subscribe(
                   (res) => {
 
                     this.paquetsService.setPaquets(res.paquets);
