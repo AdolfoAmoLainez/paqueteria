@@ -86,7 +86,7 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
       (params: Params) => {
 
         this.paquetEditing = this.paquetsService.getPaquet(
-          params.id
+          +params.id
         );
 
         if (this.paquetEditing.signatura !== 'empty') {

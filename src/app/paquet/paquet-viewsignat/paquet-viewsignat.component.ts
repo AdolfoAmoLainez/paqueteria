@@ -14,7 +14,7 @@ import {environment} from 'src/environments/environment';
 export class PaquetViewsignatComponent implements OnInit {
 
   paquetForm: FormGroup;
-  formVisible = false;
+  formVisible = true;
   qrCodePaquet = ''; // Variable que contindrà la url amb el codi QR
   paquetEditing: Paquet;
   tablename = ''; // Guardem la taula de la BBDD de paquets de l'usuari que l'està veient
@@ -48,7 +48,7 @@ export class PaquetViewsignatComponent implements OnInit {
       (params: Params) => {
 
         this.paquetEditing = this.paquetsService.getPaquet(
-          params.id
+          +params.id
         );
 
         if (this.paquetEditing.qrcode !== undefined && this.paquetEditing.qrcode) {
@@ -74,8 +74,7 @@ export class PaquetViewsignatComponent implements OnInit {
           data_lliurament: this.paquetEditing.data_lliurament
 
         });
-        this.formVisible = true;
-       // console.log(this.paquetEditing);
+
       }
     );
   }

@@ -3,50 +3,57 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { DatabaseService } from '../shared/database.service';
-import { isUndefined } from 'util';
 import { environment } from 'src/environments/environment';
 
-@Injectable()
+
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
 
     loginIncorrect = new Subject<any>();
     userRol = 2; // Usuari normal
 
     constructor(private http: HttpClient,
-        private router: Router,
-        private dbService: DatabaseService) { }
+                private router: Router,
+                private dbService: DatabaseService) { }
 
-    loginUser() {
+    loginUser(username) {
 
-        return this.http.get<any>(environment.dataServerURL + '/selfapi/getUserData')
+        return this.http.get<any>(environment.dataServerURL + '/users/getUserData/' + username)
             .subscribe(
-                (dataLogin: any) => {
-                    if (dataLogin && dataLogin.username) {
+                (data: any) => {
 
-                        localStorage.setItem('currentUser', JSON.stringify(dataLogin));
+                  if (data.length > 0) {
 
-                        this.dbService.setTablename(dataLogin.tablename);
-                        this.router.navigate(['/llista']);
-                        this.dbService.getUserRol(dataLogin.username).subscribe(
-                          (dataRol: any) => {
-                            this.userRol = dataRol.json[0].rol_id;
-                          }
+                    const dataLogin = data[0];
+                    localStorage.setItem('currentUser', JSON.stringify(dataLogin));
+
+                    this.dbService.setTablename(dataLogin.tablename);
+                    this.dbService.getUserRol(dataLogin.username).subscribe(
+                        (dataRol: any) => {
+
+                          this.userRol = +dataRol[0].rol_id;
+                          this.router.navigate(['/llista']);
+                        }
                         );
-                    } else {
-                      window.location.href = environment.dataServerURL + '/loginapi/login';
-                      //this.router.navigate(['/login']);
-                    }
+                  } else {
+
+                      this.router.navigate(['/login']);
+                  }
                 });
 
     }
 
     isAuthenticated() {
-      return this.http.get(environment.dataServerURL + '/selfapi/getUserData');
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+      return this.http.get(environment.dataServerURL + '/users/getUserData/' + currentUser.username);
     }
 
     getLocalUser() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (isUndefined(currentUser.vistaActual)) {
+        if (currentUser.vistaActual === undefined) {
             this.logout();
             return undefined;
         } else {
@@ -58,7 +65,7 @@ export class AuthService {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
         this.dbService.setTablename('');
-        window.location.href = environment.dataServerURL + '/loginapi/logout';
+        window.location.href = environment.dataServerURL + '/selfapi/logout';
     }
 
     getUserRol() {
