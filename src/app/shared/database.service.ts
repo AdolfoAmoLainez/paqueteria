@@ -7,6 +7,7 @@ import { MessagesService } from '../messages/messages.service';
 import {environment} from 'src/environments/environment';
 import { UsersService } from './users.service';
 import { User } from './user.model';
+import { map } from 'rxjs/operators';
 
 
 @Injectable()
@@ -66,7 +67,19 @@ export class DatabaseService {
                   page,
                   itemsPerpage
                 };
-        return this.http.post<{paquets: Paquet[]}>(environment.dataServerURL + '/paquets/getPaquetsPerSignar', obj).subscribe(
+        return this.http.post<{paquets: Paquet[]}>(environment.dataServerURL + '/paquets/getPaquetsPerSignar', obj)
+        .pipe(
+          map(
+            paqs => {
+              paqs.paquets.forEach(element => {
+                element.id = +element.id;
+
+              });
+              return paqs;
+            }
+          )
+        )
+        .subscribe(
                   (res) => {
                     // this.tractaResposta(res);
 
@@ -226,12 +239,13 @@ export class DatabaseService {
         };
         return this.http.put<Paquet>(environment.dataServerURL + '/paquets/updatePaquet', obj).subscribe(
             (paquete) => {
-                this.paquetsService.updatePaquet(paquete);
-                this.messagesService.sendMessage(
-                    'Codi bidi generat correctament!',
-                    'success'
-                    );
-                this.paquetsService.startedSignPaquet.next(paquet.id);
+              paquete.id = +paquete.id;
+              this.paquetsService.updatePaquet(paquete);
+              this.messagesService.sendMessage(
+                  'Codi bidi generat correctament!',
+                  'success'
+                  );
+              this.paquetsService.startedSignPaquet.next(paquet.id);
             }
         );
     }

@@ -198,6 +198,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     }
 
     this.reloadLlista();
+
   }
 
   onEditPaquet(index: number) {
@@ -298,6 +299,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   }
 
   onChangeView() {
+
     if (this.vistaSeguent === 'per Signar') {
       this.databaseService
         .getCountPaquetsPerSignar(this.searchString)
@@ -313,6 +315,10 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
           this.vistaSeguent = 'Signats';
           this.allowViewPaquet = false;
           this.isLoading = true;
+          const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+          currentUser.vistaActual = this.vistaActual;
+          currentUser.vistaSeguent = this.vistaSeguent;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
         });
     } else {
       this.databaseService
@@ -329,12 +335,14 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
           this.vistaSeguent = 'per Signar';
           this.allowViewPaquet = true;
           this.isLoading = true;
+          const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+          currentUser.vistaActual = this.vistaActual;
+          currentUser.vistaSeguent = this.vistaSeguent;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
         });
     }
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    currentUser.vistaActual = this.vistaActual;
-    currentUser.vistaSeguent = this.vistaSeguent;
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+
   }
 
   onNouPaquet() {

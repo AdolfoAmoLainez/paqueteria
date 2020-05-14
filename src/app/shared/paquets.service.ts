@@ -1,19 +1,19 @@
-import { Subject } from "rxjs";
-import { Paquet } from "./paquet.model";
-import { Injectable } from "@angular/core";
+import { Subject } from 'rxjs';
+import { Paquet } from './paquet.model';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class PaquetsService {
     paquets: Paquet[] = [];
-    pagination={
-        'first':'',
-        'prev':'',
-        'next':'',
-        'last':''
-    }
+    pagination = {
+        first: '',
+        prev: '',
+        next: '',
+        last: ''
+    };
 
     totalPaquets: number;
-    paginaActual:number;
+    paginaActual: number;
 
     startedEditPaquet = new Subject<Paquet>();
     startedSignPaquet = new Subject<number>();
@@ -21,40 +21,35 @@ export class PaquetsService {
     changedPagination = new Subject<any>();
     changedTotalPaquets = new Subject<any>();
     paquetSignatCorrectament = new Subject<number>();
-    paquetAdded = new Subject<Paquet>();    
+    paquetAdded = new Subject<Paquet>();
 
 
 
-    setTotalPaquets(total: number){
+    setTotalPaquets(total: number) {
         this.totalPaquets = total;
         this.changedTotalPaquets.next(total);
     }
 
-   /*<http://localhost:3000/paquets?signatura=empty&_page=1&_limit=3>; rel="first", 
-    <http://localhost:3000/paquets?signatura=empty&_page=1&_limit=3>; rel="prev", 
-    <http://localhost:3000/paquets?signatura=empty&_page=3&_limit=3>; rel="next", 
-    <http://localhost:3000/paquets?signatura=empty&_page=3&_limit=3>; rel="last"*/
+    setPagination(paginationLinks: string) {
 
-    setPagination(paginationLinks:string){
+        const links = paginationLinks.split(',');
 
-        const links = paginationLinks.split(",");
+        for (const link of links) {
 
-        for (let link of links){
+            let url = link.split(';')[0].substring(1);
+            url = url.substr(0, url.length - 1);
 
-            let url = link.split(";")[0].substring(1);
-            url = url.substr(0,url.length-1);
+            let pos = link.split(';')[1].split('=')[1].substr(1);
+            pos = pos.substr(0, pos.length - 1);
 
-            let pos = link.split(";")[1].split("=")[1].substr(1);
-            pos=pos.substr(0,pos.length-1);
-
-            this.pagination[pos]=url;
+            this.pagination[pos] = url;
         }
 
         this.changedPagination.next(this.pagination);
 
     }
 
-    setPaquets(paquets: Paquet[]){
+    setPaquets(paquets: Paquet[]) {
         this.paquets = paquets;
         this.changedPaquets.next(this.paquets.slice());
     }
@@ -63,18 +58,20 @@ export class PaquetsService {
         return this.paquets.slice();
     }
 
-    getPaquet(indexPaquet:number):Paquet{
-        const index = this.paquets.findIndex((element) => {
-            return element.id == indexPaquet;
+    getPaquet(indexPaquet: number): Paquet {
+
+      const index = this.paquets.findIndex((element) => {
+          return element.id === indexPaquet;
         });
-        return this.paquets[index];
+
+      return this.paquets[index];
     }
 
-    deletePaquet(indexPaquet:number){
+    deletePaquet(indexPaquet: number) {
         const index = this.paquets.findIndex((element) => {
-            return element.id == indexPaquet;
+            return element.id === indexPaquet;
         });
-        this.paquets.splice(index,1);
+        this.paquets.splice(index, 1);
         this.changedPaquets.next(this.paquets.slice());
     }
 
@@ -85,9 +82,9 @@ export class PaquetsService {
 
     }
 
-    signaPaquet(indexPaquet:number, dipositari:string, signatura:string){
+    signaPaquet(indexPaquet: number, dipositari: string, signatura: string) {
         const index = this.paquets.findIndex((element) => {
-            return element.id == indexPaquet;
+            return element.id === indexPaquet;
         });
 
         this.paquets[index].signatura = signatura;
@@ -95,17 +92,17 @@ export class PaquetsService {
         this.changedPaquets.next(this.paquets.slice());
     }
 
-    updatePaquet(paquet:Paquet){
+    updatePaquet(paquet: Paquet) {
         const index = this.paquets.findIndex((element) => {
-            return element.id == paquet.id;
+            return element.id === paquet.id;
         });
 
-        this.paquets[index]=paquet;
+        this.paquets[index] = paquet;
 
         this.changedPaquets.next(this.paquets.slice());
     }
 
-    generaQrPaquet(){
+    generaQrPaquet() {
 
     }
 }

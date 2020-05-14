@@ -9,40 +9,53 @@
 </div>
 <hr>
 <div class="row mt-3 align-items-center">
-  <div class="col-xs-12 col-sm-12 col-md-6 text-left">
-    <h3>Veient Paquets {{vistaActual}}</h3>
-  </div>
-  <div class="col-xs-12 col-sm-12 col-md-6 d-flex align-items-center justify-content-center">
-    <input type="text" name="searchInput" id="searchInput" [(ngModel)]="searchString" (keyup)="onBuscarKey($event)">
-    <fa-icon *ngIf="!searching"
-              [icon]="faSearch"
-              class="ml-2 fa-2x"
-              style="cursor: pointer;"
-              (click)="onBuscar()"
-              tooltip="Cercar..."></fa-icon>
-    <fa-icon *ngIf="searching"
-              [icon]="faTimesCircle"
-              class="ml-2 fa-2x"
-              style="cursor: pointer;"
-              (click)="onCancelBuscar()"
-              tooltip="Cancel·lar cerca..."></fa-icon>
-    <fa-icon *ngIf="isAdmin"
-              [icon]="faCog"
-              class="ml-3"
-              style="cursor: pointer;"
-              (click)="onAdminClick()"
-              tooltip="Administrar usuaris..."></fa-icon>
+
+ <div class="col-12">
+   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <h3 class="navbar-brand">Paquets {{vistaActual}}</h3>
+     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+       <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <button class="btn btn-primary mt-1 mt-sm-0" (click)="onChangeView()">Veure Paquets {{vistaSeguent}}</button>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-primary ml-sm-2 mt-1 mt-sm-0" (click)="onNouPaquet()">+ Nou Paquet</button>
+          </li>
+          <li  *ngIf="isAdmin" class="nav-item">
+            <button class="btn btn-primary ml-sm-2 mt-1 mt-sm-0" (click)="onAdminClick()">Admin</button>
+          </li>
+
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <div class="input-group">
+            <input class="form-control" type="text" name="searchInput" id="searchInput" [(ngModel)]="searchString" (keyup)="onBuscarKey($event)">
+            <div class="input-group-append">
+              <button *ngIf="!searching" class="btn btn-outline-secondary" style="cursor: pointer;" (click)="onBuscar()" type="button">
+                <fa-icon
+                [icon]="faSearch"
+                tooltip="Cercar..."></fa-icon>
+              </button>
+              <button *ngIf="searching" class="btn btn-outline-secondary" style="cursor: pointer;" (click)="onCancelBuscar()" type="button">
+                <fa-icon
+                [icon]="faTimesCircle"
+                tooltip="Cancel·lar cerca..."></fa-icon>
+              </button>
+
+            </div>
+          </div>
+          <button class="btn btn-danger ml-sm-4 mt-1 mt-sm-0" type="button" (click)="onLogout()">
+            <fa-icon [icon]="faPowerOff" class="text-white" style="cursor: pointer;"></fa-icon>Sortir
+          </button>
+        </form>
+      </div>
+    </nav>
   </div>
 </div>
-  <div class="row align-items-center">
-  <div class="col-sm-auto col-md-12 text-right" style="margin:5px 5px 5px 5px;">
-    <button class="btn btn-primary" (click)="onChangeView()">Veure Paquets {{vistaSeguent}}</button>
-    <button class="btn btn-primary ml-2" type="button" (click)="onNouPaquet()">+ Nou Paquet</button>
-    <button class="btn btn-danger ml-4" type="button" (click)="onLogout()">
-      <fa-icon [icon]="faPowerOff" class="text-white mr-2" style="cursor: pointer;"></fa-icon>Sortir
-    </button>
-  </div>
-</div>
+
 <div class="row mt-3" *ngIf="paquets.length == 0">
   <div class="col-sm-12 text-center">
     <alert type="danger text-center">
@@ -68,103 +81,85 @@
     <span class="sr-only">Carregant...</span>
   </div>
 </div>
-<div class="row mt-3" *ngIf="!isLoading">
+<div class="row mt-3 align-content-center" *ngIf="!isLoading">
   <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12">
     <ul class="list-group">
       <li [@paquetAddAnimation] *ngFor="let paquet of paquets; let i = index" class="list-group-item" >
-        <div class="row align-items-center">
-          <div class="col-sm-1 col-md-1 col-xl-1">
+        <div class="row justify-content-center">
+          <div class="col-sm-1">
               <h3><span class="badge badge-secondary">{{paquet.id}}</span></h3>
           </div>
-          <div class="col-sm-2 col-md-4 col-xl-2" style="margin:10px 0px 0px 0px;">
+          <div class="col-sm" style="margin:10px 0px 0px 0px;">
             <div class="card">
-              <div class="card-header text-center font-weight-bold ">
-                Arribada
+              <div class="card-body">
+                <dl class="row justify-content-center">
+                  <dt class="col-12 col-sm-3 bg-light">Arribada:</dt>
+                  <dd class="col-12 col-sm-6 bg-light mb-auto">{{paquet.data_arribada}}</dd>
+                  <div class="w-100"></div>
+                  <dt class="col-12 col-sm-3">Destinatari:</dt>
+                  <dd class="col-12 col-sm-6">{{paquet.destinatari + '\n'+ paquet.email}}</dd>
+                  <div class="w-100"></div>
+                  <dt class="col-12 col-sm-3 bg-light">Remitent:</dt>
+                  <dd class="col-12 col-sm-6 bg-light mb-auto">{{paquet.remitent + '\n'+ paquet.emailremitent}}</dd>
+                  <div class="w-100"></div>
+                  <dt class="col-12 col-sm-3" *ngIf="paquet.data_lliurament!=''">Lliurament:</dt>
+                  <dd class="col-12 col-sm-6" *ngIf="paquet.data_lliurament!=''">{{paquet.data_lliurament | date:"d/M/yyyy H:mm"}}</dd>
+              </dl>
               </div>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item text-center">{{paquet.data_arribada}}</li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-sm-4 col-md-7 col-xl-4" style="margin:10px 0px 0px 0px;">
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text font-weight-bold" id="basic-addon1">Destinatari:</span>
-              </div>
-              <textarea class="form-control" aria-label="destinatari" cols="30" rows="2" disabled style="resize: none;">{{paquet.destinatari + '\n'+ paquet.email}}</textarea>
+
+              <div class="card-footer">
+                <div class="container">
+                  <div class="row justify-content-sm-center">
+                    <div class="col-4 col-sm-auto" *ngIf="!allowViewPaquet">
+                      <fa-icon [icon]="faEdit"
+                               class="fa-2x text-secondary"
+                               style="cursor: pointer;"
+                               (click)="onEditClick(paquet.id)"
+                               tooltip="Editar paquet"></fa-icon>
+                    </div>
+                    <div class="col-4 col-sm-auto" *ngIf="!allowViewPaquet">
+                      <fa-icon [icon]="faHandHolding"
+                               class="fa-2x"
+                               style="cursor: pointer;"
+                               (click)="onEntregarPaquet(paquet.id,'nomessignar')"
+                               tooltip="Entregar paquet"></fa-icon>
+                    </div>
+
+                    <div class="col-4 col-sm-auto" *ngIf="!allowViewPaquet && paquet.email!=''" >
+                      <fa-icon [icon]="faEnvelope"
+                            class="fa-2x"
+                            style="cursor: pointer;"
+                            (click)="onEnviarMail(paquet.id,confirmMailing)"
+                            tooltip="Reenviar correu-e"></fa-icon>
+                    </div>
+
+                    <div class="col-4 col-sm-auto" *ngIf="!allowViewPaquet" >
+                      <fa-icon [icon]="faQrcode"
+                            class="fa-2x"
+                            style="cursor: pointer;"
+                            (click)="onGenerarQr(i)"
+                            tooltip="Generar codi Qr"></fa-icon>
+                    </div>
+                    <div class="col-4 col-sm-auto" *ngIf="allowViewPaquet">
+                      <fa-icon [icon]="faEye"
+                               class="fa-2x text-secondary"
+                               style="cursor: pointer;"
+                               (click)="onViewClick(paquet.id)"
+                               tooltip="Veure paquet"></fa-icon>
+                    </div>
+                      <div class="col-4 col-sm-auto">
+                        <fa-icon [icon]="faTrashAlt"
+                            class="fa-2x text-danger"
+                            style="cursor: pointer;"
+                            (click)="onDeleteClick(paquet.id,confirmDeletion)"
+                            tooltip="Esborrar paquet"></fa-icon>
+                      </div>
+                </div>
+                </div>
+                </div>
 
             </div>
-            <div class="input-group mt-2">
-              <div class="input-group-prepend">
-                <span class="input-group-text font-weight-bold" id="basic-addon1">Remitent:</span>
-              </div>
-              <textarea class="form-control" aria-label="remitent" cols="30" rows="2" disabled style="resize: none;">{{paquet.remitent + '\n'+ paquet.emailremitent}}</textarea>
-            </div>
           </div>
-          <div class="col-sm-3" *ngIf="paquet.data_lliurament!=''">
-            <div class="card">
-              <div class="card-header text-center font-weight-bold">
-                Lliurament
-              </div>
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item text-center">{{paquet.data_lliurament | date:"d/M/yyyy H:mm"}}</li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-sm-1 text-right" *ngIf="allowViewPaquet">
-            <fa-icon [icon]="faEye"
-                     class="fa-2x text-secondary"
-                     style="cursor: pointer;"
-                     (click)="onViewClick(paquet.id)"
-                     tooltip="Veure paquet"></fa-icon>
-          </div>
-
-          <div class="row justify-content-center" style="margin-left: 50px;">
-          <div class="col-sm-2 col-md-4 col-xl-4">
-              <div class="col-sm-1" style="margin:10px 10px 20px 10px;" *ngIf="!allowViewPaquet">
-                <fa-icon [icon]="faEdit"
-                         class="fa-2x text-secondary"
-                         style="cursor: pointer;"
-                         (click)="onEditClick(paquet.id)"
-                         tooltip="Editar paquet"></fa-icon>
-              </div>
-              <div class="col-sm-1" style="margin:10px 10px 20px 10px;" *ngIf="!allowViewPaquet && paquet.email!=''">
-                <fa-icon [icon]="faEnvelope"
-                         class="fa-2x"
-                         style="cursor: pointer;"
-                         (click)="onEnviarMail(paquet.id,confirmMailing)"
-                         tooltip="Reenviar correu-e"></fa-icon>
-              </div>
-          </div>
-        </div>
-        <div class="row" style="margin-left: 50px;">
-          <div class="col-sm-2 col-md-4">
-              <div class="col-sm-1" style="margin:3px 10px 20px 10px;" *ngIf="!allowViewPaquet">
-                <fa-icon [icon]="faHandHolding"
-                         class="fa-2x"
-                         style="cursor: pointer;"
-                         (click)="onEntregarPaquet(paquet.id,'nomessignar')"
-                         tooltip="Entregar paquet"></fa-icon>
-              </div>
-              <div class="col-sm-1" style="margin:10px 10px 20px 10px;" *ngIf="!allowViewPaquet">
-                <fa-icon [icon]="faQrcode"
-                         class="fa-2x"
-                         style="cursor: pointer;"
-                         (click)="onGenerarQr(i)"
-                         tooltip="Generar codi Qr"></fa-icon>
-              </div>
-          </div>
-        </div>
-        <div class="row" style="margin-left: 76px;">
-          <div class="col-sm-2">
-              <fa-icon [icon]="faTrashAlt"
-                       class="fa-2x text-danger"
-                       style="cursor: pointer;"
-                       (click)="onDeleteClick(paquet.id,confirmDeletion)"
-                       tooltip="Esborrar paquet"></fa-icon>
-          </div>
-        </div>
-
         </div>
       </li>
     </ul>

@@ -1,30 +1,18 @@
 <div *ngIf="formVisible" style="touch-action: none;">
   <div *ngIf="!paquetSignatCorrectament">
-    <form [formGroup]="paquetForm" >
-      <fieldset disabled>
-        <div class="row d-none d-md-block">
-            <div class="form-group col-12">
-              <label for="data_arribada">Data Arribada</label>
-              <input bsDatepicker [bsConfig]="{ dateInputFormat: 'D/M/YYYY H:mm' }" type="text" formControlName="data_arribada"
-                name="data_arribada" id="data_arribada" class="form-control">
-            </div>
-            <div class="form-group col-12">
-              <label for="remitent">Remitent</label>
-              <input type="text" formControlName="remitent" name="remitent" id="remitent" class="form-control">
-            </div>
-          </div>
-          <div class="row d-none d-md-block">
-            <div class="form-group col-12">
-              <label for="quantitat">Quantitat</label>
-              <input type="number" formControlName="quantitat" name="quantitat" id="quantitat" class="form-control">
-            </div>
-            <div class="form-group col-12">
-              <label for="destinatari">Destinatari</label>
-              <input type="text" formControlName="destinatari" name="destinatari" id="destinatari" class="form-control">
-            </div>
-        </div>
-      </fieldset>
-    </form>
+    <dl class="row justify-content-center">
+      <dt class="col-3 bg-light">Arribada:</dt>
+      <dd class="col-9 bg-light mb-auto">{{paquetEditing.data_arribada | date:"d/M/yyyy H:mm"}}</dd>
+      <div class="w-100"></div>
+      <dt class="col-3 ">Remitent:</dt>
+      <dd class="col-9 mb-auto">{{paquetEditing.remitent}}</dd>
+      <div class="w-100"></div>
+      <dt class="col-3 bg-light">Destinatari:</dt>
+      <dd class="col-9 bg-light mb-auto">{{paquetEditing.destinatari}}</dd>
+      <div class="w-100"></div>
+      <dt class="col-3">Quantitat:</dt>
+      <dd class="col-9 mb-auto">{{paquetEditing.quantitat}}</dd>
+  </dl>
   </div>
     <div class="row justify-content-center" *ngIf="formVisible">
       <div class="col-md-6">
