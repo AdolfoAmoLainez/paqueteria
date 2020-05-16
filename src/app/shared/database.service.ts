@@ -230,7 +230,7 @@ export class DatabaseService {
           tablename: this.tablename,
           paquet
         };
-        return this.http.post(environment.dataServerURL + '/paquets/updatePaquet', obj).subscribe(
+        return this.http.post(environment.dataServerURL + '/paquets/signaPaquetQr', obj).subscribe(
             () => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
                 this.messagesService.sendMessage(

@@ -153,6 +153,25 @@ class paquets extends AppAuthorizator {
    *          };
    */
 
+  public function signaPaquetQr() {
+
+    $body = json_decode(file_get_contents("php://input"), true);
+
+    $resultat = paquet::updatePaquet($body['tablename'], $body['paquet']);
+    if ($resultat) {
+      echo json_encode($body['paquet']);
+    }
+  }
+
+  /**
+   * Rebem les dades per POST en format json
+   *
+   *   obj = {
+   *            tablename: nom de la taula
+   *            paquet: objecte a modificar
+   *          };
+   */
+
   public function updatePaquet() {
     $this->validateSession();
     $body = json_decode(file_get_contents("php://input"), true);
