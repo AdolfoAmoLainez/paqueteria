@@ -23,42 +23,10 @@ export class AuthService {
     loginUser() {
 
       window.location.href = environment.dataServerURL + '/cas/login';
-/*       this.http.get<User[]>
-      (environment.dataServerURL + '/cas/login').subscribe(
-        (data) => {
-          console.log(data);
-          if (data.length > 0) {
-            this.isLogged = true;
-
-            const dataLogin = data[0];
-            localStorage.setItem('currentUser', JSON.stringify(dataLogin));
-
-            this.dbService.setTablename(dataLogin.tablename);
-            this.dbService.getUserRol(dataLogin.niu).subscribe(
-                (dataRol: any) => {
-
-                  this.userRol = +dataRol[0].rol_id;
-                  this.router.navigate(['/llista']);
-                }
-                );
-          } else {
-
-              //this.router.navigate(['/login']);
-          }
-        },
-        (err) => {
-          console.log(err);
-
-         /*  window.location.href = environment.dataServerURL + '/cas/login';
-        }
-      ); */
 
     }
 
     isAuthenticated() {
-/*       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-      return this.http.get(environment.dataServerURL + '/users/getUserData/' + currentUser.niu); */
       return this.isLogged;
     }
 
@@ -106,7 +74,7 @@ export class AuthService {
                 );
           } else {
 
-              //this.router.navigate(['/login']);
+            window.location.href = environment.dataServerURL + '/cas/login';
           }
         }
       );

@@ -21,7 +21,7 @@ export class ErrorPageComponent {
   onClose() {
     this.bsModalRef.hide();
     if (this.status === 0 ) {
-      window.location.href = environment.dataServerURL + '/loginapi/login';
+      window.location.href = environment.dataServerURL + '/cas/login';
     }
 
   }

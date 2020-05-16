@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { AuthService} from '../auth.service';
 import { Subscription } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,9 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(public authService: AuthService,
-              private activatedRoute: ActivatedRoute,
-              private router: Router) { }
+  constructor(public authService: AuthService) { }
 
   loginForm: FormGroup;
   loginErrorSubscription: Subscription;
@@ -23,31 +20,6 @@ export class LoginComponent implements OnInit {
 
     this.authService.getUserData();
 
-/*    this.activatedRoute.data.subscribe(
-      (data) => {
-        console.log(data);
-
-         if (!data.ticket) {
-          this.authService.loginUser();
-        } else {
-          this.authService.getUserData();
-          // this.router.navigate(['/llista']);
-        }
-      }
-    );*/
-
-    //this.authService.loginUser();
-
-    /*this.loginForm = new FormGroup({
-      "niu": new FormControl(null),
-      "passwd": new FormControl(null)
-    });
-    this.loginErrorSubscription = this.authService.loginIncorrect.subscribe(
-      (error)=>{
-        this.errorMsg="Usuari o password incorrectes!";
-        console.log(this.errorMsg);
-      }
-    )*/
   }
 
   onLogin() {
