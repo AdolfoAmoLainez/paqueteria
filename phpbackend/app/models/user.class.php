@@ -14,7 +14,7 @@ class user {
   public static function getUserData($niu) {
     try {
 
-      $sql = "SELECT id, niu as username, tablename, ubicacioemail, gestoremail FROM usuaris WHERE niu = ".$niu.";";
+      $sql = "SELECT id, niu, tablename, ubicacioemail, gestoremail FROM usuaris WHERE niu = ".$niu.";";
 
       $connection = Database::instance();
       $query = $connection->prepare($sql);

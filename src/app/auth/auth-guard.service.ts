@@ -14,19 +14,19 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean>|boolean {
 
-    return this.authService.isAuthenticated()
-      .pipe(
+    return this.authService.isAuthenticated();
+/*       .pipe(
         take(1),
          map(
         (auth) => {
           if (auth && auth[0].username) {
             return true;
           } else {
-            window.location.href = environment.dataServerURL + '/selfapi/login';
+            window.location.href = environment.dataServerURL + '/login';
             return false;
           }
         }
-      ));
+      )); */
 
   }
 }

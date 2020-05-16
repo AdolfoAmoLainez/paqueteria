@@ -17,15 +17,19 @@ class users extends AppAuthorizator {
     /* $this->validateSession(); */
   }
 
-  public function getUserData($niu) {
+  public function getUserData() {
 
-    $usrResult = user::getUserData($niu);
+    $this->validateSession();
+
+    $usrResult = user::getUserData($_SESSION['username']);
 
     echo json_encode($usrResult);
 
   }
 
   public function getUserRol($niu) {
+
+    $this->validateSession();
 
     $usrResult = user::getUserRol($niu);
 
@@ -34,6 +38,7 @@ class users extends AppAuthorizator {
   }
 
   public function getAll() {
+    $this->validateSession();
     echo json_encode(user::getAll());
   }
 
@@ -52,6 +57,7 @@ class users extends AppAuthorizator {
    */
 
   public function add() {
+    $this->validateSession();
 
     $body = json_decode(file_get_contents("php://input"), true);
 
@@ -75,6 +81,7 @@ class users extends AppAuthorizator {
    */
 
   public function update() {
+    $this->validateSession();
 
     $body = json_decode(file_get_contents("php://input"), true);
 

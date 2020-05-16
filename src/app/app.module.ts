@@ -74,7 +74,6 @@ registerLocaleData(localeEs, 'es');
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    //    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: LOCALE_ID, useValue: 'es' },
         AuthService, DatabaseService, PaquetsService, MessagesService, UsersService, AuthGuard, AdminGuard ],
   bootstrap: [AppComponent]

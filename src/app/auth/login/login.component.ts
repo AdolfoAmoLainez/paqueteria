@@ -21,15 +21,20 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
 
-    this.activatedRoute.data.subscribe(
+    this.authService.getUserData();
+
+/*    this.activatedRoute.data.subscribe(
       (data) => {
-        if (!data.ticket) {
+        console.log(data);
+
+         if (!data.ticket) {
           this.authService.loginUser();
         } else {
-          this.router.navigate(['/llista']);
+          this.authService.getUserData();
+          // this.router.navigate(['/llista']);
         }
       }
-    );
+    );*/
 
     //this.authService.loginUser();
 

@@ -14,8 +14,8 @@ export class AdminGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean>|boolean {
 
-    return this.authService.isAuthenticated()
-    .pipe( map(
+    return this.authService.isAuthenticated();
+/*     .pipe( map(
       (auth: any) => {
         if (auth && auth[0].username) {
           if (this.authService.userRol === environment.ADMIN) {
@@ -25,11 +25,11 @@ export class AdminGuard implements CanActivate {
             return false;
           }
         } else {
-          window.location.href = environment.dataServerURL + '/selfapi/logout';
+          window.location.href = environment.dataServerURL + '/cas/logout';
           return false;
         }
       }
-    ));
+    )); */
   }
 /*
     const logged = this.authService.isAuthenticated();

@@ -28,6 +28,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function getCountPaquetsPerSignar() {
+    $this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
 
@@ -49,6 +50,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function getPaquetsPerSignar() {
+    $this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
 
@@ -68,6 +70,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function getCountPaquetsSignats() {
+    $this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
 
@@ -89,6 +92,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function getPaquetsSignats() {
+    $this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
 
@@ -108,6 +112,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function add() {
+    $this->validateSession();
     $body = json_decode(file_get_contents("php://input"), true);
 
     $resultat = paquet::add($body['tablename'], $body['paquet']);
@@ -149,6 +154,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function updatePaquet() {
+    $this->validateSession();
     $body = json_decode(file_get_contents("php://input"), true);
 
     $resultat = paquet::updatePaquet($body['tablename'], $body['paquet']);
@@ -165,6 +171,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function del($tablename, $id) {
+    $this->validateSession();
 
     $resultat = paquet::del($tablename, $id);
 
@@ -216,6 +223,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function enviaMailRemitent() {
+    $this->validateSession();
     $body = json_decode(file_get_contents("php://input"), true);
     $resultat = "{ SendMail: 'ko' }";
 
@@ -240,6 +248,7 @@ class paquets extends AppAuthorizator {
   }
 
   public function creaTaula($nom) {
+    $this->validateSession();
 
     paquet::creaTaula($nom);
 
@@ -248,6 +257,7 @@ class paquets extends AppAuthorizator {
   }
 
   public function delTaula($nom) {
+    $this->validateSession();
     paquet::delTaula($nom);
     echo "";
   }

@@ -8,8 +8,7 @@ defined('BASEURLPATH') OR die('Access denied');
 use \core\view;
 use \core\uabcas as uabcas ;
 use \core\sessionManager;
-use \core\auth;
-use app\models\usuari as Usuaris;
+use app\models\user;
 use app\models\appconfig as appconfig;
 
 class cas {
@@ -22,19 +21,21 @@ class cas {
 
     if (sessionManager::is_started()) {
 
-      $userProfile = auth::validaUsuariBBDD(sessionManager::get('username'));
+      $userProfile = user::getUserData(sessionManager::get('username'));
+
+      $config = $this->getConfig();
       if (empty($userProfile)) {
-        $config = $this->getConfig();
+
         header("Location: ".$config['baseurl']."/login", true, 401);
         include APPPATH ."/views/errors/401.php";
         exit;
       } else {
-        $config = $this->getConfig();
-        header("Location: ".$config['baseurl']."/login");
+        header("Location: ".$config['baseurl']."/public/login",false);
       }
     }
 
     unset ($objCas);
+    exit;
 
   }
 
@@ -45,18 +46,6 @@ class cas {
     $objCas = new uabcas();
     $objCas->logout();
     unset($objCas);
-
-  }
-
-  public function btnLogin(){
-
-    view::render('cas/btnLogin');
-
-  }
-
-  public function btnLogout(){
-
-    view::render('cas/btnLogout');
 
   }
 

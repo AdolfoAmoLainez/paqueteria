@@ -1,8 +1,11 @@
 export const environment = {
   production: true,
-  loginURL: 'https://paqueteria.uab.cat:55023/auth/login',
+  loginURL: 'https://testcascc.uab.cat/login',
+  dataServerURL: 'https://testcascc.uab.cat',
+  signUrlServer: 'https://testcascc.uab.cat/signarmovil/',
+/*   loginURL: 'https://paqueteria.uab.cat:55023/auth/login',
   dataServerURL: 'https://paqueteria.uab.cat:55023',
-  signUrlServer: 'https://paqueteria.uab.cat:55023/signarmovil/',
+  signUrlServer: 'https://paqueteria.uab.cat:55023/signarmovil/', */
   ADMIN: 1,
   USUARI: 2,
   rols: [
