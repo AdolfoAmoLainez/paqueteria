@@ -27,22 +27,20 @@ export class UserEditaddComponent implements OnInit {
 
   ngOnInit() {
     this.userForm = new FormGroup({
-      'niu' : new FormControl (null, Validators.required),
-      'displayname' : new FormControl (null, Validators.required),
-      'tablename' : new FormControl (null, Validators.required),
-      'rol_id' : new FormControl (null, Validators.required),
-/*       'uidbasedn' : new FormControl (null, Validators.required),
-      'ldapuri' : new FormControl (null, Validators.required), */
-      'ubicacioemail' : new FormControl (null, Validators.required),
-      'gestoremail' : new FormControl (null, Validators.required)
+      niu : new FormControl (null, Validators.required),
+      displayname : new FormControl (null, Validators.required),
+      tablename : new FormControl (null, Validators.required),
+      rol_id : new FormControl (null, Validators.required),
+      ubicacioemail : new FormControl (null, Validators.required),
+      gestoremail : new FormControl (null, Validators.required)
     });
 
     this.route.params.subscribe(
       (params: Params) => {
-        switch (params['mode']) {
+        switch (params.mode) {
           case 'edit':
             this.userEditing = this.usersService.getUser(
-              +this.route.snapshot.params['id']
+              this.route.snapshot.params.id
             );
             if (!this.userEditing) {
               this.onHideForm();
@@ -50,14 +48,12 @@ export class UserEditaddComponent implements OnInit {
               this.formVisible = true;
               this.editMode = true;
               this.userForm.patchValue({
-                'niu' : this.userEditing.niu,
-                'displayname' : this.userEditing.displayname,
-                'tablename' : this.userEditing.tablename,
-                'rol_id' : this.userEditing.rol_id,
-/*                 'uidbasedn' : this.userEditing.uidbasedn,
-                'ldapuri' : this.userEditing.ldapuri, */
-                'ubicacioemail' : this.userEditing.ubicacioemail,
-                'gestoremail' : this.userEditing.gestoremail
+                niu : this.userEditing.niu,
+                displayname : this.userEditing.displayname,
+                tablename : this.userEditing.tablename,
+                rol_id : this.userEditing.rol_id,
+                ubicacioemail : this.userEditing.ubicacioemail,
+                gestoremail : this.userEditing.gestoremail
               });
             }
             break;
@@ -65,7 +61,7 @@ export class UserEditaddComponent implements OnInit {
           this.formVisible = true;
           this.editMode = false;
           this.userForm.reset();
-           break;
+          break;
         }
       });
 

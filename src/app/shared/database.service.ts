@@ -7,6 +7,7 @@ import { MessagesService } from '../messages/messages.service';
 import {environment} from 'src/environments/environment';
 import { UsersService } from './users.service';
 import { User } from './user.model';
+import { map } from 'rxjs/operators';
 
 
 @Injectable()
@@ -54,7 +55,7 @@ export class DatabaseService {
           tablename: this.tablename,
           searchText
         };
-        return this.http.post(environment.dataServerURL + '/selfapi/getCountPaquetsPerSignar', obj);
+        return this.http.post(environment.dataServerURL + '/paquets/getCountPaquetsPerSignar', obj);
     }
 
     getPaquetsPerSignar(page: number, itemsPerpage: number, searchText?: string) {
@@ -66,7 +67,19 @@ export class DatabaseService {
                   page,
                   itemsPerpage
                 };
-        return this.http.post<{paquets: Paquet[]}>(environment.dataServerURL + '/selfapi/getPaquetsPerSignar', obj).subscribe(
+        return this.http.post<{paquets: Paquet[]}>(environment.dataServerURL + '/paquets/getPaquetsPerSignar', obj)
+        .pipe(
+          map(
+            paqs => {
+              paqs.paquets.forEach(element => {
+                element.id = +element.id;
+
+              });
+              return paqs;
+            }
+          )
+        )
+        .subscribe(
                   (res) => {
                     // this.tractaResposta(res);
 
@@ -85,7 +98,7 @@ export class DatabaseService {
           tablename: this.tablename,
           searchText
         };
-        return this.http.post(environment.dataServerURL + '/selfapi/getCountPaquetsSignats', obj);
+        return this.http.post(environment.dataServerURL + '/paquets/getCountPaquetsSignats', obj);
     }
 
 
@@ -101,7 +114,19 @@ export class DatabaseService {
                   itemsPerpage
                 };
 
-        return this.http.post<{paquets: Paquet[]}>(environment.dataServerURL + '/selfapi/getPaquetsSignats', obj).subscribe(
+        return this.http.post<{paquets: Paquet[]}>(environment.dataServerURL + '/paquets/getPaquetsSignats', obj)
+        .pipe(
+          map(
+            paqs => {
+              paqs.paquets.forEach(element => {
+                element.id = +element.id;
+
+              });
+              return paqs;
+            }
+          )
+        )
+        .subscribe(
                   (res) => {
 
                     this.paquetsService.setPaquets(res.paquets);
@@ -114,24 +139,26 @@ export class DatabaseService {
     addPaquet(paquet: Paquet) {
 
         this.testTablename();
-        return this.http.post(environment.dataServerURL + '/api/crud/' + this.tablename, paquet).subscribe(
-            (data: any) => {
-                const paquete = data.json[0] as Paquet;
-                this.paquetsService.addPaquet(paquete);
-                this.messagesService.sendMessage(
-                    'Paquet afegit correctament!',
-                    'success'
-                    );
-                paquete.ubicacioemail = paquete.ubicacioemail.replace('\\', '');
-                this.enviaMail(paquete);
-            }
-        );
+        const obj = {
+          tablename: this.tablename,
+          paquet
+
+        };
+        return this.http.post(environment.dataServerURL + '/paquets/add', obj).subscribe(
+          (data: Paquet) => {
+              this.paquetsService.addPaquet(data);
+              this.messagesService.sendMessage(
+                  'Paquet afegit correctament!',
+                  'success'
+                  );
+              data.ubicacioemail = data.ubicacioemail.replace('\\', '');
+              this.enviaMail(data);
+          }
+      );
     }
 
     getPaquetQr(index: number, qrcode: number, tablename: string) {
-        // this.testTablename();
-        // return this.http.get(this.appConstants.dataServerURL + "/api/crud/"+this.tablename+"?id=" + index + "&qrcode=" + qrcode);
-        return this.http.post(environment.dataServerURL + '/selfapi/paquetqr/get', {tablename, id: index, qrcode});
+        return this.http.get<Paquet[]>(environment.dataServerURL + '/paquets/getPaquetQr/' + tablename + '/' + index + '/' + qrcode);
     }
 
     getPaquet(index: number) {
@@ -141,9 +168,13 @@ export class DatabaseService {
 
     updatePaquet(paquet: Paquet) {
         this.testTablename();
-        return (this.http.put(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + paquet.id, paquet).subscribe(
-            (data: any) => {
-                const paquete = data.json[0] as Paquet;
+        const obj = {
+          tablename: this.tablename,
+          paquet
+
+        };
+        return this.http.put<Paquet>(environment.dataServerURL + '/paquets/updatePaquet', obj).subscribe(
+            (paquete) => {
                 this.paquetsService.updatePaquet(paquete);
                 this.messagesService.sendMessage(
                     'Paquet modificat correctament!',
@@ -157,13 +188,13 @@ export class DatabaseService {
                   'danger'
                   );
             }
-        ));
+        );
     }
 
     deletePaquet(index: number) {
         this.testTablename();
-        return (this.http.delete(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + index).subscribe(
-            (data) => {
+        return (this.http.delete(environment.dataServerURL + '/paquets/del/' + this.tablename + '/' + index).subscribe(
+            () => {
                 this.paquetsService.deletePaquet(index);
                 this.messagesService.sendMessage(
                     'Paquet esborrat correctament!',
@@ -173,12 +204,15 @@ export class DatabaseService {
         ));
     }
 
-
     signaPaquet(paquet: Paquet) {
         this.testTablename();
         paquet.data_lliurament = Date.now().toString();
-        return (this.http.put(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + paquet.id, paquet)).subscribe(
-            (data) => {
+        const obj = {
+          tablename: this.tablename,
+          paquet
+        };
+        return (this.http.put(environment.dataServerURL + '/paquets/updatePaquet', obj)).subscribe(
+            () => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
                 this.messagesService.sendMessage(
                     'Paquet signat correctament!',
@@ -191,13 +225,13 @@ export class DatabaseService {
 
     signaPaquetQr(paquet: Paquet, tablename: string) {
         paquet.data_lliurament = Date.now().toString();
-        return (this.http.post(environment.dataServerURL + '/selfapi/paquetqr/signar', {
-            tablename,
-            id: paquet.id,
-            dipositari: paquet.dipositari,
-            signatura: paquet.signatura
-        })).subscribe(
-            (data) => {
+        paquet.qrcode = 0;
+        const obj = {
+          tablename: this.tablename,
+          paquet
+        };
+        return this.http.post(environment.dataServerURL + '/paquets/updatePaquet', obj).subscribe(
+            () => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
                 this.messagesService.sendMessage(
                     'Paquet signat correctament!',
@@ -210,17 +244,22 @@ export class DatabaseService {
 
     updateQrPaquet(paquet: Paquet) {
         this.testTablename();
-        return (this.http.put(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + paquet.id, paquet).subscribe(
-            (data: any) => {
-                const paquete = data.json[0];
-                this.paquetsService.updatePaquet(paquete);
-                this.messagesService.sendMessage(
-                    'Codi bidi generat correctament!',
-                    'success'
-                    );
-                this.paquetsService.startedSignPaquet.next(paquet.id);
+        const obj = {
+          tablename: this.tablename,
+          paquet
+
+        };
+        return this.http.put<Paquet>(environment.dataServerURL + '/paquets/updatePaquet', obj).subscribe(
+            (paquete) => {
+              paquete.id = +paquete.id;
+              this.paquetsService.updatePaquet(paquete);
+              this.messagesService.sendMessage(
+                  'Codi bidi generat correctament!',
+                  'success'
+                  );
+              this.paquetsService.startedSignPaquet.next(paquet.id);
             }
-        ));
+        );
     }
 
     enviaMail(paquet: Paquet) {
@@ -228,7 +267,7 @@ export class DatabaseService {
         // paquet.ubicacioemail = this.ubicacioEmail;
         paquet.gestoremail = this.gestorEmail;
         if (paquet.email !== '') {
-            return (this.http.post(environment.dataServerURL + '/selfapi/enviaMail', paquet)).subscribe(
+            return (this.http.post(environment.dataServerURL + '/paquets/enviaMail', paquet)).subscribe(
                 (data: any) => {
                     if (data.SendMail === 'ok') {
                         this.messagesService.sendMessage(
@@ -251,7 +290,7 @@ export class DatabaseService {
       // paquet.ubicacioemail = this.ubicacioEmail;
       paquet.gestoremail = this.gestorEmail;
       if (paquet.emailremitent !== '') {
-          return (this.http.post(environment.dataServerURL + '/selfapi/enviaMailRemitent', paquet)).subscribe(
+          return (this.http.post(environment.dataServerURL + '/paquets/enviaMailRemitent', paquet)).subscribe(
               (data: any) => {
                   if (data.SendMail === 'ok') {
                       this.messagesService.sendMessage(
@@ -270,26 +309,26 @@ export class DatabaseService {
   }
 
     getUsers() {
-      return this.http.get(environment.dataServerURL + '/api/crud/usuaris',
-      { observe: 'response' }).subscribe(
-        (res: any) => {
-          this.usersService.setUsers(res.body.json);
+      return this.http.get<User[]>(environment.dataServerURL + '/users/getAll')
+      .subscribe(
+        (users) => {
+          this.usersService.setUsers(users);
         }
         );
     }
 
     addUser(user: User) {
-      return this.http.post(environment.dataServerURL + '/selfapi/creataula', user).subscribe(
-        (data: any) => {
+      return this.http.get(environment.dataServerURL + '/paquets/creataula/' + user.tablename).subscribe(
+        () => {
 
-          this.http.post(environment.dataServerURL + '/api/crud/usuaris', user).subscribe(
+          this.http.post(environment.dataServerURL + '/users/add', user).subscribe(
             (dbuser: any) => {
 
                 this.messagesService.sendMessage(
                     'Usuari afegit correctament!',
                     'success'
                     );
-                this.usersService.addUser(dbuser.json[0]);
+                this.usersService.addUser(dbuser);
             }
           );
         }
@@ -298,10 +337,10 @@ export class DatabaseService {
 
   updateUser(user: User) {
     this.testTablename();
-    return (this.http.put(environment.dataServerURL + '/api/crud/usuaris/' + user.id, user).subscribe(
-        (data: any) => {
+    return (this.http.put<User>(environment.dataServerURL + '/users/update', user).subscribe(
+        (data) => {
             // const user: User = <User> data.json[0];
-            this.usersService.updateUser(user);
+            this.usersService.updateUser(data);
             this.messagesService.sendMessage(
                 'Usuari modificat correctament!',
                 'success'
@@ -319,10 +358,10 @@ export class DatabaseService {
 
   deleteUser(user: User) {
 
-    return this.http.post(environment.dataServerURL + '/selfapi/deltaula', user).subscribe(
-      (data: any) => {
-        this.http.delete(environment.dataServerURL + '/api/crud/usuaris/' + user.id).subscribe(
-          (data2) => {
+    return this.http.get(environment.dataServerURL + '/paquets/delTaula/' + user.tablename).subscribe(
+      () => {
+        this.http.get(environment.dataServerURL + '/users/del/' + user.id).subscribe(
+          () => {
               this.usersService.deleteUser(user.id);
               this.messagesService.sendMessage(
                   'Usuari esborrat correctament!',
@@ -335,7 +374,7 @@ export class DatabaseService {
   }
 
   getUserRol(username: string) {
-    return this.http.get(environment.dataServerURL + '/api/crud/usuaris?niu[LIKE]=%' + username + '%&_fields=rol_id');
+    return this.http.get(environment.dataServerURL + '/users/getUserRol/' + username);
   }
 
 }

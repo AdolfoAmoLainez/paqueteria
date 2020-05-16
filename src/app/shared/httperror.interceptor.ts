@@ -28,20 +28,5 @@ export class ErrorInterceptor implements HttpInterceptor {
           return throwError(error);
         })
       );
-      /*
-        return next.handle(request).pipe(catchError(err => {
-            if (err.status === 401) {
-                // auto logout if 401 response returned from api
-                this.authService.logout();
-                this.authService.loginIncorrect.next();
-                //this.router.navigate(['/login']);
-
-            }else{
-                //console.log(err);
-                this.router.navigate(['/http-error/'+err.message]);
-            }
-            const error = err.error.message || err.statusText;
-            return throwError(error);
-        }))*/
     }
 }

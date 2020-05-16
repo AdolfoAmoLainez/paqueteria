@@ -117,6 +117,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   searchString = '';
   searching = false;
+  isAdmin = false;
   // Variables per controlar els paquets que veiem a la llista
   // "per Signar" o "Signats"
   vistaSeguent: string;
@@ -190,7 +191,14 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
       }
     );
 
+    if (this.authService.getUserRol() === 1) {
+      this.isAdmin = true;
+    } else {
+      this.isAdmin = false;
+    }
+
     this.reloadLlista();
+
   }
 
   onEditPaquet(index: number) {
@@ -271,7 +279,6 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
             this.allowViewPaquet = false;
             this.isLoading = true;
           });
-
         break;
       case 'Signats':
         this.databaseService
@@ -291,11 +298,8 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSearch(valor: string) {
-    console.log(valor);
-  }
-
   onChangeView() {
+
     if (this.vistaSeguent === 'per Signar') {
       this.databaseService
         .getCountPaquetsPerSignar(this.searchString)
@@ -311,6 +315,10 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
           this.vistaSeguent = 'Signats';
           this.allowViewPaquet = false;
           this.isLoading = true;
+          const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+          currentUser.vistaActual = this.vistaActual;
+          currentUser.vistaSeguent = this.vistaSeguent;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
         });
     } else {
       this.databaseService
@@ -327,12 +335,14 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
           this.vistaSeguent = 'per Signar';
           this.allowViewPaquet = true;
           this.isLoading = true;
+          const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+          currentUser.vistaActual = this.vistaActual;
+          currentUser.vistaSeguent = this.vistaSeguent;
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
         });
     }
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    currentUser.vistaActual = this.vistaActual;
-    currentUser.vistaSeguent = this.vistaSeguent;
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+
   }
 
   onNouPaquet() {
@@ -368,13 +378,6 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.searchString = '';
     this.searching = false;
     this.reloadLlista();
-  }
-
-  isAdmin() {
-    if (this.authService.userRol === 1) {
-      return true;
-    }
-    return false;
   }
 
   onAdminClick() {

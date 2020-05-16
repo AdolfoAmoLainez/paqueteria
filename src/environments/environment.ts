@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  loginURL: 'http://localhost:55022/auth/login',
-  dataServerURL: 'http://localhost:55022',
+  loginURL: 'http://localhost/auth/login',
+  dataServerURL: 'http://localhost/paqueteria',
   signUrlServer: 'http://localhost:55022/signarmovil/',
   ADMIN: 1,
   USUARI: 2,

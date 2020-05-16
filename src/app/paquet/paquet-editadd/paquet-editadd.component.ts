@@ -53,7 +53,6 @@ export class PaquetEditAddComponent implements OnInit {
       // 'dipositari': new FormControl(null,Validators.required)
     });
 
-    // console.log(this.route.snapshot.params);
 
     this.route.params.subscribe(
       (params: Params) => {
@@ -71,7 +70,7 @@ export class PaquetEditAddComponent implements OnInit {
               this.formVisible = true;
               this.editMode = true;
               let data: string = this.paquetEditing.data_arribada.toLocaleString();
-              // console.log(data);
+
               if (data.indexOf('.000Z') !== -1) {
                 data = new Date(this.paquetEditing.data_arribada).toLocaleString();
                 const dataDate = new Date(this.paquetEditing.data_arribada);
@@ -80,7 +79,7 @@ export class PaquetEditAddComponent implements OnInit {
               } else {
                 data = this.paquetEditing.data_arribada.toLocaleString();
               }
-              // console.log("add date: "+ data);
+
 
               this.paquetForm.patchValue({
                 // 'data_arribada': this.paquetEditing.data_arribada,
@@ -134,7 +133,7 @@ export class PaquetEditAddComponent implements OnInit {
   onPaquetAction() {
     if (this.editMode) {
       let data: string = this.paquetForm.get('data_arribada').value.toLocaleString();
-      // console.log(data);
+
       if (data.indexOf('.000Z') !== -1) {
         data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
         const dataDate = new Date(this.paquetForm.get('data_arribada').value);
@@ -143,7 +142,7 @@ export class PaquetEditAddComponent implements OnInit {
       } else {
         data = this.paquetForm.get('data_arribada').value.toLocaleString();
       }
-      // console.log("Edit date: "+data);
+
       this.databaseService.updatePaquet(new Paquet(
         this.paquetEditing.id,
         data,
@@ -162,10 +161,10 @@ export class PaquetEditAddComponent implements OnInit {
         this.paquetForm.get('emailremitent').value,
         this.paquetForm.value.ubicacioemail.replace('\\', ''))
         );
-        // console.log(this.paquetForm.get('data_arribada').value);
+
     } else {
       let data: string = this.paquetForm.get('data_arribada').value.toLocaleString();
-      // console.log(data);
+
       if (data.indexOf('.000Z') !== -1) {
         data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
         const dataDate = new Date(this.paquetForm.get('data_arribada').value);
@@ -174,11 +173,10 @@ export class PaquetEditAddComponent implements OnInit {
       } else {
         data = this.paquetForm.get('data_arribada').value.toLocaleString();
       }
-      // console.log("add date: "+ data);
+
 
       this.databaseService.addPaquet(new Paquet(
         0,
-        // this.paquetForm.get('data_arribada').value,
         data,
         this.paquetForm.get('remitent').value,
         this.paquetForm.get('procedencia').value,
