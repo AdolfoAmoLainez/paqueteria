@@ -75,7 +75,7 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
                                       this.route.snapshot.params.tablename)
       .subscribe(
         (data: any) => {
-          console.log(data);
+
           if (data.length === 0) {
             this.paquetSignatCorrectament = true;
           } else {

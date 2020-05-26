@@ -104,7 +104,7 @@
                   <dd class="col-12 col-sm-6 bg-light mb-auto">{{paquet.remitent + '\n'+ paquet.emailremitent}}</dd>
                   <div class="w-100"></div>
                   <dt class="col-12 col-sm-3" *ngIf="paquet.data_lliurament!=''">Lliurament:</dt>
-                  <dd class="col-12 col-sm-6" *ngIf="paquet.data_lliurament!=''">{{paquet.data_lliurament | date:"d/M/yyyy H:mm"}}</dd>
+                  <dd class="col-12 col-sm-6" *ngIf="paquet.data_lliurament!=''">{{paquet.data_lliurament}}</dd>
               </dl>
               </div>
 
@@ -168,14 +168,14 @@
   <ng-template #confirmDeletion>
     <div class="modal-body text-center">
       <p>{{deleteModalMsg}}</p>
-      <button type="button" class="btn btn-default" (click)="confirmDelete()">Sí</button>
+      <button type="button" class="btn btn-danger" (click)="confirmDelete()">Sí</button>
       <button type="button" class="btn btn-primary" (click)="declineDelete()" style="margin-left: 10px;">No</button>
     </div>
   </ng-template>
   <ng-template #confirmMailing>
     <div class="modal-body text-center">
       <p>{{mailModalMsg}}</p>
-      <button type="button" class="btn btn-default" (click)="confirmMailSend()">Sí</button>
+      <button type="button" class="btn btn-danger" (click)="confirmMailSend()">Sí</button>
       <button type="button" class="btn btn-primary" (click)="declineMailSend()" style="margin-left: 10px;">No</button>
     </div>
   </ng-template>

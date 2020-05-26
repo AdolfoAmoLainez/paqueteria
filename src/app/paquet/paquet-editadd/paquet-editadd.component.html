@@ -72,7 +72,7 @@
   </div>
   <div class="row">
     <div class="col-12 justify-content-left ">
-      <button type="submit" [disabled]="!paquetForm.valid" [class]="!paquetForm.valid?'btn btn-warning':'btn btn-success'"
+      <button type="button" [disabled]="!paquetForm.valid" [class]="!paquetForm.valid?'btn btn-warning':'btn btn-success'"
         (click)="onPaquetAction()">{{ editMode ? 'Modificar' : 'Afegir'}}</button>
       <!--<button *ngIf="editMode" class="btn btn-danger" type="button" (click)="onDelete()">Delete</button>-->
       <button class="btn btn-primary" type="button" (click)="onClear()" style="margin-left: 10px;">Netejar</button>

@@ -57,7 +57,7 @@ export class AuthService {
       this.http.get<User[]>
       (environment.dataServerURL + '/users/getUserData').subscribe(
         (data) => {
-          console.log(data);
+
           if (data.length > 0) {
             this.isLogged = true;
 
