@@ -76,6 +76,9 @@ export class DatabaseService {
                 if (element.emailremitent === null) {
                   element.emailremitent = '';
                 }
+                if (element.email === null) {
+                  element.email = '';
+                }
               });
               return paqs;
             }
@@ -125,7 +128,9 @@ export class DatabaseService {
                 if (element.emailremitent === null) {
                   element.emailremitent = '';
                 }
-
+                if (element.email === null) {
+                  element.email = '';
+                }
               });
               return paqs;
             }
