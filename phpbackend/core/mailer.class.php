@@ -17,7 +17,7 @@ use \core\error;
 class mailer {
     private static $nameTitleSender = 'MVC';
 
-    private static $mailserver_name;
+    private static $mailserver_name = "smtp.uab.es";
     private static $mailserver_port;
     private static $mailserver_login;
     private static $mailserver_pass;

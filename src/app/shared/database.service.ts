@@ -73,7 +73,12 @@ export class DatabaseService {
             paqs => {
               paqs.paquets.forEach(element => {
                 element.id = +element.id;
-
+                if (element.emailremitent === null) {
+                  element.emailremitent = '';
+                }
+                if (element.email === null) {
+                  element.email = '';
+                }
               });
               return paqs;
             }
@@ -120,7 +125,12 @@ export class DatabaseService {
             paqs => {
               paqs.paquets.forEach(element => {
                 element.id = +element.id;
-
+                if (element.emailremitent === null) {
+                  element.emailremitent = '';
+                }
+                if (element.email === null) {
+                  element.email = '';
+                }
               });
               return paqs;
             }
@@ -146,6 +156,7 @@ export class DatabaseService {
         };
         return this.http.post(environment.dataServerURL + '/paquets/add', obj).subscribe(
           (data: Paquet) => {
+              data.id = +data.id;
               this.paquetsService.addPaquet(data);
               this.messagesService.sendMessage(
                   'Paquet afegit correctament!',
@@ -206,7 +217,19 @@ export class DatabaseService {
 
     signaPaquet(paquet: Paquet) {
         this.testTablename();
-        paquet.data_lliurament = Date.now().toString();
+        const now = new Date();
+        const dia = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();
+        const mes = now.getMonth() < 10 ? '0' + (now.getMonth() + 1) : now.getMonth() + 1;
+        const hora = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
+        const minuts = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
+        const secs = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
+
+        paquet.data_lliurament = dia + '/' +
+                                 mes + '/' +
+                                 now.getFullYear() + ' ' +
+                                 hora + ':' +
+                                 minuts + ':' +
+                                 secs;
         const obj = {
           tablename: this.tablename,
           paquet

@@ -28,6 +28,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function getCountPaquetsPerSignar() {
+    $this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
 
@@ -49,6 +50,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function getPaquetsPerSignar() {
+    $this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
 
@@ -68,6 +70,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function getCountPaquetsSignats() {
+    $this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
 
@@ -89,6 +92,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function getPaquetsSignats() {
+    $this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
 
@@ -108,6 +112,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function add() {
+    $this->validateSession();
     $body = json_decode(file_get_contents("php://input"), true);
 
     $resultat = paquet::add($body['tablename'], $body['paquet']);
@@ -148,7 +153,27 @@ class paquets extends AppAuthorizator {
    *          };
    */
 
+  public function signaPaquetQr() {
+
+    $body = json_decode(file_get_contents("php://input"), true);
+
+    $resultat = paquet::updatePaquet($body['tablename'], $body['paquet']);
+    if ($resultat) {
+      echo json_encode($body['paquet']);
+    }
+  }
+
+  /**
+   * Rebem les dades per POST en format json
+   *
+   *   obj = {
+   *            tablename: nom de la taula
+   *            paquet: objecte a modificar
+   *          };
+   */
+
   public function updatePaquet() {
+    $this->validateSession();
     $body = json_decode(file_get_contents("php://input"), true);
 
     $resultat = paquet::updatePaquet($body['tablename'], $body['paquet']);
@@ -165,6 +190,7 @@ class paquets extends AppAuthorizator {
    */
 
   public function del($tablename, $id) {
+    $this->validateSession();
 
     $resultat = paquet::del($tablename, $id);
 
@@ -182,26 +208,24 @@ class paquets extends AppAuthorizator {
 
   public function enviaMail() {
     $body = json_decode(file_get_contents("php://input"), true);
-    $resultat = "{ SendMail: 'ko' }";
+    $resultat['SendMail'] = 'ko';
 
     if (isset($body['email']) && $body['email']!=''){
 
-      $cuerpo = htmlentities('Heu rebut un paquet amb n&uacute;mero de registre '.$body['id'].' i remitent '.
-        $body['remitent'].'. \nPodreu recollir-lo '.$body['ubicacioemail'].".");
+      $cuerpo[0] = htmlentities('Heu rebut un paquet amb número de registre '.$body['id'].' i remitent '.$body['remitent'].'.');
+      $cuerpo[1]= htmlentities('Podreu recollir-lo '.$body['ubicacioemail'].'.');
       $subject = 'Paquet rebut per part de '.$body['remitent'];
       $arrayMailsTo = array($body['email']);
-
-      print_r($arrayMailsTo);
 
       $code = mailer::sendMail($body['gestoremail'],$subject, $arrayMailsTo, $cuerpo);
 
       if (!$code){
-        $resultat="{ SendMail: 'ko' }";
+        $resultat['SendMail'] = 'ko';
       }else{
-        $resultat="{ SendMail: 'ok' }";
+        $resultat['SendMail'] = 'ok';
       }
     }else{
-      $resultat="{ SendMail: 'ko' }";
+      $resultat['SendMail'] = 'ko';
     }
 
     echo json_encode($resultat);
@@ -216,30 +240,32 @@ class paquets extends AppAuthorizator {
    */
 
   public function enviaMailRemitent() {
+    $this->validateSession();
     $body = json_decode(file_get_contents("php://input"), true);
-    $resultat = "{ SendMail: 'ko' }";
+    $resultat['SendMail'] = 'ko';
 
     if (isset($body['emailremitent']) && $body['emailremitent']!=''){
 
-      $cuerpo = htmlentities("S\'ha recollit el paquet amb n&uacute;mero de registre ".$body['id'].".");
+      $cuerpo[0] = htmlentities("S'ha recollit el paquet amb número de registre ".$body['id'].".");
       $subject = 'Paquet entregat';
       $arrayMailsTo = array($body['emailremitent']);
 
       $code = mailer::sendMail($body['gestoremail'],$subject, $arrayMailsTo, $cuerpo);
 
       if (!$code){
-        $resultat="{ SendMail: 'ko' }";
+        $resultat['SendMail'] = 'ko';
       }else{
-        $resultat="{ SendMail: 'ok' }";
+        $resultat['SendMail'] = 'ok';
       }
     }else{
-      $resultat="{ SendMail: 'ko' }";
+      $resultat['SendMail'] = 'ko';
     }
 
     echo json_encode($resultat);
   }
 
   public function creaTaula($nom) {
+    $this->validateSession();
 
     paquet::creaTaula($nom);
 
@@ -248,6 +274,7 @@ class paquets extends AppAuthorizator {
   }
 
   public function delTaula($nom) {
+    $this->validateSession();
     paquet::delTaula($nom);
     echo "";
   }
