@@ -3,9 +3,9 @@ export const environment = {
 /*   loginURL: 'https://testcascc.uab.cat/login',
   dataServerURL: 'https://testcascc.uab.cat',
   signUrlServer: 'https://testcascc.uab.cat/signarmovil/', */
-  loginURL: 'https://apps-test.uab.cat/paqueteria/login',
-  dataServerURL: 'https://apps-test.uab.cat/paqueteria',
-  signUrlServer: 'https://apps-test.uab.cat/paqueteria/signarmovil/',
+  loginURL: 'https://apps.uab.cat/paqueteria/login',
+  dataServerURL: 'https://apps.uab.cat/paqueteria',
+  signUrlServer: 'https://apps.uab.cat/paqueteria/signarmovil/',
 /*   loginURL: 'https://paqueteria.uab.cat:55023/auth/login',
   dataServerURL: 'https://paqueteria.uab.cat:55023',
   signUrlServer: 'https://paqueteria.uab.cat:55023/signarmovil/', */
