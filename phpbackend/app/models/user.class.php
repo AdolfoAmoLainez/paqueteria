@@ -30,7 +30,7 @@ class user {
   public static function getUserRol($niu) {
     try {
 
-      $sql = "SELECT rol_id FROM usuaris WHERE niu = ".$niu.";";
+      $sql = "SELECT rol_id FROM usuaris WHERE niu = '".$niu."';";
 
       $connection = Database::instance();
       $query = $connection->prepare($sql);
