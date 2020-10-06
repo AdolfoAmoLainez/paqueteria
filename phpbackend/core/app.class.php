@@ -30,7 +30,7 @@ class app {
 
         if (!isset($url)){
 
-            header("Location: public/index.html");
+            header("Location: index.html");
             exit();
         }
         elseif (!isset($url[1])) $url[1] = 'index';
@@ -63,7 +63,7 @@ class app {
                 else{
 
                     $config = $this->getConfig();
-                    header("Location: ".$config['baseurl']."/public/index.html");
+                    header("Location: ".$config['baseurl']."/index.html");
                     exit();
                     /* throw new \Exception("Error Processing Method {$this->_method}", 1); */
                 }
@@ -73,7 +73,7 @@ class app {
         }
         else {
             $config = $this->getConfig();
-            header("Location: ".$config['baseurl']."/public/index.html");
+            header("Location: ".$config['baseurl']."/index.html");
             exit();
         }
     }

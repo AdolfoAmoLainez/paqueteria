@@ -61,7 +61,7 @@ class uabcas {
       }
       else {
         $config = $this->getConfig();
-        phpCAS::setServerServiceValidateURL("https://testcascc.uab.es".$config['baseurl']."/public/index.html");
+        phpCAS::setServerServiceValidateURL("https://apps-test.uab.es".$config['baseurl']."/index.html");
         $auth = phpCAS::forceAuthentication();
       }
 	  }

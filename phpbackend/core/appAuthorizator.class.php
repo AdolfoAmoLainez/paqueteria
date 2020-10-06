@@ -14,7 +14,7 @@ class AppAuthorizator {
     if (sessionManager::is_valid()==FALSE) {
 
       $config = $this->getConfig();
-      header("Location: ".$config['baseurl']."/public/login", true, 401);
+      header("Location: ".$config['baseurl']."/login", true, 401);
       include APPPATH . '/views/errors/401.php';
       exit;
     }

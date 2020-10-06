@@ -30,7 +30,7 @@ class cas {
         include APPPATH ."/views/errors/401.php";
         exit;
       } else {
-        header("Location: ".$config['baseurl']."/public/login",false);
+        header("Location: ".$config['baseurl']."/login",false);
       }
     }
 
