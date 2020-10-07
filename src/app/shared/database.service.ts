@@ -219,7 +219,7 @@ export class DatabaseService {
         this.testTablename();
         const now = new Date();
         const dia = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();
-        const mes = now.getMonth() < 10 ? '0' + (now.getMonth() + 1) : now.getMonth() + 1;
+        const mes = now.getMonth() < 9 ? '0' + (now.getMonth() + 1) : now.getMonth() + 1;
         const hora = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
         const minuts = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
         const secs = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
@@ -247,13 +247,25 @@ export class DatabaseService {
     }
 
     signaPaquetQr(paquet: Paquet, tablename: string) {
-        paquet.data_lliurament = Date.now().toString();
-        paquet.qrcode = 0;
-        const obj = {
-          tablename: this.tablename,
+      const now = new Date();
+      const dia = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();
+      const mes = now.getMonth() < 9 ? '0' + (now.getMonth() + 1) : now.getMonth() + 1;
+      const hora = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
+      const minuts = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
+      const secs = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
+
+      paquet.data_lliurament = dia + '/' +
+                              mes + '/' +
+                              now.getFullYear() + ' ' +
+                              hora + ':' +
+                              minuts + ':' +
+                              secs;
+      paquet.qrcode = 0;
+      const obj = {
+          tablename,
           paquet
         };
-        return this.http.post(environment.dataServerURL + '/paquets/signaPaquetQr', obj).subscribe(
+      return this.http.post(environment.dataServerURL + '/paquets/signaPaquetQr', obj).subscribe(
             () => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
                 this.messagesService.sendMessage(
