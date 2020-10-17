@@ -33,6 +33,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-arribades-list',
@@ -382,5 +383,9 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
 
   onAdminClick() {
     this.router.navigate(['/admin']);
+  }
+
+  onDescarreguesClick() {
+    window.open(environment.dataServerURL + '/public/baixades', "_blank");
   }
 }
