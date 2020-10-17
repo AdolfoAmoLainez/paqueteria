@@ -19,7 +19,7 @@ p {font-family:"Verdana";font-weight:normal;color:black;font-size:9pt;margin-top
   <?php
     $config = parse_ini_file(APPPATH . '/config/config.ini');
   ?>
-  <button type="button" onclick="location.href = '<?php echo $config['baseurl'];?>/cas/logout';">Acceptar</button>
+  <button type="button" onclick="location.href = '<?php echo $config['baseurl'];?>/backend/cas/logout';">Acceptar</button>
 </form>
 <div class="version">
 <?php echo date('Y-m-d H:i:s'); ?>

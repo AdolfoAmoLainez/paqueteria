@@ -30,9 +30,8 @@ class auth {
     }
 
     public static function validaUsuariBBDD($niu) {
-      $sql = "SELECT u.id, u.niu, u.entitat_id ".
-             "FROM `usuaris` as u LEFT JOIN `entitats` as e ON `u`.`entitat_id` = `e`.`id`".
-             "WHERE niu ='".$niu."';";
+        $sql = "SELECT u.id, u.niu ".
+        "FROM `usuaris` WHERE niu ='".$niu."';";
       try {
           $connection = Database::instance();
           $query = $connection->prepare($sql);

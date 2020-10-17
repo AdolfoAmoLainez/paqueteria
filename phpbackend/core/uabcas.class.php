@@ -15,7 +15,7 @@ class uabcas {
 
   private $cas_test = 'sacnt.uab.cat';
   private $cas_prod = 'sso.uab.cat';
-  private $cas_host = 'testcascc.uab.es';
+  private $cas_host = 'apps-test.uab.cat';
   private $path_attribs = '/p3';
   private $cas_context = '';
   private $cas_port = 443;
@@ -27,7 +27,7 @@ class uabcas {
   public function __construct() {
       $this->cas_server_ca_cert_path = PROJECTPATH . '/vendors/ssl/2048_star_uab_cat.crt';
 
-      if (strpos($_SERVER['SERVER_NAME'],'testcascc') !== FALSE) {
+      if (strpos($_SERVER['SERVER_NAME'],'apps-test') !== FALSE) {
         $this->cas_host = $this->cas_test;
       } else {
         $this->cas_host = $this->cas_prod;
@@ -61,7 +61,7 @@ class uabcas {
       }
       else {
         $config = $this->getConfig();
-        phpCAS::setServerServiceValidateURL("https://testcascc.uab.es".$config['baseurl']."/public/index.html");
+        phpCAS::setServerServiceValidateURL("https://apps-test.uab.es".$config['baseurl']."/index.html");
         $auth = phpCAS::forceAuthentication();
       }
 	  }
