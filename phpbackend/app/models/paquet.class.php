@@ -126,10 +126,10 @@ class paquet {
                                               "data_lliurament LIKE '%".$searchText."%' or ".
                                               "dipositari LIKE '%".$searchText."%' ".
                                               ") AND signatura NOT LIKE 'empty' ".
-                                              "ORDER BY data_lliurament DESC " .
+                                              "ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC " .
                                               "LIMIT " . $limit.";";
         } else {
-          $sql ="SELECT * FROM " . $tablename . " WHERE signatura NOT LIKE 'empty' ORDER BY data_lliurament DESC ".
+          $sql ="SELECT * FROM " . $tablename . " WHERE signatura NOT LIKE 'empty' ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC ".
           "LIMIT ".$limit.";";
         }
 
