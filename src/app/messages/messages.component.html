@@ -1,3 +1,12 @@
-<div *ngFor="let alert of alerts" class="toast-message w5 relative z-999 ba bw1 b--moon-gray bg-blue tc br4">
-  <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)" >{{ alert.msg }}<br>(Rebut: {{alert.emitted}})</alert>
-</div>
+<ngb-toast
+*ngFor="let alert of alerts"
+[class]="alert.type"
+[autohide]="true"
+[delay]="5000"
+(hide)="remove(alert)"
+>
+<ng-template [ngIf]="isTemplate(alert)" [ngIfElse]="text">
+  <ng-template [ngTemplateOutlet]="alert.textOrTpl"></ng-template>
+</ng-template>
+<ng-template #text>{{ alert.msg }}</ng-template>
+</ngb-toast>

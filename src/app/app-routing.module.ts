@@ -25,12 +25,13 @@ const appRoutes: Routes = [
     {path: 'http-error/:error', component: ErrorPageComponent},
     {path: 'admin', component: UsersListComponent, children: [
       {path: ':mode/:id', component: UserEditaddComponent}
-    ], canActivate: [AdminGuard]}
+    ], canActivate: [AdminGuard]},
+    {path: ':mode/:id', component: PaquetEditAddComponent}
 ];
 
 @NgModule({
     imports: [
-      RouterModule.forRoot(appRoutes)
+      RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' })
     ],
     exports: [RouterModule]
   })

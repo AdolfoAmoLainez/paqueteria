@@ -75,7 +75,6 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
                                       this.route.snapshot.params.tablename)
       .subscribe(
         (data: any) => {
-
           if (data.length === 0) {
             this.paquetSignatCorrectament = true;
           } else {
@@ -92,7 +91,7 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
                 data[elem].referencia,
                 data[elem].destinatari,
                 data[elem].departament,
-                data[elem].data_lliutament,
+                data[elem].data_lliurament,
                 data[elem].dipositari,
                 data[elem].signatura,
                 0,
@@ -102,17 +101,6 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
               );
           }
 
-          this.paquetForm.patchValue({
-            data_arribada: this.paquetEditing.data_arribada,
-            remitent: this.paquetEditing.remitent,
-            procedencia: this.paquetEditing.procedencia,
-            quantitat: this.paquetEditing.quantitat,
-            mitja_arribada: this.paquetEditing.mitja_arribada,
-            referencia: this.paquetEditing.referencia,
-            destinatari: this.paquetEditing.destinatari,
-            departament: this.paquetEditing.departament,
-            dipositari: this.paquetEditing.dipositari
-          });
         }
       );
   }

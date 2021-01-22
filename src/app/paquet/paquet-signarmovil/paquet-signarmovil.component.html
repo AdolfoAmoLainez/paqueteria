@@ -1,29 +1,17 @@
 <div *ngIf="!paquetSignatCorrectament && formVisible" style="touch-action: none;">
-  <form [formGroup]="paquetForm" class="mb-3">
-    <fieldset disabled>
-      <div class="row d-none d-md-block">
-          <div class="form-group col-12">
-            <label for="data_arribada">Data Arribada</label>
-            <input bsDatepicker [bsConfig]="{ dateInputFormat: 'D/M/YYYY' }" type="text" formControlName="data_arribada"
-              name="data_arribada" id="data_arribada" class="form-control">
-          </div>
-          <div class="form-group col-12">
-            <label for="remitent">Remitent</label>
-            <input type="text" formControlName="remitent" name="remitent" id="remitent" class="form-control">
-          </div>
-      </div>
-      <div class="row d-none d-md-block">
-          <div class="form-group col-12">
-            <label for="quantitat">Quantitat</label>
-            <input type="number" formControlName="quantitat" name="quantitat" id="quantitat" class="form-control">
-          </div>
-          <div class="form-group col-12">
-            <label for="destinatari">Destinatari</label>
-            <input type="text" formControlName="destinatari" name="destinatari" id="destinatari" class="form-control">
-          </div>
-      </div>
-    </fieldset>
-  </form>
+  <dl class="row justify-content-center">
+    <dt class="col-3 bg-light">Data Arribada:</dt>
+    <dd class="col-9 bg-light mb-auto">{{paquetEditing.data_arribada | date: 'dd/MM/yyyy H:mm'}}</dd>
+    <div class="w-100"></div>
+    <dt class="col-3 ">Remitent:</dt>
+    <dd class="col-9 mb-auto">{{paquetEditing.remitent}}</dd>
+    <div class="w-100"></div>
+    <dt class="col-3 bg-light">Destinatari:</dt>
+    <dd class="col-9 bg-light mb-auto">{{paquetEditing.destinatari}}</dd>
+    <div class="w-100"></div>
+    <dt class="col-3">Quantitat:</dt>
+    <dd class="col-9 mb-auto">{{paquetEditing.quantitat}}</dd>
+</dl>
 </div>
 <div class="row" *ngIf="!paquetSignatCorrectament && formVisible">
   <div class="col-md-6">
@@ -55,9 +43,9 @@
 
 <div class="row mt-3" *ngIf="paquetSignatCorrectament && formVisible">
   <div class="col-sm-12 text-center">
-    <alert type="success text-center">
+    <ngb-alert type="success">
       <h2><strong>El paquet s'ha signat correctament</strong></h2>
-    </alert>
+    </ngb-alert>
   </div>
   <div class="col-sm-12 text-center">
     <button class="btn btn-success" type="button" (click)="onHideForm()" style="margin-left: 10px;">Tancar</button>

@@ -5,10 +5,11 @@ import { PaquetsService } from 'src/app/shared/paquets.service';
 import { Paquet } from 'src/app/shared/paquet.model';
 import { DatabaseService } from 'src/app/shared/database.service';
 
-import { BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { esLocale } from 'ngx-bootstrap/locale';
-import { defineLocale } from 'ngx-bootstrap/chronos';
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+
 import { AuthService } from 'src/app/auth/auth.service';
+import { MyDateService } from 'src/app/shared/my-date.service';
+
 
 
 @Component({
@@ -17,6 +18,10 @@ import { AuthService } from 'src/app/auth/auth.service';
   styleUrls: ['./paquet-editadd.component.css']
 })
 export class PaquetEditAddComponent implements OnInit {
+  
+  // Icons
+  faCalendarAlt = faCalendarAlt;
+
   formVisible = false;
   paquetForm: FormGroup;
 
@@ -27,19 +32,15 @@ export class PaquetEditAddComponent implements OnInit {
               private router: Router,
               private paquetsService: PaquetsService,
               private databaseService: DatabaseService,
-              private localeService: BsLocaleService,
-              private authService: AuthService) {
-
-      defineLocale('es', esLocale);
-      this.localeService.use('es');
-
-  }
+               private authService: AuthService,
+              private myDateAdapter: MyDateService) {  }
 
   ngOnInit() {
 
     // this.localeService.use('es');
     this.paquetForm = new FormGroup({
       data_arribada: new FormControl(null, Validators.required),
+      hora_arribada: new FormControl(null, Validators.required),
       remitent: new FormControl(null, Validators.required),
       procedencia: new FormControl(null),
       quantitat: new FormControl(null, [Validators.required, Validators.min(1)]),
@@ -69,16 +70,20 @@ export class PaquetEditAddComponent implements OnInit {
 
               this.formVisible = true;
               this.editMode = true;
-              let data: string = this.paquetEditing.data_arribada.toLocaleString();
+              //let data: string = this.paquetEditing.data_arribada.toLocaleString();
 
-              if (data.indexOf('.000Z') !== -1) {
+              const data = new Date(this.paquetEditing.data_arribada);
+              const hora = data.getHours();
+              const minutes = data.getMinutes();
+
+/*               if (data.indexOf('.000Z') !== -1) {
                 data = new Date(this.paquetEditing.data_arribada).toLocaleString();
                 const dataDate = new Date(this.paquetEditing.data_arribada);
                 data = dataDate.getDate + '/' + (dataDate.getMonth() + 1) + '/' + dataDate.getFullYear() + ' ' +
                      dataDate.getHours() + ':' + dataDate.getMinutes();
               } else {
                 data = this.paquetEditing.data_arribada.toLocaleString();
-              }
+              } */
 
 
               this.paquetForm.patchValue({
@@ -96,18 +101,47 @@ export class PaquetEditAddComponent implements OnInit {
                 ubicacioemail: this.paquetEditing.ubicacioemail.replace('\\', '')
               });
 
+              this.paquetForm.get('data_arribada').setValue(this.myDateAdapter.fromModel(this.paquetEditing.data_arribada));
+              this.paquetForm.get('hora_arribada').setValue(('0' + hora).slice(-2) + ':' + ('0' + minutes).slice(-2));
+
+
             }
             break;
           case 'add':
             this.formVisible = true;
             this.editMode = false;
-            const ahora = new Date().toLocaleString('es-ES');
+            const ahora = new Date();
+            const dataAct = ahora.getFullYear() + "-" + 
+                            ahora.getMonth()+1 + "-" +
+                            ahora.getDate()
+
             const ubicacioemail = this.authService.getLocalUser().ubicacioemail.replace('\\', '');
+
+            const horaActInt = ahora.getHours();
+            const minActInt = ahora.getMinutes();
+            let horaActStr = '';
+            let minActStr = '';
+
+            if (horaActInt < 10 ) {
+              horaActStr = '0' + horaActInt;
+            } else {
+              horaActStr = '' + horaActInt;
+            }
+
+            if (minActInt < 10 ) {
+              minActStr = '0' + minActInt;
+            } else {
+              minActStr = '' + minActInt;
+            }
 
             this.paquetForm.reset({
               data_arribada: ahora,
               ubicacioemail
             });
+
+            this.paquetForm.get('data_arribada').setValue(this.myDateAdapter.fromModel(dataAct));
+            this.paquetForm.get('hora_arribada').setValue(horaActStr + ':' + minActStr);
+
             break;
         }
       }
@@ -127,7 +161,9 @@ export class PaquetEditAddComponent implements OnInit {
   onHideForm() {
     this.formVisible = false;
     this.onClear();
-    this.router.navigate(['llista']);
+    //this.router.navigate(['llista']);
+    window.history.back();
+
   }
 
   onPaquetAction() {
@@ -163,16 +199,18 @@ export class PaquetEditAddComponent implements OnInit {
         );
 
     } else {
-      let data: string = this.paquetForm.get('data_arribada').value.toLocaleString();
+      let data: string = this.myDateAdapter.toModel(this.paquetForm.get('data_arribada').value);
 
-      if (data.indexOf('.000Z') !== -1) {
+/*       if (data.indexOf('.000Z') !== -1) {
         data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
         const dataDate = new Date(this.paquetForm.get('data_arribada').value);
         data = dataDate.getDate + '/' + (dataDate.getMonth() + 1) + '/' + dataDate.getFullYear() + ' ' +
              dataDate.getHours() + ':' + dataDate.getMinutes();
       } else {
         data = this.paquetForm.get('data_arribada').value.toLocaleString();
-      }
+      } */
+
+      data = data + ' ' + this.paquetForm.get('hora_arribada').value
 
 
       this.databaseService.addPaquet(new Paquet(
@@ -198,4 +236,9 @@ export class PaquetEditAddComponent implements OnInit {
     }
   }
 
+  onDateSelected( event){
+    console.log(event);
+    
+  }
+  
 }

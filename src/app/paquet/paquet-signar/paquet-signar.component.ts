@@ -12,6 +12,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Paquet } from 'src/app/shared/paquet.model';
 import { DatabaseService } from 'src/app/shared/database.service';
 import {environment} from 'src/environments/environment';
+import { MyDateService } from 'src/app/shared/my-date.service';
 
 @Component({
   selector: 'app-paquet-signar',
@@ -38,7 +39,8 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private paquetsService: PaquetsService,
-              private databaseService: DatabaseService) { }
+              private databaseService: DatabaseService,
+              private myDateAdapter: MyDateService) { }
 
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -64,14 +66,6 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
 
     this.paquetForm = new FormGroup({
-      data_arribada: new FormControl(null),
-      remitent: new FormControl(null),
-      procedencia: new FormControl(null),
-      quantitat: new FormControl(null),
-      mitja_arribada: new FormControl(null),
-      referencia: new FormControl(null),
-      destinatari: new FormControl(null),
-      departament: new FormControl(null),
       dipositari: new FormControl(null, Validators.required)
     });
 
@@ -98,16 +92,6 @@ export class PaquetSignarComponent implements OnInit, AfterViewInit, OnDestroy {
           } else {
             this.qrCodePaquet = '';
           }
-          this.paquetForm.patchValue({
-            data_arribada: this.paquetEditing.data_arribada,
-            remitent: this.paquetEditing.remitent,
-            procedencia: this.paquetEditing.procedencia,
-            quantitat: this.paquetEditing.quantitat,
-            mitja_arribada: this.paquetEditing.mitja_arribada,
-            referencia: this.paquetEditing.referencia,
-            destinatari: this.paquetEditing.destinatari,
-            departament: this.paquetEditing.departament
-          });
 
           this.formVisible = true;
         }

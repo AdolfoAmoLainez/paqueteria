@@ -2,7 +2,7 @@
   <div *ngIf="!paquetSignatCorrectament">
     <dl class="row justify-content-center">
       <dt class="col-3 bg-light">Arribada:</dt>
-      <dd class="col-9 bg-light mb-auto">{{paquetEditing.data_arribada}}</dd>
+      <dd class="col-9 bg-light mb-auto">{{paquetEditing.data_arribada | date: 'dd/MM/yyyy H:mm'}}</dd>
       <div class="w-100"></div>
       <dt class="col-3 ">Remitent:</dt>
       <dd class="col-9 mb-auto">{{paquetEditing.remitent}}</dd>
@@ -49,9 +49,9 @@
 
 <div class="row mt-3" *ngIf="paquetSignatCorrectament && formVisible">
   <div class="col-sm-12 text-center">
-    <alert type="success text-center">
+    <ngb-alert type="success text-center">
       <h2><strong>El paquet s'ha signat correctament</strong></h2>
-    </alert>
+    </ngb-alert>
   </div>
   <div class="col-sm-12 text-center">
     <button class="btn btn-success" type="button" (click)="onHideForm()" style="margin-left: 10px;">Tancar</button>

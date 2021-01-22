@@ -163,6 +163,27 @@ class paquets extends AppAuthorizator {
     }
   }
 
+    /**
+   * Rebem les dades per POST en format json
+   *
+   *   obj = {
+   *            tablename: nom de la taula
+   *            id: id del paquet,
+   *            dipositari,
+   *            signatura
+   *          };
+   */
+
+  public function signaPaquet() {
+
+    $body = json_decode(file_get_contents("php://input"), true);
+
+    $resultat = paquet::signaPaquet($body['tablename'], $body);
+    if ($resultat) {
+      echo json_encode($body);
+    }
+  }
+
   /**
    * Rebem les dades per POST en format json
    *

@@ -47,47 +47,20 @@ class mailer {
     }
 
     public static function sendMail ($strFrom, $strSubject, $arrayMailsTo, $arrayMessage) {
-        try {
-            //Carrega configuració
-            self::loadConfig();
-
-            //Bloc enviament
-            $objEmail = new PHPMailer();
-            $objEmail->isSMTP();
-            $objEmail->SMTPDebug = 0;
-            //$objEmail->SMTPDebug = 2;
-            //$objEmail->SMTPAuth = true;
-            //$objEmail->SMTPSecure = false;
-            $objEmail->CharSet = 'UTF-8';
-
-/*             $objEmail->SMTPAuth = true;
-            $objEmail->SMTPSecure = 'tls'; */
-            $objEmail->Host = self::$mailserver_name;
-/*             $objEmail->Port = self::$mailserver_port;
-            $objEmail->Username = self::$mailserver_login;
-            $objEmail->Password = self::$mailserver_pass; */
-
-            $objEmail->setFrom($strFrom, $strFrom);
-            $objEmail->Subject = $strSubject;
-
-            foreach ($arrayMailsTo as $strMail)    $objEmail->addAddress($strMail, $strMail);
-
-            $objEmail->MsgHTML(implode('<br>', $arrayMessage));
-            $objEmail->send();
-            if ($objEmail->isError()) {
-
-                $strLogs = self::$mailserver_name . ' Port: ' . self::$mailserver_port . ' Login: ' . self::$mailserver_login . ' Passw: ' . self::$mailserver_pass;
-                error::writeLog($objEmail->ErrorInfo . ' ' . $strLogs, 'Email');
-                error::writeLog($strError, 'Notificació Fallida: '.__METHOD__ , 'notify-' . date('Y-m-d') . '.log');
-                //exit;
-            }
-            //$this->writeLogDatabase($strLogs, 'Notificació Realitzada: '.__METHOD__);
-            unset($objEmail);
+        try{
+            // Para enviar un correo HTML, debe establecerse la cabecera Content-type
+            $cabeceras  = 'MIME-Version: 1.0' . "\r\n";
+            $cabeceras .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+    
+            // Cabeceras adicionales
+            $cabeceras .= 'From: '.$strFrom. "\r\n";
+            mail(implode(',',$arrayMailsTo), $strSubject, implode('<br>', $arrayMessage), $cabeceras);
             return true;
-        }
-        catch (Exception $e) {
-            error::writeLog(__METHOD__, $e->getMessage(), 'Error');
-        }
+    
+       } catch (Exception $e) {
+           error::writeLog(__METHOD__, $e->getMessage(), 'Error');
+           return false;
+       } 
 
     }
 

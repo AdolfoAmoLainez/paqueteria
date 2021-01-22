@@ -2,19 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
-import { AuthService } from '../auth/auth.service';
-import { Router } from '@angular/router';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-  errorModalRef: BsModalRef;
-
-    constructor(private authService: AuthService, private router: Router, private modalService: BsModalService) {}
+  constructor(private modalService: NgbModal,
+              private authService: AuthService) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
       return next.handle(request).pipe(
@@ -26,7 +23,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               title: 'ERROR: ' + 'Usuari no autoritzat o bé la sessió ha expirat.',
               status: error.status
             };
-            this.errorModalRef = this.modalService.show(ErrorPageComponent, {initialState});
+            this.modalService.open(ErrorPageComponent);
 
             setTimeout(() => {
               this.authService.logout();
@@ -38,7 +35,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               title: 'ERROR: ' + error.status,
               status: error.status
             };
-            this.errorModalRef = this.modalService.show(ErrorPageComponent, {initialState});
+            this.modalService.open(ErrorPageComponent);
           }
           return throwError(error);
         })

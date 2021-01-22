@@ -1,10 +1,8 @@
 <div class="row">
   <div class="col-sm-12">
-    <router-outlet></router-outlet>
-  </div>
-  <div class="col-sm-4 toast-container absolute fixed-top align-self-end">
-    <app-messages></app-messages>
+<!--     <router-outlet></router-outlet> -->
 </div>
+
 </div>
 <hr>
 <div class="row mt-3 align-items-center">
@@ -34,12 +32,12 @@
                 <button *ngIf="!searching" class="btn btn-outline-secondary" style="cursor: pointer;" (click)="onBuscar()" type="button">
                   <fa-icon
                   [icon]="faSearch"
-                  tooltip="Cercar..."></fa-icon>
+                  ngbTooltip="Cercar..."></fa-icon>
                 </button>
                 <button *ngIf="searching" class="btn btn-outline-secondary" style="cursor: pointer;" (click)="onCancelBuscar()" type="button">
                   <fa-icon
                   [icon]="faTimesCircle"
-                  tooltip="Cancel·lar cerca..."></fa-icon>
+                  ngbTooltip="Cancel·lar cerca..."></fa-icon>
                 </button>
               </div>
             </div>
@@ -63,22 +61,25 @@
 
 <div class="row mt-3" *ngIf="paquets.length == 0">
   <div class="col-sm-12 text-center">
-    <alert type="danger text-center">
+    <ngb-alert type="danger">
       <h2><strong>No hi ha paquets per signar!</strong></h2>
-    </alert>
+    </ngb-alert>
   </div>
 </div>
 <div class="row mt-3 p-1" >
     <div class="col-sm-12 col-xs-12 col-md-12 col-lg-12 d-flex align-items-center justify-content-center">
-      <pagination *ngIf="totalPaquets>itemsPerPage" class = "mt-2" [totalItems]="totalPaquets"
-                  [itemsPerPage]="itemsPerPage"
-                  [rotate]="false"
-                  [boundaryLinks]="true"
-        previousText="Anterior" nextText="Següent"
-        firstText="Primer" lastText="Últim"
+      <ngb-pagination *ngIf="totalPaquets>itemsPerPage" 
+        [collectionSize]="totalPaquets" 
+        [(page)]="paginaActual" 
         [maxSize]="maxSizePagination"
-        [(ngModel)]="paginaActual"
-        (pageChanged)="pageChanged($event)"></pagination>
+        [pageSize]="itemsPerPage"
+        [rotate]="true" [boundaryLinks]="true" (pageChange)="pageChanged()">
+
+<ng-template ngbPaginationPrevious>Anterior</ng-template>
+<ng-template ngbPaginationNext>Següent</ng-template>
+<ng-template ngbPaginationFirst>Primer</ng-template>
+<ng-template ngbPaginationLast>Últim</ng-template>
+</ngb-pagination>
     </div>
 </div>
 <div class="text-center" *ngIf="isLoading">
@@ -99,7 +100,7 @@
                     <h3><span class="badge badge-secondary">{{paquet.id}}</span></h3>
                   </div>
                   <dt class="col-12 col-sm-3 bg-light">Arribada:</dt>
-                  <dd class="col-12 col-sm-6 bg-light mb-auto">{{paquet.data_arribada}}</dd>
+                  <dd class="col-12 col-sm-6 bg-light mb-auto">{{paquet.data_arribada | date: 'dd/MM/yyyy H:mm'}}</dd>
                   <div class="w-100"></div>
                   <dt class="col-12 col-sm-3">Destinatari:</dt>
                   <dd class="col-12 col-sm-6">{{paquet.destinatari + '\n'+ paquet.email}}</dd>
@@ -107,8 +108,8 @@
                   <dt class="col-12 col-sm-3 bg-light">Remitent:</dt>
                   <dd class="col-12 col-sm-6 bg-light mb-auto">{{paquet.remitent + '\n'+ paquet.emailremitent}}</dd>
                   <div class="w-100"></div>
-                  <dt class="col-12 col-sm-3" *ngIf="paquet.data_lliurament!=''">Lliurament:</dt>
-                  <dd class="col-12 col-sm-6" *ngIf="paquet.data_lliurament!=''">{{paquet.data_lliurament}}</dd>
+                  <dt class="col-12 col-sm-3" *ngIf="paquet.data_lliurament!='0000-00-00 00:00:00'">Lliurament:</dt>
+                  <dd class="col-12 col-sm-6" *ngIf="paquet.data_lliurament!='0000-00-00 00:00:00'">{{paquet.data_lliurament | date: 'dd/MM/yyyy H:mm'}}</dd>
               </dl>
               </div>
 
@@ -120,14 +121,14 @@
                                class="fa-2x text-secondary"
                                style="cursor: pointer;"
                                (click)="onEditClick(paquet.id)"
-                               tooltip="Editar paquet"></fa-icon>
+                               ngbTooltip="Editar paquet"></fa-icon>
                     </div>
                     <div class="col-4 col-sm-auto" *ngIf="!allowViewPaquet">
                       <fa-icon [icon]="faHandHolding"
                                class="fa-2x"
                                style="cursor: pointer;"
                                (click)="onEntregarPaquet(paquet.id,'nomessignar')"
-                               tooltip="Entregar paquet"></fa-icon>
+                               ngbTooltip="Entregar paquet"></fa-icon>
                     </div>
 
                     <div class="col-4 col-sm-auto" *ngIf="!allowViewPaquet && paquet.email!=''" >
@@ -135,7 +136,7 @@
                             class="fa-2x"
                             style="cursor: pointer;"
                             (click)="onEnviarMail(paquet.id,confirmMailing)"
-                            tooltip="Reenviar correu-e"></fa-icon>
+                            ngbTooltip="Reenviar correu-e"></fa-icon>
                     </div>
 
                     <div class="col-4 col-sm-auto" *ngIf="!allowViewPaquet" >
@@ -143,21 +144,21 @@
                             class="fa-2x"
                             style="cursor: pointer;"
                             (click)="onGenerarQr(i)"
-                            tooltip="Generar codi Qr"></fa-icon>
+                            ngbTooltip="Generar codi Qr"></fa-icon>
                     </div>
                     <div class="col-4 col-sm-auto" *ngIf="allowViewPaquet">
                       <fa-icon [icon]="faEye"
                                class="fa-2x text-secondary"
                                style="cursor: pointer;"
                                (click)="onViewClick(paquet.id)"
-                               tooltip="Veure paquet"></fa-icon>
+                               ngbTooltip="Veure paquet"></fa-icon>
                     </div>
                       <div class="col-4 col-sm-auto">
                         <fa-icon [icon]="faTrashAlt"
                             class="fa-2x text-danger"
                             style="cursor: pointer;"
                             (click)="onDeleteClick(paquet.id,confirmDeletion)"
-                            tooltip="Esborrar paquet"></fa-icon>
+                            ngbTooltip="Esborrar paquet"></fa-icon>
                       </div>
                 </div>
                 </div>
@@ -169,18 +170,18 @@
       </li>
     </ul>
   </div>
-  <ng-template #confirmDeletion>
+  <ng-template #confirmDeletion let-modalDel>
     <div class="modal-body text-center">
       <p>{{deleteModalMsg}}</p>
-      <button type="button" class="btn btn-danger" (click)="confirmDelete()">Sí</button>
-      <button type="button" class="btn btn-primary" (click)="declineDelete()" style="margin-left: 10px;">No</button>
+      <button type="button" class="btn btn-danger" (click)="modalDel.close()">Sí</button>
+      <button type="button" class="btn btn-primary" (click)="modalDel.dismiss()" style="margin-left: 10px;">No</button>
     </div>
   </ng-template>
-  <ng-template #confirmMailing>
+  <ng-template #confirmMailing let-modalMail>
     <div class="modal-body text-center">
       <p>{{mailModalMsg}}</p>
-      <button type="button" class="btn btn-danger" (click)="confirmMailSend()">Sí</button>
-      <button type="button" class="btn btn-primary" (click)="declineMailSend()" style="margin-left: 10px;">No</button>
+      <button type="button" class="btn btn-danger" (click)="modalMail.close()">Sí</button>
+      <button type="button" class="btn btn-primary" (click)="modalMail.dismiss()" style="margin-left: 10px;">No</button>
     </div>
   </ng-template>
 </div>

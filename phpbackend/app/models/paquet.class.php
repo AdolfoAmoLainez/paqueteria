@@ -60,10 +60,10 @@ class paquet {
                                               "data_lliurament LIKE '%".$searchText."%' or ".
                                               "dipositari LIKE '%".$searchText."%' ".
                                               ") AND signatura='empty' ".
-                                              "ORDER BY STR_TO_DATE(data_arribada, '%d/%m/%Y %H:%i:%s') DESC " .
+                                              "ORDER BY data_arribada DESC " .
                                               "LIMIT " . $limit.";";
         } else {
-          $sql ="SELECT * FROM " . $tablename . " WHERE signatura='empty' ORDER BY STR_TO_DATE(data_arribada, '%d/%m/%Y %H:%i:%s') DESC " .
+          $sql ="SELECT * FROM " . $tablename . " WHERE signatura='empty' ORDER BY data_arribada DESC " .
               "LIMIT " . $limit.";";
         }
 
@@ -126,10 +126,10 @@ class paquet {
                                               "data_lliurament LIKE '%".$searchText."%' or ".
                                               "dipositari LIKE '%".$searchText."%' ".
                                               ") AND signatura NOT LIKE 'empty' ".
-                                              "ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC " .
+                                              "ORDER BY data_lliurament DESC " .
                                               "LIMIT " . $limit.";";
         } else {
-          $sql ="SELECT * FROM " . $tablename . " WHERE signatura NOT LIKE 'empty' ORDER BY STR_TO_DATE(data_lliurament, '%d/%m/%Y %H:%i:%s') DESC ".
+          $sql ="SELECT * FROM " . $tablename . " WHERE signatura NOT LIKE 'empty' ORDER BY data_lliurament DESC ".
           "LIMIT ".$limit.";";
         }
 
@@ -152,6 +152,33 @@ class paquet {
       return scaffold::superUpdate($tablename, $paquet);
     }
 
+    public static function signaPaquet($tablename, $data)
+    {
+    	try {
+            $connection = Database::instance();
+
+            $sql = 'UPDATE '.$tablename.' SET dipositari = :dipositari,
+                                              signatura = :signatura,
+                                              data_lliurament = NOW(),
+                                              qrcode = 0 
+                    WHERE id = :id;';
+
+            $query = $connection->prepare($sql);
+            $query->bindParam(':id', $data['id'], \PDO::PARAM_INT);
+            $query->bindParam(':dipositari', $data['dipositari'], \PDO::PARAM_STR);
+            $query->bindParam(':signatura', $data['signatura'], \PDO::PARAM_STR);
+
+            $connection->execute($query);
+            //$lastid = $connection->lastInsertId();
+            unset($connection);
+            return true;
+        }
+        catch(\PDOException $e)
+        {
+            print 'Error!: ' . $e->getMessage();
+        }
+    }
+    
     public static function getPaquetQr($tableName, $id, $qrcode){
       $arrayOrderFields = scaffold::getMetaData($tableName);
 
