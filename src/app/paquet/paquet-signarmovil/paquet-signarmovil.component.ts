@@ -70,51 +70,40 @@ export class PaquetSignarmovilComponent implements OnInit, AfterViewInit {
     this.route.snapshot.params.tablename !== undefined &&
     this.route.snapshot.params.tablename != null) {
 
-    this.databaseService.getPaquetQr(this.route.snapshot.params.id,
-                                      this.route.snapshot.params.qrcode,
-                                      this.route.snapshot.params.tablename)
-      .subscribe(
-        (data: any) => {
-          if (data.length === 0) {
-            this.paquetSignatCorrectament = true;
-          } else {
-              const elem = 0;
-              let fecha = new Date(data[elem].data_arribada).toLocaleString('es-ES');
-              if (fecha === 'Invalid Date') { fecha = data[elem].data_arribada; }
-              this.paquetEditing = new Paquet(
-                data[elem].id,
-                fecha,
-                data[elem].remitent,
-                data[elem].procedencia,
-                data[elem].quantitat,
-                data[elem].mitja_arribada,
-                data[elem].referencia,
-                data[elem].destinatari,
-                data[elem].departament,
-                data[elem].data_lliurament,
-                data[elem].dipositari,
-                data[elem].signatura,
-                0,
-                data[elem].email,
-                data[elem].emailremitent,
-                data[elem].ubicacioemail
-              );
-          }
+      this.databaseService.getPaquetQr(this.route.snapshot.params.id,
+                                       this.route.snapshot.params.qrcode,
+                                       this.route.snapshot.params.tablename)
+        .subscribe(
+          (data: any) => {
+            if (data.length === 0) {
+              this.paquetSignatCorrectament = true;
+            } else {
+                const elem = 0;
+                let fecha = new Date(data[elem].data_arribada).toLocaleString('es-ES');
+                if (fecha === 'Invalid Date') { fecha = data[elem].data_arribada; }
+                this.paquetEditing = new Paquet(
+                  data[elem].id,
+                  fecha,
+                  data[elem].remitent,
+                  data[elem].procedencia,
+                  data[elem].quantitat,
+                  data[elem].mitja_arribada,
+                  data[elem].referencia,
+                  data[elem].destinatari,
+                  data[elem].departament,
+                  data[elem].data_lliurament,
+                  data[elem].dipositari,
+                  data[elem].signatura,
+                  0,
+                  data[elem].email,
+                  data[elem].emailremitent,
+                  data[elem].ubicacioemail
+                );
+            }
 
-          this.paquetForm.patchValue({
-            data_arribada: this.paquetEditing.data_arribada,
-            remitent: this.paquetEditing.remitent,
-            procedencia: this.paquetEditing.procedencia,
-            quantitat: this.paquetEditing.quantitat,
-            mitja_arribada: this.paquetEditing.mitja_arribada,
-            referencia: this.paquetEditing.referencia,
-            destinatari: this.paquetEditing.destinatari,
-            departament: this.paquetEditing.departament,
-            dipositari: this.paquetEditing.dipositari
-          });
-        }
-      );
-  }
+          }
+        );
+    }
 
   }
 

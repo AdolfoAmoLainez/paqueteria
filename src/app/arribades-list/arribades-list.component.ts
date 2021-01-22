@@ -1,8 +1,7 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
-  TemplateRef,
+  OnDestroy
 } from '@angular/core';
 import {
   faSearch,
@@ -31,9 +30,8 @@ import { Subscription } from 'rxjs';
 import { DatabaseService } from '../shared/database.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { environment } from 'src/environments/environment';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-arribades-list',
@@ -126,11 +124,8 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   isLoading = true;
 
   deleteModalMsg = 'Vols esborrar el paquet?';
-  deleteModalRef: BsModalRef;
-  deletePaquetIndex = 0;
 
   mailModalMsg = 'Vols reenviar l\'avís del paquet per correu-e?';
-  mailModalRef: BsModalRef;
   mailPaquetIndex = 0;
 
   constructor(
@@ -139,7 +134,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     public authService: AuthService,
-    private modalService: BsModalService
+    private modalService: NgbModal
   ) {}
 
   ngOnDestroy() {
@@ -209,7 +204,7 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   }
 
   onEditClick(index: number) {
-    this.router.navigate(['edit', index], { relativeTo: this.route });
+    this.router.navigate(['/','edit', index], { relativeTo: this.route });
   }
 
   onEntregarPaquet(index: number, mode: string) {
@@ -223,39 +218,26 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
     this.router.navigate(['view', index]);
   }
 
-  onDeleteClick(index: number, template: TemplateRef<any>) {
-    this.deleteModalRef = this.modalService.show(template, {
-      class: 'modal-sm',
+  onDeleteClick(index: number, template) {
+
+    this.modalService.open(template, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.databaseService.deletePaquet(index);
+    }, (reason) => {
+      console.log('Cancelat');
+      
     });
-    this.deletePaquetIndex = index;
+
   }
 
-  confirmDelete(): void {
-    this.databaseService.deletePaquet(this.deletePaquetIndex);
-    this.deleteModalRef.hide();
-    this.deletePaquetIndex = 0;
-  }
+  onEnviarMail(index: number, template) {
 
-  declineDelete(): void {
-    this.deleteModalRef.hide();
-    this.deletePaquetIndex = 0;
-  }
-
-  onEnviarMail(index: number, template: TemplateRef<any>) {
-    this.mailModalRef = this.modalService.show(template, { class: 'modal-sm' });
-    this.mailPaquetIndex = index;
-  }
-
-  confirmMailSend(): void {
-    const paquet = this.paquetsService.getPaquet(this.mailPaquetIndex);
-    this.databaseService.enviaMail(paquet);
-    this.mailModalRef.hide();
-    this.mailPaquetIndex = 0;
-  }
-
-  declineMailSend(): void {
-    this.mailModalRef.hide();
-    this.mailPaquetIndex = 0;
+    this.modalService.open(template, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      const paquet = this.paquetsService.getPaquet(index);
+      this.databaseService.enviaMail(paquet);
+    }, (reason) => {
+      console.log('Cancelat');
+      
+    });
   }
 
   onGenerarQr(index: number) {
@@ -347,15 +329,14 @@ export class ArribadesListComponent implements OnInit, OnDestroy {
   }
 
   onNouPaquet() {
-    this.router.navigate(['add', 0], { relativeTo: this.route });
+    this.router.navigate(['/','add', 0], { relativeTo: this.route });
   }
 
   onLogout() {
     this.authService.logout();
   }
 
-  pageChanged(event: any): void {
-    this.paginaActual = event.page;
+  pageChanged(): void {
     this.reloadLlista();
   }
 

@@ -160,7 +160,7 @@ export class DatabaseService {
               this.paquetsService.addPaquet(data);
               this.messagesService.sendMessage(
                   'Paquet afegit correctament!',
-                  'success'
+                  'bg-success text-light'
                   );
               data.ubicacioemail = data.ubicacioemail.replace('\\', '');
               this.enviaMail(data);
@@ -189,14 +189,14 @@ export class DatabaseService {
                 this.paquetsService.updatePaquet(paquete);
                 this.messagesService.sendMessage(
                     'Paquet modificat correctament!',
-                    'success'
+                    'bg-success text-light'
                     );
             },
             (error: any) => {
                 console.log(error);
                 this.messagesService.sendMessage(
                   'No s\'ha pogut modificar el paquet!',
-                  'danger'
+                  'bg-danger text-light'
                   );
             }
         );
@@ -209,37 +209,27 @@ export class DatabaseService {
                 this.paquetsService.deletePaquet(index);
                 this.messagesService.sendMessage(
                     'Paquet esborrat correctament!',
-                    'success'
+                    'bg-success text-light'
                     );
             }
         ));
     }
 
     signaPaquet(paquet: Paquet) {
-        this.testTablename();
-        const now = new Date();
-        const dia = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();
-        const mes = now.getMonth() < 9 ? '0' + (now.getMonth() + 1) : now.getMonth() + 1;
-        const hora = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
-        const minuts = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
-        const secs = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
 
-        paquet.data_lliurament = dia + '/' +
-                                 mes + '/' +
-                                 now.getFullYear() + ' ' +
-                                 hora + ':' +
-                                 minuts + ':' +
-                                 secs;
         const obj = {
           tablename: this.tablename,
-          paquet
+          id: paquet.id,
+          dipositari: paquet.dipositari,
+          signatura: paquet.signatura
         };
-        return (this.http.put(environment.dataServerURL + '/paquets/updatePaquet', obj)).subscribe(
+
+        return (this.http.put(environment.dataServerURL + '/paquets/signaPaquet', obj)).subscribe(
             () => {
                 this.paquetsService.paquetSignatCorrectament.next(paquet.id);
                 this.messagesService.sendMessage(
                     'Paquet signat correctament!',
-                    'success'
+                    'bg-success text-light'
                     );
                 this.enviaMailRemitent(paquet);
             }
@@ -247,30 +237,20 @@ export class DatabaseService {
     }
 
     signaPaquetQr(paquet: Paquet, tablename: string) {
-      const now = new Date();
-      const dia = now.getDate() < 10 ? '0' + now.getDate() : now.getDate();
-      const mes = now.getMonth() < 9 ? '0' + (now.getMonth() + 1) : now.getMonth() + 1;
-      const hora = now.getHours() < 10 ? '0' + now.getHours() : now.getHours();
-      const minuts = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
-      const secs = now.getSeconds() < 10 ? '0' + now.getSeconds() : now.getSeconds();
 
-      paquet.data_lliurament = dia + '/' +
-                              mes + '/' +
-                              now.getFullYear() + ' ' +
-                              hora + ':' +
-                              minuts + ':' +
-                              secs;
-      paquet.qrcode = 0;
       const obj = {
-        tablename,
-        paquet
+        tablename: tablename,
+        id: paquet.id,
+        dipositari: paquet.dipositari,
+        signatura: paquet.signatura
       };
-      return this.http.post(environment.dataServerURL + '/paquets/updatePaquet', obj).subscribe(
+
+      return this.http.post(environment.dataServerURL + '/paquets/signaPaquet', obj).subscribe(
           () => {
               this.paquetsService.paquetSignatCorrectament.next(paquet.id);
               this.messagesService.sendMessage(
                   'Paquet signat correctament!',
-                  'success'
+                  'bg-success text-light'
                   );
               this.enviaMailRemitent(paquet);
           }
@@ -290,7 +270,7 @@ export class DatabaseService {
               this.paquetsService.updatePaquet(paquete);
               this.messagesService.sendMessage(
                   'Codi bidi generat correctament!',
-                  'success'
+                  'bg-success text-light'
                   );
               this.paquetsService.startedSignPaquet.next(paquet.id);
             }
@@ -307,12 +287,12 @@ export class DatabaseService {
                     if (data.SendMail === 'ok') {
                         this.messagesService.sendMessage(
                             'Mail enviat correctament!',
-                            'success'
+                            'bg-success text-light'
                             );
                     } else {
                         this.messagesService.sendMessage(
                             'No s\'ha pogut enviar el correu-e!',
-                            'danger'
+                            'bg-danger text-light'
                             );
                     }
                 }
@@ -330,12 +310,12 @@ export class DatabaseService {
                   if (data.SendMail === 'ok') {
                       this.messagesService.sendMessage(
                           'Mail enviat correctament!',
-                          'success'
+                          'bg-success text-light'
                           );
                   } else {
                       this.messagesService.sendMessage(
                           'No s\'ha pogut enviar el correu-e!',
-                          'danger'
+                          'bg-danger text-light'
                           );
                   }
               }
@@ -361,7 +341,7 @@ export class DatabaseService {
 
                 this.messagesService.sendMessage(
                     'Usuari afegit correctament!',
-                    'success'
+                    'bg-success text-light'
                     );
                 this.usersService.addUser(dbuser);
             }
@@ -378,14 +358,14 @@ export class DatabaseService {
             this.usersService.updateUser(data);
             this.messagesService.sendMessage(
                 'Usuari modificat correctament!',
-                'success'
+                'bg-success text-light'
                 );
         },
         (error: any) => {
             console.log(error);
             this.messagesService.sendMessage(
               'No s\'ha pogut modificar l\'usuari!',
-              'danger'
+              'bg-danger text-light'
               );
         }
     ));
@@ -400,7 +380,7 @@ export class DatabaseService {
               this.usersService.deleteUser(user.id);
               this.messagesService.sendMessage(
                   'Usuari esborrat correctament!',
-                  'success'
+                  'bg-success text-light'
                   );
           }
         );

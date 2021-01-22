@@ -19,12 +19,6 @@ import { UserEditaddComponent } from './admin/user-editadd/user-editadd.componen
 import { AppRoutingModule } from './app-routing.module';
 import { ErrorInterceptor } from './shared/httperror.interceptor';
 
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { CollapseModule, ModalModule } from 'ngx-bootstrap';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { AlertModule } from 'ngx-bootstrap/alert';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-
 import { QRCodeModule } from 'angularx-qrcode';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AuthService } from './auth/auth.service';
@@ -35,11 +29,10 @@ import { UsersService } from './shared/users.service';
 import { AuthGuard } from './auth/auth-guard.service';
 import { AdminGuard } from './auth/admin-guard.service';
 
-import localeEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
-import { fas, faQrcode } from '@fortawesome/free-solid-svg-icons';
-
-registerLocaleData(localeEs, 'es');
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import localeCa from '@angular/common/locales/ca-AD';
+registerLocaleData(localeCa);
 
 @NgModule({
   declarations: [
@@ -61,20 +54,15 @@ registerLocaleData(localeEs, 'es');
     FontAwesomeModule,
     FormsModule,
     ReactiveFormsModule,
-    BsDatepickerModule.forRoot(),
-    CollapseModule.forRoot(),
-    AlertModule.forRoot(),
-    ModalModule.forRoot(),
-    PaginationModule.forRoot(),
-    TooltipModule.forRoot(),
     QRCodeModule,
     HttpClientModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NgbModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-        { provide: LOCALE_ID, useValue: 'es' },
+        { provide: LOCALE_ID, useValue: 'ca-AD' },
         AuthService, DatabaseService, PaquetsService, MessagesService, UsersService, AuthGuard, AdminGuard ],
   bootstrap: [AppComponent]
 })

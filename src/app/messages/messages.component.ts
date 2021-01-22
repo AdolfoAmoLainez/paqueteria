@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AlertComponent } from 'ngx-bootstrap/alert/alert.component';
+import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { MessagesService } from './messages.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-messages',
   templateUrl: './messages.component.html',
-  styleUrls: ['./messages.component.css']
+  styleUrls: ['./messages.component.css'],
+  host: {'[class.ngb-toasts]': 'true'}
 })
 export class MessagesComponent implements OnInit,OnDestroy {
   alerts: any[] = [];
@@ -18,16 +18,20 @@ export class MessagesComponent implements OnInit,OnDestroy {
   ngOnInit() {
     this.messagesSendedSubscription = this.messagesService.messageSend.subscribe(
       (alert: any) =>{
+        console.log(alert);
+        
         this.alerts.push(alert);
       });
-  }
- 
-  onClosed(dismissedAlert: AlertComponent): void {
-    this.alerts = this.alerts.filter(alert => alert !== dismissedAlert);
   }
 
   ngOnDestroy(){
     this.messagesSendedSubscription.unsubscribe();
   }
+
+  remove(toast) {
+    this.alerts = this.alerts.filter(t => t !== toast);
+  }
+
+  isTemplate(toast) { return toast.textOrTpl instanceof TemplateRef; }
 
 }

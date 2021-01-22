@@ -7,10 +7,36 @@
   <div class="row">
     <div class="col-sm-4">
       <div class="form-group">
+        <div class="row">
+          <div class="col-7">
+            <label for="data_arribada">Data Arribada</label>
+            <div class="input-group">
+              <input class="form-control" formControlName="data_arribada" placeholder="dd/mm/yyyy"
+                     name="data_arribada"  ngbDatepicker #d1="ngbDatepicker"
+                     (dateSelect)="onDateSelected($event)">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" (click)="d1.toggle()" type="button">
+                  <fa-icon
+                  [icon]="faCalendarAlt"
+                  style="cursor: pointer;"
+                  ></fa-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-5">
+            <label for="hora_arribada">Hora</label>
+            <input type="time" class="form-control" formControlName="hora_arribada" id="hora_arribada" name="hora_arribada">
+          </div>
+        </div>
+
+      </div>
+
+<!--       <div class="form-group">
         <label for="data_arribada">Data Arribada</label>
         <input bsDatepicker [bsConfig]="{ dateInputFormat: 'D/M/YYYY H:mm' }" type="text" formControlName="data_arribada"
           name="data_arribada" id="data_arribada" class="form-control" tabindex="1">
-      </div>
+      </div> -->
       <div class="form-group">
         <label for="emailremitent">Email només per sortida</label>
         <input type="text" formControlName="emailremitent" name="emailremitent" id="emailremitent" class="form-control" tabindex="4">

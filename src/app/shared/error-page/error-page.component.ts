@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
 
-import { BsModalRef } from 'ngx-bootstrap/modal';
-
-import { environment } from 'src/environments/environment';
-
 @Component({
   selector: 'app-error-page',
   templateUrl: './error-page.component.html',
@@ -16,10 +12,9 @@ export class ErrorPageComponent {
   status: number;
 
 
-  constructor(public bsModalRef: BsModalRef) { }
+  constructor() { }
 
   onClose() {
-    this.bsModalRef.hide();
     if (this.status === 0 ) {
       // window.location.href = environment.dataServerURL + '/selfapi/login';
     }
