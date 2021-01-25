@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -8,9 +8,9 @@ import { environment } from 'src/environments/environment';
 })
 export class ErrorPageComponent {
 
-  title: string;
-  message: string;
-  status: number;
+  @Input() title: string;
+  @Input() message: string;
+  @Input() status: number;
 
 
   constructor() { }

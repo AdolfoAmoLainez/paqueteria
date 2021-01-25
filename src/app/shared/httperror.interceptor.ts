@@ -18,42 +18,26 @@ export class ErrorInterceptor implements HttpInterceptor {
         catchError((error: HttpErrorResponse) => {
 
           if (error.status === 401) {
-            const initialState = {
-              message: 'Usuari no Autoritzat',
-              title: 'ERROR: ' + 'Usuari no autoritzat o bé la sessió ha expirat.',
-              status: error.status
-            };
-            this.modalService.open(ErrorPageComponent);
+
+            const modalRef = this.modalService.open(ErrorPageComponent);
+            modalRef.componentInstance.message = 'Usuari no Autoritzat';
+            modalRef.componentInstance.title = 'ERROR: ' + 'Usuari no autoritzat o bé la sessió ha expirat.';
+            modalRef.componentInstance.status = error.status;
 
             setTimeout(() => {
               this.authService.logout();
             }, 4000);
 
           } else {
-            const initialState = {
-              message: error.message,
-              title: 'ERROR: ' + error.status,
-              status: error.status
-            };
-            this.modalService.open(ErrorPageComponent);
+
+            const modalRef = this.modalService.open(ErrorPageComponent);
+            modalRef.componentInstance.message = error.message;
+            modalRef.componentInstance.title = 'ERROR: ' + error.status;
+            modalRef.componentInstance.status = error.status;
           }
           return throwError(error);
         })
       );
-      /*
-        return next.handle(request).pipe(catchError(err => {
-            if (err.status === 401) {
-                // auto logout if 401 response returned from api
-                this.authService.logout();
-                this.authService.loginIncorrect.next();
-                //this.router.navigate(['/login']);
 
-            }else{
-                //console.log(err);
-                this.router.navigate(['/http-error/'+err.message]);
-            }
-            const error = err.error.message || err.statusText;
-            return throwError(error);
-        }))*/
     }
 }
