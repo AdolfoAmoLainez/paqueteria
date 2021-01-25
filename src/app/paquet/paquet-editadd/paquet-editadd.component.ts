@@ -101,7 +101,9 @@ export class PaquetEditAddComponent implements OnInit {
                 ubicacioemail: this.paquetEditing.ubicacioemail.replace('\\', '')
               });
 
-              this.paquetForm.get('data_arribada').setValue(this.myDateAdapter.fromModel(this.paquetEditing.data_arribada));
+              this.paquetForm.get('data_arribada').setValue(this.myDateAdapter.fromModel(data.getFullYear() + "-" + 
+                                                            data.getMonth()+1 + "-" +
+                                                            data.getDate()));
               this.paquetForm.get('hora_arribada').setValue(('0' + hora).slice(-2) + ':' + ('0' + minutes).slice(-2));
 
 

@@ -146,6 +146,7 @@ class paquet {
 
     public static function add( $tablename, $paquet) {
       return scaffold::superInsert($tablename, $paquet);
+
     }
 
     public static function updatePaquet( $tablename, $paquet) {

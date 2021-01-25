@@ -176,7 +176,10 @@ class paquets extends AppAuthorizator {
 
   public function signaPaquet() {
 
+    if(!sessionManager::is_started()) sessionManager::start();
+
     $body = json_decode(file_get_contents("php://input"), true);
+
     $userProfile = sessionManager::get('userProfile');
 
     $resultat = paquet::signaPaquet($userProfile['tablename'], $body);
