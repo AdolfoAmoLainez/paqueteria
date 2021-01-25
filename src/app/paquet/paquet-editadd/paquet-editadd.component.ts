@@ -135,7 +135,6 @@ export class PaquetEditAddComponent implements OnInit {
             }
 
             this.paquetForm.reset({
-              data_arribada: ahora,
               ubicacioemail
             });
 
@@ -168,16 +167,8 @@ export class PaquetEditAddComponent implements OnInit {
 
   onPaquetAction() {
     if (this.editMode) {
-      let data: string = this.paquetForm.get('data_arribada').value.toLocaleString();
-
-      if (data.indexOf('.000Z') !== -1) {
-        data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
-        const dataDate = new Date(this.paquetForm.get('data_arribada').value);
-        data = dataDate.getDate + '/' + (dataDate.getMonth() + 1) + '/' + dataDate.getFullYear() + ' ' +
-             dataDate.getHours() + ':' + dataDate.getMinutes();
-      } else {
-        data = this.paquetForm.get('data_arribada').value.toLocaleString();
-      }
+      let data: string = this.myDateAdapter.toModel(this.paquetForm.get('data_arribada').value);
+      data = data + ' ' + this.paquetForm.get('hora_arribada').value + ':00';
 
       this.databaseService.updatePaquet(new Paquet(
         this.paquetEditing.id,
@@ -201,17 +192,7 @@ export class PaquetEditAddComponent implements OnInit {
     } else {
       let data: string = this.myDateAdapter.toModel(this.paquetForm.get('data_arribada').value);
 
-/*       if (data.indexOf('.000Z') !== -1) {
-        data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
-        const dataDate = new Date(this.paquetForm.get('data_arribada').value);
-        data = dataDate.getDate + '/' + (dataDate.getMonth() + 1) + '/' + dataDate.getFullYear() + ' ' +
-             dataDate.getHours() + ':' + dataDate.getMinutes();
-      } else {
-        data = this.paquetForm.get('data_arribada').value.toLocaleString();
-      } */
-
-      data = data + ' ' + this.paquetForm.get('hora_arribada').value
-
+      data = data + ' ' + this.paquetForm.get('hora_arribada').value + ':00';
 
       this.databaseService.addPaquet(new Paquet(
         0,
