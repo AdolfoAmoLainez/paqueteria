@@ -673,7 +673,6 @@ class scaffold {
             $connection->execute($query);
             $lastId = $connection->getLastId();
 
-            echo ($sql);
             unset($connection);
             // return TRUE;
             return $lastId;

@@ -3,6 +3,7 @@ namespace app\controllers;
 defined('APPPATH') OR die('Access denied');
 
 use \core\appAuthorizator;
+use \core\sessionManager;
 use \core\mailer;
 use \app\models\paquet;
 
@@ -31,8 +32,9 @@ class paquets extends AppAuthorizator {
     // $this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
+    $userProfile = sessionManager::get('userProfile');
 
-    $resultat = paquet::getCountPaquetsPerSignar($body['tablename'], $body['searchText']);
+    $resultat = paquet::getCountPaquetsPerSignar($userProfile['tablename'], $body['searchText']);
 
     echo json_encode($resultat);
 
@@ -53,8 +55,9 @@ class paquets extends AppAuthorizator {
     //$this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
+    $userProfile = sessionManager::get('userProfile');
 
-    $resultat['paquets'] = paquet::getPaquetsPerSignar($body['tablename'], $body['page'], $body['itemsPerpage'], $body['searchText']);
+    $resultat['paquets'] = paquet::getPaquetsPerSignar($userProfile['tablename'], $body['page'], $body['itemsPerpage'], $body['searchText']);
 
     echo json_encode($resultat);
 
@@ -73,8 +76,9 @@ class paquets extends AppAuthorizator {
     //$this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
+    $userProfile = sessionManager::get('userProfile');
 
-    $resultat = paquet::getCountPaquetsSignats($body['tablename'], $body['searchText']);
+    $resultat = paquet::getCountPaquetsSignats($userProfile['tablename'], $body['searchText']);
 
     echo json_encode($resultat);
 
@@ -95,8 +99,9 @@ class paquets extends AppAuthorizator {
     //$this->validateSession();
     // Rebem les dades per post
     $body = json_decode(file_get_contents("php://input"), true);
+    $userProfile = sessionManager::get('userProfile');
 
-    $resultat['paquets'] = paquet::getPaquetsSignats($body['tablename'], $body['page'], $body['itemsPerpage'], $body['searchText']);
+    $resultat['paquets'] = paquet::getPaquetsSignats($userProfile['tablename'], $body['page'], $body['itemsPerpage'], $body['searchText']);
 
     echo json_encode($resultat);
 
@@ -114,8 +119,9 @@ class paquets extends AppAuthorizator {
   public function add() {
     //$this->validateSession();
     $body = json_decode(file_get_contents("php://input"), true);
+    $userProfile = sessionManager::get('userProfile');
 
-    $resultat = paquet::add($body['tablename'], $body['paquet']);
+    $resultat = paquet::add($userProfile['tablename'], $body['paquet']);
     if ($resultat) {
       $body['paquet']['id'] = $resultat;
       echo json_encode($body['paquet']);
@@ -156,8 +162,9 @@ class paquets extends AppAuthorizator {
   public function signaPaquetQr() {
 
     $body = json_decode(file_get_contents("php://input"), true);
+    $userProfile = sessionManager::get('userProfile');
 
-    $resultat = paquet::updatePaquet($body['tablename'], $body['paquet']);
+    $resultat = paquet::updatePaquet($userProfile['tablename'], $body['paquet']);
     if ($resultat) {
       echo json_encode($body['paquet']);
     }
@@ -177,8 +184,9 @@ class paquets extends AppAuthorizator {
   public function signaPaquet() {
 
     $body = json_decode(file_get_contents("php://input"), true);
+    $userProfile = sessionManager::get('userProfile');
 
-    $resultat = paquet::signaPaquet($body['tablename'], $body);
+    $resultat = paquet::signaPaquet($userProfile['tablename'], $body);
     if ($resultat) {
       echo json_encode($body);
     }
@@ -196,8 +204,9 @@ class paquets extends AppAuthorizator {
   public function updatePaquet() {
     //$this->validateSession();
     $body = json_decode(file_get_contents("php://input"), true);
+    $userProfile = sessionManager::get('userProfile');
 
-    $resultat = paquet::updatePaquet($body['tablename'], $body['paquet']);
+    $resultat = paquet::updatePaquet($userProfile['tablename'], $body['paquet']);
     if ($resultat) {
       echo json_encode($body['paquet']);
     }
@@ -210,10 +219,11 @@ class paquets extends AppAuthorizator {
    *     id: id del paquet
    */
 
-  public function del($tablename, $id) {
+  public function del( $id) {
     //$this->validateSession();
+    $userProfile = sessionManager::get('userProfile');
 
-    $resultat = paquet::del($tablename, $id);
+    $resultat = paquet::del($userProfile['tablename'], $id);
 
     echo json_encode($resultat);
 

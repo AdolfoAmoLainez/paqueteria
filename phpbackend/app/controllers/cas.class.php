@@ -8,6 +8,7 @@ defined('BASEURLPATH') OR die('Access denied');
 use \core\view;
 use \core\uabcas as uabcas ;
 use \core\sessionManager;
+use \core\app;
 use \core\auth;
 use app\models\usuari as Usuaris;
 use app\models\appconfig as appconfig;
@@ -24,12 +25,13 @@ class cas {
 
       $userProfile = auth::validaUsuariBBDD(sessionManager::get('username'));
       if (empty($userProfile)) {
-        $config = $this->getConfig();
+        $config = app::getConfig();
         header("Location: ".$config['baseurl']."/login", true, 401);
         include APPPATH ."/views/errors/401.php";
         exit;
       } else {
-        $config = $this->getConfig();
+        sessionManager::set('userProfile', $userProfile[0]);
+        $config = app::getConfig();
         header("Location: ".$config['baseurl']."/login");
       }
     }
@@ -60,13 +62,6 @@ class cas {
 
   }
 
-    /**
-   * [getConfig Obtenemos la configuración de la app]
-   * @return [Array] [Array con la config]
-   */
-  public static function getConfig() {
-    return parse_ini_file(APPPATH . '/config/config.ini');
-  }
 
 }
 

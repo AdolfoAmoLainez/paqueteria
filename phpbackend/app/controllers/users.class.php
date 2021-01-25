@@ -3,6 +3,7 @@ namespace app\controllers;
 defined('APPPATH') OR die('Access denied');
 
 use \core\appAuthorizator;
+use \core\sessionManager;
 use \app\models\user;
 
 /**
@@ -20,6 +21,7 @@ class users extends AppAuthorizator {
   public function getUserData($niu) {
 
     $usrResult = user::getUserData($niu);
+    sessionManager::set('userProfile', $usrResult[0]);
 
     echo json_encode($usrResult);
 

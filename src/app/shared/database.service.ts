@@ -28,12 +28,6 @@ export class DatabaseService {
         this.tablename = tablename;
     }
 
-    testTablename() {
-        if (this.tablename === '') {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            this.tablename = currentUser.tablename;
-        }
-    }
 
     testEmailData() {
         if (this.ubicacioEmail === '') {
@@ -49,20 +43,16 @@ export class DatabaseService {
 
 
     getCountPaquetsPerSignar(searchText?: string) {
-        this.testTablename();
 
         const obj = {
-          tablename: this.tablename,
           searchText
         };
         return this.http.post(environment.dataServerURL + '/paquets/getCountPaquetsPerSignar', obj);
     }
 
     getPaquetsPerSignar(page: number, itemsPerpage: number, searchText?: string) {
-        this.testTablename();
 
         const obj = {
-                  tablename: this.tablename,
                   searchText,
                   page,
                   itemsPerpage
@@ -97,10 +87,8 @@ export class DatabaseService {
 
 
     getCountPaquetsSignats(searchText?: string) {
-        this.testTablename();
 
         const obj = {
-          tablename: this.tablename,
           searchText
         };
         return this.http.post(environment.dataServerURL + '/paquets/getCountPaquetsSignats', obj);
@@ -109,11 +97,8 @@ export class DatabaseService {
 
 
     getPaquetsSignats(page: number, itemsPerpage: number, searchText?: string) {
-        this.testTablename();
-
 
         const obj = {
-                  tablename: this.tablename,
                   searchText,
                   page,
                   itemsPerpage
@@ -148,9 +133,7 @@ export class DatabaseService {
 
     addPaquet(paquet: Paquet) {
 
-        this.testTablename();
         const obj = {
-          tablename: this.tablename,
           paquet
 
         };
@@ -172,15 +155,8 @@ export class DatabaseService {
         return this.http.get<Paquet[]>(environment.dataServerURL + '/paquets/getPaquetQr/' + tablename + '/' + index + '/' + qrcode);
     }
 
-    getPaquet(index: number) {
-        this.testTablename();
-        return this.http.get(environment.dataServerURL + '/api/crud/' + this.tablename + '/' + index);
-    }
-
     updatePaquet(paquet: Paquet) {
-        this.testTablename();
         const obj = {
-          tablename: this.tablename,
           paquet
 
         };
@@ -203,8 +179,8 @@ export class DatabaseService {
     }
 
     deletePaquet(index: number) {
-        this.testTablename();
-        return (this.http.delete(environment.dataServerURL + '/paquets/del/' + this.tablename + '/' + index).subscribe(
+
+        return (this.http.delete(environment.dataServerURL + '/paquets/del/' + index).subscribe(
             () => {
                 this.paquetsService.deletePaquet(index);
                 this.messagesService.sendMessage(
@@ -218,7 +194,6 @@ export class DatabaseService {
     signaPaquet(paquet: Paquet) {
 
         const obj = {
-          tablename: this.tablename,
           id: paquet.id,
           dipositari: paquet.dipositari,
           signatura: paquet.signatura
@@ -239,7 +214,6 @@ export class DatabaseService {
     signaPaquetQr(paquet: Paquet, tablename: string) {
 
       const obj = {
-        tablename: tablename,
         id: paquet.id,
         dipositari: paquet.dipositari,
         signatura: paquet.signatura
@@ -258,9 +232,7 @@ export class DatabaseService {
     }
 
     updateQrPaquet(paquet: Paquet) {
-        this.testTablename();
         const obj = {
-          tablename: this.tablename,
           paquet
 
         };
@@ -351,7 +323,7 @@ export class DatabaseService {
   }
 
   updateUser(user: User) {
-    this.testTablename();
+    //this.testTablename();
     return (this.http.put<User>(environment.dataServerURL + '/users/update', user).subscribe(
         (data) => {
             // const user: User = <User> data.json[0];
