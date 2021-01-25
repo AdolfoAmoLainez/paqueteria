@@ -1,0 +1,9 @@
+{
+    "/paqueteria/backend": {
+      "target": "http://localhost/paqueteria/backend",
+      "secure": false,
+      "pathRewrite": {
+        "^/paqueteria/backend": ""
+      }
+    }
+  }
