@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-error-page',
@@ -7,9 +7,9 @@ import { Component } from '@angular/core';
 })
 export class ErrorPageComponent {
 
-  title: string;
-  message: string;
-  status: number;
+  @Input() title: string;
+  @Input() message: string;
+  @Input() status: number;
 
 
   constructor() { }
