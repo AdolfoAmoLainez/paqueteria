@@ -74,19 +74,8 @@ export class PaquetEditAddComponent implements OnInit {
               const data = new Date(this.paquetEditing.data_arribada);
               const hora = data.getHours();
               const minutes = data.getMinutes();
-              
-/*               if (data.indexOf('.000Z') !== -1) {
-                const dataDate = new Date(this.paquetEditing.data_arribada);
-                data = dataDate.getDate + '/' + (dataDate.getMonth() + 1) + '/' + dataDate.getFullYear() + ' ' +
-                     dataDate.getHours() + ':' + dataDate.getMinutes();
-              } else {
-                data = this.paquetEditing.data_arribada.toLocaleString();
-              } */
-
 
               this.paquetForm.patchValue({
-                // 'data_arribada': this.paquetEditing.data_arribada,
-                data_arribada: data,
                 remitent: this.paquetEditing.remitent,
                 procedencia: this.paquetEditing.procedencia,
                 quantitat: this.paquetEditing.quantitat,
@@ -99,7 +88,9 @@ export class PaquetEditAddComponent implements OnInit {
                 ubicacioemail: this.paquetEditing.ubicacioemail.replace('\\', '')
               });
 
-              this.paquetForm.get('data_arribada').setValue(this.myDateAdapter.fromModel(this.paquetEditing.data_arribada));
+              this.paquetForm.get('data_arribada').setValue(this.myDateAdapter.fromModel(data.getFullYear() + "-" + 
+                                                            data.getMonth()+1 + "-" +
+                                                            data.getDate()));
               this.paquetForm.get('hora_arribada').setValue(('0' + hora).slice(-2) + ':' + ('0' + minutes).slice(-2));
 
 
@@ -164,16 +155,8 @@ export class PaquetEditAddComponent implements OnInit {
 
   onPaquetAction() {
     if (this.editMode) {
-      let data: string = this.paquetForm.get('data_arribada').value.toLocaleString();
-
-      if (data.indexOf('.000Z') !== -1) {
-        data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
-        const dataDate = new Date(this.paquetForm.get('data_arribada').value);
-        data = dataDate.getDate + '/' + (dataDate.getMonth() + 1) + '/' + dataDate.getFullYear() + ' ' +
-             dataDate.getHours() + ':' + dataDate.getMinutes();
-      } else {
-        data = this.paquetForm.get('data_arribada').value.toLocaleString();
-      }
+      let data: string = this.myDateAdapter.toModel(this.paquetForm.get('data_arribada').value);
+      data = data + ' ' + this.paquetForm.get('hora_arribada').value + ':00';
 
       this.databaseService.updatePaquet(new Paquet(
         this.paquetEditing.id,
@@ -197,17 +180,7 @@ export class PaquetEditAddComponent implements OnInit {
     } else {
       let data: string = this.myDateAdapter.toModel(this.paquetForm.get('data_arribada').value);
 
-/*       if (data.indexOf('.000Z') !== -1) {
-        data = new Date(this.paquetForm.get('data_arribada').value).toLocaleString();
-        const dataDate = new Date(this.paquetForm.get('data_arribada').value);
-        data = dataDate.getDate + '/' + (dataDate.getMonth() + 1) + '/' + dataDate.getFullYear() + ' ' +
-             dataDate.getHours() + ':' + dataDate.getMinutes();
-      } else {
-        data = this.paquetForm.get('data_arribada').value.toLocaleString();
-      } */
-
-      data = data + ' ' + this.paquetForm.get('hora_arribada').value
-
+      data = data + ' ' + this.paquetForm.get('hora_arribada').value + ':00';
 
       this.databaseService.addPaquet(new Paquet(
         0,

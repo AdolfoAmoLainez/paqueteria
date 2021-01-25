@@ -23,7 +23,6 @@ class paquets extends AppAuthorizator {
    * Rebem les dades per POST en format json
    *
    *  body = {
-   *       tablename: Nom de la taula
    *       searchText: string de búsqueda
    *     };
    */
@@ -44,7 +43,6 @@ class paquets extends AppAuthorizator {
    * Rebem les dades per POST en format json
    *
    *   obj = {
-   *            tablename: nom de la taula
    *            searchText: string de cerca
    *            page: pagina de resultats SQL
    *            itemsPerpage: items per pàgina de resultats
@@ -67,7 +65,6 @@ class paquets extends AppAuthorizator {
    * Rebem les dades per POST en format json
    *
    *  body = {
-   *       tablename: Nom de la taula
    *       searchText: string de búsqueda
    *     };
    */
@@ -88,7 +85,6 @@ class paquets extends AppAuthorizator {
    * Rebem les dades per POST en format json
    *
    *   obj = {
-   *            tablename: nom de la taula
    *            searchText: string de cerca
    *            page: pagina de resultats SQL
    *            itemsPerpage: items per pàgina de resultats
@@ -111,7 +107,6 @@ class paquets extends AppAuthorizator {
    * Rebem les dades per POST en format json
    *
    *   obj = {
-   *            tablename: nom de la taula
    *            paquet: objecte a insertar
    *          };
    */
@@ -162,9 +157,8 @@ class paquets extends AppAuthorizator {
   public function signaPaquetQr() {
 
     $body = json_decode(file_get_contents("php://input"), true);
-    $userProfile = sessionManager::get('userProfile');
 
-    $resultat = paquet::updatePaquet($userProfile['tablename'], $body['paquet']);
+    $resultat = paquet::updatePaquet($body['tablename'], $body['paquet']);
     if ($resultat) {
       echo json_encode($body['paquet']);
     }
@@ -174,7 +168,6 @@ class paquets extends AppAuthorizator {
    * Rebem les dades per POST en format json
    *
    *   obj = {
-   *            tablename: nom de la taula
    *            id: id del paquet,
    *            dipositari,
    *            signatura
@@ -196,7 +189,6 @@ class paquets extends AppAuthorizator {
    * Rebem les dades per POST en format json
    *
    *   obj = {
-   *            tablename: nom de la taula
    *            paquet: objecte a modificar
    *          };
    */
@@ -215,7 +207,6 @@ class paquets extends AppAuthorizator {
   /**
    * Rebem les dades per paràmetres de URL
    *
-   *     tablename: nom de la taula
    *     id: id del paquet
    */
 

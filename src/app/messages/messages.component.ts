@@ -18,7 +18,6 @@ export class MessagesComponent implements OnInit,OnDestroy {
   ngOnInit() {
     this.messagesSendedSubscription = this.messagesService.messageSend.subscribe(
       (alert: any) =>{
-        console.log(alert);
         
         this.alerts.push(alert);
       });

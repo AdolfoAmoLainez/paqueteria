@@ -24,6 +24,6 @@ export class MyDateService extends NgbDateAdapter<string> {
   }
 
   toModel(date: NgbDateStruct | null): string | null {
-    return date ? date.day + this.DELIMITER + date.month + this.DELIMITER + date.year : null;
+    return date ? date.year + this.DELIMITER + date.month + this.DELIMITER + date.day : null;
   }
 }

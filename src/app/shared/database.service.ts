@@ -214,12 +214,13 @@ export class DatabaseService {
     signaPaquetQr(paquet: Paquet, tablename: string) {
 
       const obj = {
+        tablename: tablename,
         id: paquet.id,
         dipositari: paquet.dipositari,
         signatura: paquet.signatura
       };
 
-      return this.http.post(environment.dataServerURL + '/paquets/signaPaquet', obj).subscribe(
+      return this.http.post(environment.dataServerURL + '/paquets/signaPaquetQr', obj).subscribe(
           () => {
               this.paquetsService.paquetSignatCorrectament.next(paquet.id);
               this.messagesService.sendMessage(

@@ -146,6 +146,43 @@ class paquet {
 
     public static function add( $tablename, $paquet) {
       return scaffold::superInsert($tablename, $paquet);
+/*     	try {
+        $connection = Database::instance();
+
+        $sql = 'INSERT INTO '.$tablename.'
+        (data_arribada, remitent, procedencia, mitja_arribada,
+        referencia, destinatari, departament, dipositari,
+        email, emailremitent, ubicacioemail, signatura)
+        VALUES
+        (:data_arribada, :remitent, :procedencia, :mitja_arribada,
+        :referencia, :destinatari, :departament, :dipositari,
+        :email, :emailremitent, :ubicacioemail, :signatura);';
+
+
+        $query = $connection->prepare($sql);
+        $query->bindParam(':data_arribada', $paquet['data_arribada'], \PDO::PARAM_STR);
+        $query->bindParam(':remitent', $paquet['remitent'], \PDO::PARAM_STR);
+        $query->bindParam(':procedencia', $paquet['procedencia'], \PDO::PARAM_STR);
+        $query->bindParam(':mitja_arribada', $paquet['mitja_arribada'], \PDO::PARAM_STR);
+        $query->bindParam(':referencia', $paquet['referencia'], \PDO::PARAM_STR);
+        $query->bindParam(':destinatari', $paquet['destinatari'], \PDO::PARAM_STR);
+        $query->bindParam(':departament', $paquet['departament'], \PDO::PARAM_STR);
+        $query->bindParam(':dipositari', $paquet['dipositari'], \PDO::PARAM_STR);
+        $query->bindParam(':email', $paquet['email'], \PDO::PARAM_STR);
+        $query->bindParam(':emailremitent', $paquet['emailremitent'], \PDO::PARAM_STR);
+        $query->bindParam(':ubicacioemail', $paquet['ubicacioemail'], \PDO::PARAM_STR);
+        $query->bindParam(':signatura', $paquet['signatura'], \PDO::PARAM_STR);
+        
+
+        $connection->execute($query);
+        $lastid = $connection->getLastId();
+        unset($connection);
+        return $lastid;
+    }
+    catch(\PDOException $e)
+    {
+        print 'Error!: ' . $e->getMessage();
+    } */
     }
 
     public static function updatePaquet( $tablename, $paquet) {

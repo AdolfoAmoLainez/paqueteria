@@ -573,9 +573,9 @@ class scaffold {
                                 if ($columnType === 'timestamp')
                                     $sql .= '';
                                 elseif ($columnType === 'datetime')
-                                    $sql .= $key . '=DATE_FORMAT(STR_TO_DATE(\'' . $value . '\', \'%d-%m-%Y %H:%i:%s\'), \'%Y-%m-%d\ %H:%i:%s\'),';
+                                    $sql .= $key . '=DATE_FORMAT(STR_TO_DATE(\'' . $value . '\', \'%Y-%m-%d %H:%i:%s\'), \'%Y-%m-%d\ %H:%i:%s\'),';
                                 elseif ($columnType === 'date')
-                                    $sql .= $key . '=DATE_FORMAT(STR_TO_DATE(\'' . $value . '\', \'%d-%m-%Y\'), \'%Y-%m-%d\'),';
+                                    $sql .= $key . '=DATE_FORMAT(STR_TO_DATE(\'' . $value . '\', \'%Y-%m-%d\'), \'%Y-%m-%d\'),';
                                 else {
                                     if ($key === 'ip')
                                         $sql .= $key . '=INET_ATON(' . $value . '),';
@@ -646,9 +646,9 @@ class scaffold {
                             if ($columnType !== 'timestamp') {
                                 $sql .= $key . ',';
                                 if ($columnType === 'datetime')
-                                    $strValues .= ' DATE_FORMAT(STR_TO_DATE(\'' . $value . '\', \'%d-%m-%Y %H:%i:%s\'), \'%Y-%m-%d %H:%i:%s\'),';
+                                    $strValues .= ' DATE_FORMAT(STR_TO_DATE(\'' . $value . '\', \'%Y-%m-%d %H:%i:%s\'), \'%Y-%m-%d %H:%i:%s\'),';
                                 elseif ($columnType === 'date')
-                                    $strValues .= ' DATE_FORMAT(STR_TO_DATE(\'' . $value . '\', \'%d-%m-%Y\'), \'%Y-%m-%d\'),';
+                                    $strValues .= ' DATE_FORMAT(STR_TO_DATE(\'' . $value . '\', \'%Y-%m-%d\'), \'%Y-%m-%d\'),';
                                 else {
                                     if ($key === 'ip')
                                         $strValues .= 'INET_ATON(' . $value . '),';
@@ -713,9 +713,9 @@ class scaffold {
                     $columnType = $metaField['COLUMN_TYPE'];
 
                     if ($columnType === 'timestamp' || $columnType === 'datetime')
-                        $sql .= 'DATE_FORMAT(' . $columnName . ',\'%d-%m-%Y %H:%i:%s\') AS ' . $columnName . ',';
+                        $sql .= 'DATE_FORMAT(' . $columnName . ',\'%Y-%m-%d %H:%i:%s\') AS ' . $columnName . ',';
                     elseif ($columnType === 'date')
-                        $sql .= 'DATE_FORMAT(' . $columnName . ',\'%d-%m-%Y\') AS ' . $columnName . ',';
+                        $sql .= 'DATE_FORMAT(' . $columnName . ',\'%Y-%m-%d\') AS ' . $columnName . ',';
                     else {
                         $isRelated = substr($columnName, -3, 3);
                         if ($isRelated === '_id') {
