@@ -1,18 +1,23 @@
 <div *ngIf="formVisible" style="touch-action: none;">
-  <div *ngIf="!paquetSignatCorrectament">
-    <dl class="row justify-content-center">
-      <dt class="col-3 bg-light">Arribada:</dt>
-      <dd class="col-9 bg-light mb-auto">{{paquetEditing.data_arribada | date: 'dd/MM/yyyy H:mm'}}</dd>
-      <div class="w-100"></div>
-      <dt class="col-3 ">Remitent:</dt>
-      <dd class="col-9 mb-auto">{{paquetEditing.remitent}}</dd>
-      <div class="w-100"></div>
-      <dt class="col-3 bg-light">Destinatari:</dt>
-      <dd class="col-9 bg-light mb-auto">{{paquetEditing.destinatari}}</dd>
-      <div class="w-100"></div>
-      <dt class="col-3">Quantitat:</dt>
-      <dd class="col-9 mb-auto">{{paquetEditing.quantitat}}</dd>
-  </dl>
+  <div class="row" *ngIf="!paquetSignatCorrectament">
+    <div class="col-3 text-right">
+       <h3>Paquet: <span class="badge badge-secondary">{{paquetEditing.id}}</span></h3>
+    </div>
+    <div class="col-9">
+      <dl class="row justify-content-center">
+        <dt class="col-3 bg-light">Arribada:</dt>
+        <dd class="col-6 bg-light mb-auto">{{paquetEditing.data_arribada | date: 'dd/MM/yyyy H:mm'}}</dd>
+        <div class="w-100"></div>
+        <dt class="col-3 ">Remitent:</dt>
+        <dd class="col-6 mb-auto">{{paquetEditing.remitent}}</dd>
+        <div class="w-100"></div>
+        <dt class="col-3 bg-light">Destinatari:</dt>
+        <dd class="col-6 bg-light mb-auto">{{paquetEditing.destinatari}}</dd>
+        <div class="w-100"></div>
+        <dt class="col-3">Quantitat:</dt>
+        <dd class="col-6 mb-auto">{{paquetEditing.quantitat}}</dd>
+    </dl>
+    </div>
   </div>
     <div class="row justify-content-center" *ngIf="formVisible">
       <div class="col-md-6">
