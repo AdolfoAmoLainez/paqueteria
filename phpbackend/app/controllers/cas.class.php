@@ -8,6 +8,8 @@ defined('BASEURLPATH') OR die('Access denied');
 use \core\view;
 use \core\uabcas as uabcas ;
 use \core\sessionManager;
+use \core\app;
+
 use app\models\user;
 use app\models\appconfig as appconfig;
 
