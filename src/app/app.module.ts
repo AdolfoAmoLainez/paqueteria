@@ -32,6 +32,11 @@ import { AdminGuard } from './auth/admin-guard.service';
 import { registerLocaleData } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import localeCa from '@angular/common/locales/ca-AD';
+import { MenuComponent } from './menu/menu.component';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 registerLocaleData(localeCa);
 
 @NgModule({
@@ -47,7 +52,8 @@ registerLocaleData(localeCa);
     MessagesComponent,
     ErrorPageComponent,
     UsersListComponent,
-    UserEditaddComponent
+    UserEditaddComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +64,10 @@ registerLocaleData(localeCa);
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NgbModule
+    NgbModule,
+    StoreModule.forRoot({}, {}),
+    EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
