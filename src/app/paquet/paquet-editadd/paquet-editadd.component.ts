@@ -11,7 +11,6 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { MyDateService } from 'src/app/shared/my-date.service';
 
 
-
 @Component({
   selector: 'app-paquet-editadd',
   templateUrl: './paquet-editadd.component.html',
@@ -76,19 +75,7 @@ export class PaquetEditAddComponent implements OnInit {
               const hora = data.getHours();
               const minutes = data.getMinutes();
 
-/*               if (data.indexOf('.000Z') !== -1) {
-                data = new Date(this.paquetEditing.data_arribada).toLocaleString();
-                const dataDate = new Date(this.paquetEditing.data_arribada);
-                data = dataDate.getDate + '/' + (dataDate.getMonth() + 1) + '/' + dataDate.getFullYear() + ' ' +
-                     dataDate.getHours() + ':' + dataDate.getMinutes();
-              } else {
-                data = this.paquetEditing.data_arribada.toLocaleString();
-              } */
-
-
               this.paquetForm.patchValue({
-                // 'data_arribada': this.paquetEditing.data_arribada,
-                data_arribada: data,
                 remitent: this.paquetEditing.remitent,
                 procedencia: this.paquetEditing.procedencia,
                 quantitat: this.paquetEditing.quantitat,
@@ -102,7 +89,7 @@ export class PaquetEditAddComponent implements OnInit {
               });
 
               this.paquetForm.get('data_arribada').setValue(this.myDateAdapter.fromModel(data.getFullYear() + "-" + 
-                                                            data.getMonth()+1 + "-" +
+                                                            (data.getMonth() + 1) + "-" +
                                                             data.getDate()));
               this.paquetForm.get('hora_arribada').setValue(('0' + hora).slice(-2) + ':' + ('0' + minutes).slice(-2));
 
@@ -114,7 +101,7 @@ export class PaquetEditAddComponent implements OnInit {
             this.editMode = false;
             const ahora = new Date();
             const dataAct = ahora.getFullYear() + "-" + 
-                            ahora.getMonth()+1 + "-" +
+                            (ahora.getMonth() + 1) + "-" +
                             ahora.getDate()
 
             const ubicacioemail = this.authService.getLocalUser().ubicacioemail.replace('\\', '');
