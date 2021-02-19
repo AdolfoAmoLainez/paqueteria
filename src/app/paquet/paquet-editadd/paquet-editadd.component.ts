@@ -89,7 +89,7 @@ export class PaquetEditAddComponent implements OnInit {
               });
 
               this.paquetForm.get('data_arribada').setValue(this.myDateAdapter.fromModel(data.getFullYear() + "-" + 
-                                                            data.getMonth()+1 + "-" +
+                                                            (data.getMonth() + 1) + "-" +
                                                             data.getDate()));
               this.paquetForm.get('hora_arribada').setValue(('0' + hora).slice(-2) + ':' + ('0' + minutes).slice(-2));
 
@@ -100,8 +100,10 @@ export class PaquetEditAddComponent implements OnInit {
             this.formVisible = true;
             this.editMode = false;
             const ahora = new Date();
+            console.log(ahora);
+            
             const dataAct = ahora.getFullYear() + "-" + 
-                            ahora.getMonth()+1 + "-" +
+                            (ahora.getMonth() + 1) + "-" +
                             ahora.getDate()
             
             const ubicacioemail = this.authService.getLocalUser().ubicacioemail.replace('\\', '');
@@ -126,6 +128,9 @@ export class PaquetEditAddComponent implements OnInit {
             this.paquetForm.reset({
               ubicacioemail
             });
+
+            console.log(dataAct);
+            
 
             this.paquetForm.get('data_arribada').setValue(this.myDateAdapter.fromModel(dataAct));
             this.paquetForm.get('hora_arribada').setValue(horaActStr + ':' + minActStr);
